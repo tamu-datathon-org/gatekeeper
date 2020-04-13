@@ -10,9 +10,10 @@ COPY package*.json ./
 
 RUN npm ci
 
-# copy app source
-COPY src ./
-COPY test ./
+# build production app
+RUN npm run build
+# copy built app
+COPY dist ./dist
 
 EXPOSE 3000
-CMD [ "npm", "run", "start:prod" ]
+CMD [ "node", "dist/main.js" ]
