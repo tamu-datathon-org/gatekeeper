@@ -17,8 +17,6 @@ COPY nest* ./
 
 # build production app
 RUN npm run build
-# copy built app
-COPY dist ./dist
 
 EXPOSE 3000
 CMD [ "node", "dist/main.js" ]
