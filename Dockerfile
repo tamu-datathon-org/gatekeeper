@@ -10,6 +10,11 @@ COPY package*.json ./
 
 RUN npm ci
 
+COPY src/ ./src
+COPY test/ ./test
+COPY ts* ./
+COPY nest* ./
+
 # build production app
 RUN npm run build
 # copy built app
