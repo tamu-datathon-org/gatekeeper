@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { EasyconfigModule } from  'nestjs-easyconfig';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
-  imports: [ConfigModule.forRoot()],
+  imports: [EasyconfigModule.register({safe: true})],
   controllers: [AppController],
   providers: [AppService],
 })
