@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import ejs from 'ejs';
 
 @Injectable()
 export class MailService {
@@ -9,10 +10,10 @@ export class MailService {
 
   // Private helper function to send a payload to mailgun API.
   // Exists to reduce code redundancy.
-  sendMailPayload(payload: Object) {
+  private sendMailPayload(payload: Object): Promise<AxiosResponse> {
     return axios.post(
       `${this.MailgunAPIBaseURL}/messages`,
-      {}, /* Mailgun needs the payload to be in params */
+      {}, /* Mailgun needs the payload to be in params, leave body empty */
       { auth: this.MailgunAuth, params: payload }
     );
   }
@@ -60,6 +61,32 @@ export class MailService {
     };
 
     try {
+      const res = await this.sendMailPayload(payload);
+      return [res.status, 'Email queued.'];
+    } catch (err) {
+      return [err.status, 'Error in sending email.'];
+    }
+  }
+
+  // Sends an email to a **single** recipient after rendering the given template.
+  async sendTemplatedMail(
+    emailTo: string,
+    subject: string,
+    templatePath: string,
+    templateVariables: Object,
+    emailsCC?: [string],
+    emailsBCC?: [string]
+  ): Promise<[Number, string]> {
+    try {
+      const emailHTML = await ejs.renderFile(templatePath, templateVariables);
+      const payload = {
+        from: this.MailgunFromString,
+        to: emailTo,
+        cc: emailsCC ? emailsCC.join(',') : undefined,
+        bcc: emailsCC ? emailsBCC.join(',') : undefined,
+        subject,
+        html: emailHTML
+      };
       const res = await this.sendMailPayload(payload);
       return [res.status, 'Email queued.'];
     } catch (err) {

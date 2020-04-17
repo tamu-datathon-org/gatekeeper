@@ -24,6 +24,7 @@
     "@nestjs/core": "^6.10.14",
     "@nestjs/platform-express": "^6.10.14",
     "axios": "^0.19.2",
+    "ejs": "^3.0.2",
     "mailgun-js": "^0.22.0",
     "mongoose": "^5.9.2",
     "nestjs-easyconfig": "^1.8.10",
