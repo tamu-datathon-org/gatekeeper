@@ -11,7 +11,7 @@ export class MailController {
   sendMail(@Body('emails') emails: Array<string>, 
            @Body('emailTemplateFile') emailFile: string, 
            @Body('emailTemplateObjects') templateObjects: Array<JSON>): string {
-    emails.forEach(email => console.log(this.mailService.sendMail(email)))
+    emails.forEach(async email => console.log(await this.mailService.sendMailText([email], "Test Subject", "Test Body")))
     return 'Hello!'
   }
 }
