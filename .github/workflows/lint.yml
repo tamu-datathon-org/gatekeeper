@@ -9,9 +9,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: 'Checkout Github Action'
-      uses: actions/checkout@v1
-
+    - uses: actions/checkout@v2
     - name: Setup Node 12.x
       uses: actions/setup-node@v1
       with:
@@ -19,6 +17,6 @@ jobs:
 
     - name: 'npm install'
       run: npm install
-      
+
     - name: 'npm run lint'
       run: npm run lint
