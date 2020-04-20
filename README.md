@@ -11,6 +11,12 @@ Central Authentication Service for Datathon Apps (Registration, forms, etc)
 # development (you can load the site through http://localhost:4000)
 $ npm run dev
 
+# check for lint errors
+$ npm run lint
+
+# attempt to fix lint errors
+$ npm run fix
+
 # watch mode
 $ npm run start:dev
 

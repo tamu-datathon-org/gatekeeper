@@ -1,0 +1,24 @@
+name: Linter Check
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Checkout Github Action'
+      uses: actions/checkout@v1
+
+    - name: Setup Node 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+
+    - name: 'npm install'
+      run: npm install
+      
+    - name: 'npm run lint'
+      run: npm run lint

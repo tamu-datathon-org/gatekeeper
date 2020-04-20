@@ -1,9 +1,9 @@
-import * as mongoose from 'mongoose';
+import * as mongoose from "mongoose";
 
 export const UserAuthSchema = new mongoose.Schema({
   email: String,
   isVerified: Boolean,
   authType: String, // "EmailAndPassword" | "Google" | "Facebook"
   passwordHash: String,
-  salt: String
+  oAuthToken: String
 });
