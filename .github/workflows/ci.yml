@@ -17,9 +17,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-
-    - name: 'npm install'
-      run: npm install
+      - name: 'npm install'
+        run: npm install
   lint:
     needs: setup
     steps:
