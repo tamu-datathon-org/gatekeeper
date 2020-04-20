@@ -108,3 +108,7 @@ dist
 # env files
 .env.production
 .env.test
+
+# DS_Store
+.DS_Store
+**/*.DS_Store

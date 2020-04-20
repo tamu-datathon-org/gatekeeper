@@ -17,7 +17,22 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - name: 'npm ci'
+      - name: 'Install Dependancies'
         run: npm ci
-      - name: 'npm run lint'
+      - name: 'Run Linter'
         run: npm run lint
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: 'Install Dependancies'
+        run: npm ci
+      - name: 'Run Unit Tests'
+        uses: ziishaned/jest-reporter-action@v0.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          test-command: npm run test:ci -- --coverage

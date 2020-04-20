@@ -1,7 +1,9 @@
 import { UserAuthType } from "../interfaces/user-auth.interface";
 
 export class CreateUserAuthDto {
-  readonly email: string;
-
-  readonly authType: UserAuthType;
+  email: string;
+  isVerified: boolean;
+  authType: UserAuthType;
+  password?: string;
+  oAuthToken?: string;
 }
