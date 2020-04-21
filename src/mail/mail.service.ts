@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import axios, { AxiosResponse } from 'axios';
-import ejs from 'ejs';
+const ejs = require('ejs');
 
 @Injectable()
 export class MailService {
-  private readonly MailgunAPIBaseURL = `${process.env.MAILGUN_API_URL}/${process.env.MAILGUN_EMAIL_DOMAIN}`;
-  private readonly MailgunFromString = `${process.env.MAILGUN_DEFAULT_NAME} <${process.env.MAILGUN_DEFAULT_EMAIL}>`; 
+  private readonly mailgunAPIBaseURL = `${process.env.MAILGUN_API_URL}/${process.env.MAILGUN_EMAIL_DOMAIN}`;
+  private readonly emailFromString = `${process.env.MAILGUN_DEFAULT_NAME} <${process.env.MAILGUN_DEFAULT_EMAIL}>`;
 
   // Private helper function to send a payload to mailgun API.
   // Exists to reduce code redundancy.
   private sendMailPayload(params: Object): Promise<AxiosResponse> {
     return axios.post(
-      `${this.MailgunAPIBaseURL}/messages`,
+      `${this.mailgunAPIBaseURL}/messages`,
       {}, /* Mailgun needs the payload to be in params, leave body empty */
       { 
         auth: {username: 'api', password: process.env.MAILGUN_API_KEY}, 
@@ -21,16 +21,16 @@ export class MailService {
   }
 
   // Sends a simple email with a plain text body.
-  async sendTextMail(
-    emailsTo: [string],
+  async sendTextEmail(
+    emailTo: string,
     subject: string,
     bodyText: string,
     emailsCC?: [string],
     emailsBCC?: [string]
   ): Promise<[Number, string]> {
     const payload = {
-      from: this.MailgunFromString,
-      to: emailsTo.join(','),
+      from: this.emailFromString,
+      to: emailTo,
       cc: emailsCC ? emailsCC.join(',') : undefined,
       bcc: emailsCC ? emailsBCC.join(',') : undefined,
       subject,
@@ -46,16 +46,16 @@ export class MailService {
   }
 
   // Sends a simple email with an HTML body.
-  async sendHTMLMail(
-    emailsTo: [string],
+  async sendHTMLEmail(
+    emailTo: string,
     subject: string,
     bodyHTML: string,
     emailsCC?: [string],
     emailsBCC?: [string]
   ): Promise<[Number, string]> {
     const payload = {
-      from: this.MailgunFromString,
-      to: emailsTo.join(','),
+      from: this.emailFromString,
+      to: emailTo,
       cc: emailsCC ? emailsCC.join(',') : undefined,
       bcc: emailsCC ? emailsBCC.join(',') : undefined,
       subject,
@@ -71,7 +71,7 @@ export class MailService {
   }
 
   // Sends an email to a **single** recipient after rendering the given template.
-  async sendSingleTemplatedMail(
+  async sendTemplatedEmail(
     emailTo: string,
     subject: string,
     templatePath: string,
@@ -81,8 +81,9 @@ export class MailService {
   ): Promise<[Number, string]> {
     try {
       const emailHTML = await ejs.renderFile(templatePath, templateVariables);
+      
       const payload = {
-        from: this.MailgunFromString,
+        from: this.emailFromString,
         to: emailTo,
         cc: emailsCC ? emailsCC.join(',') : undefined,
         bcc: emailsCC ? emailsBCC.join(',') : undefined,
@@ -92,6 +93,7 @@ export class MailService {
       const res = await this.sendMailPayload(payload);
       return [res.status, 'Email queued.'];
     } catch (err) {
+      console.log(err);
       return [err.status, 'Error in sending email.'];
     }
   }
