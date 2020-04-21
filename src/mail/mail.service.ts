@@ -6,20 +6,22 @@ import ejs from 'ejs';
 export class MailService {
   private readonly MailgunAPIBaseURL = `${process.env.MAILGUN_API_URL}/${process.env.MAILGUN_EMAIL_DOMAIN}`;
   private readonly MailgunFromString = `${process.env.MAILGUN_DEFAULT_NAME} <${process.env.MAILGUN_DEFAULT_EMAIL}>`; 
-  private readonly MailgunAuth = {username: 'api', password: process.env.MAILGUN_API_KEY}
 
   // Private helper function to send a payload to mailgun API.
   // Exists to reduce code redundancy.
-  private sendMailPayload(payload: Object): Promise<AxiosResponse> {
+  private sendMailPayload(params: Object): Promise<AxiosResponse> {
     return axios.post(
       `${this.MailgunAPIBaseURL}/messages`,
       {}, /* Mailgun needs the payload to be in params, leave body empty */
-      { auth: this.MailgunAuth, params: payload }
+      { 
+        auth: {username: 'api', password: process.env.MAILGUN_API_KEY}, 
+        params 
+      }
     );
   }
 
   // Sends a simple email with a plain text body.
-  async sendMailText(
+  async sendTextMail(
     emailsTo: [string],
     subject: string,
     bodyText: string,
@@ -44,7 +46,7 @@ export class MailService {
   }
 
   // Sends a simple email with an HTML body.
-  async sendMailHTML(
+  async sendHTMLMail(
     emailsTo: [string],
     subject: string,
     bodyHTML: string,
@@ -69,7 +71,7 @@ export class MailService {
   }
 
   // Sends an email to a **single** recipient after rendering the given template.
-  async sendTemplatedMail(
+  async sendSingleTemplatedMail(
     emailTo: string,
     subject: string,
     templatePath: string,
