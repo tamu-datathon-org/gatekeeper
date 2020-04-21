@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import axios, { AxiosResponse } from 'axios';
-const ejs = require('ejs');
+import { Injectable } from "@nestjs/common";
+import axios, { AxiosResponse } from "axios";
+import * as ejs from "ejs";
 
 @Injectable()
 export class MailService {
@@ -9,13 +9,13 @@ export class MailService {
 
   // Private helper function to send a payload to mailgun API.
   // Exists to reduce code redundancy.
-  private sendMailPayload(params: Object): Promise<AxiosResponse> {
+  private sendMailPayload(params: Record<string, any>): Promise<AxiosResponse> {
     return axios.post(
       `${this.mailgunAPIBaseURL}/messages`,
-      {}, /* Mailgun needs the payload to be in params, leave body empty */
-      { 
-        auth: {username: 'api', password: process.env.MAILGUN_API_KEY}, 
-        params 
+      {} /* Mailgun needs the payload to be in params, leave body empty */,
+      {
+        auth: { username: "api", password: process.env.MAILGUN_API_KEY },
+        params
       }
     );
   }
@@ -27,21 +27,21 @@ export class MailService {
     bodyText: string,
     emailsCC?: [string],
     emailsBCC?: [string]
-  ): Promise<[Number, string]> {
+  ): Promise<[number, string]> {
     const payload = {
       from: this.emailFromString,
       to: emailTo,
-      cc: emailsCC ? emailsCC.join(',') : undefined,
-      bcc: emailsCC ? emailsBCC.join(',') : undefined,
+      cc: emailsCC ? emailsCC.join(",") : undefined,
+      bcc: emailsCC ? emailsBCC.join(",") : undefined,
       subject,
-      text: bodyText,
+      text: bodyText
     };
 
     try {
       const res = await this.sendMailPayload(payload);
-      return [res.status, 'Email queued.'];
+      return [res.status, "Email queued."];
     } catch (err) {
-      return [err.status, 'Error in sending email.'];
+      return [err.status, "Error in sending email."];
     }
   }
 
@@ -52,21 +52,21 @@ export class MailService {
     bodyHTML: string,
     emailsCC?: [string],
     emailsBCC?: [string]
-  ): Promise<[Number, string]> {
+  ): Promise<[number, string]> {
     const payload = {
       from: this.emailFromString,
       to: emailTo,
-      cc: emailsCC ? emailsCC.join(',') : undefined,
-      bcc: emailsCC ? emailsBCC.join(',') : undefined,
+      cc: emailsCC ? emailsCC.join(",") : undefined,
+      bcc: emailsCC ? emailsBCC.join(",") : undefined,
       subject,
-      html: bodyHTML,
+      html: bodyHTML
     };
 
     try {
       const res = await this.sendMailPayload(payload);
-      return [res.status, 'Email queued.'];
+      return [res.status, "Email queued."];
     } catch (err) {
-      return [err.status, 'Error in sending email.'];
+      return [err.status, "Error in sending email."];
     }
   }
 
@@ -75,26 +75,26 @@ export class MailService {
     emailTo: string,
     subject: string,
     templatePath: string,
-    templateVariables: Object,
+    templateVariables: Record<string, any>,
     emailsCC?: [string],
     emailsBCC?: [string]
-  ): Promise<[Number, string]> {
+  ): Promise<[number, string]> {
     try {
       const emailHTML = await ejs.renderFile(templatePath, templateVariables);
-      
+
       const payload = {
         from: this.emailFromString,
         to: emailTo,
-        cc: emailsCC ? emailsCC.join(',') : undefined,
-        bcc: emailsCC ? emailsBCC.join(',') : undefined,
+        cc: emailsCC ? emailsCC.join(",") : undefined,
+        bcc: emailsCC ? emailsBCC.join(",") : undefined,
         subject,
         html: emailHTML
       };
       const res = await this.sendMailPayload(payload);
-      return [res.status, 'Email queued.'];
+      return [res.status, "Email queued."];
     } catch (err) {
       console.log(err);
-      return [err.status, 'Error in sending email.'];
+      return [err.status, "Error in sending email."];
     }
   }
 }

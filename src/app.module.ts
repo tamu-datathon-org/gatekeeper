@@ -1,12 +1,18 @@
-import { Module } from '@nestjs/common';
-import { EasyconfigModule } from  'nestjs-easyconfig';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { MailService } from './mail/mail.service';
-
+import { Module } from "@nestjs/common";
+import { EasyconfigModule } from "nestjs-easyconfig";
+import { MongooseModule } from "@nestjs/mongoose";
+import { AuthModule } from "./auth/auth.module";
+import { UserAuthModule } from "./user-auth/user-auth.module";
+import { MailService } from "./mail/mail.service";
+import { AppController } from "./app.controller";
 @Module({
-  imports: [EasyconfigModule.register({safe: true})],
+  imports: [
+    AuthModule,
+    UserAuthModule,
+    EasyconfigModule.register({ safe: true }),
+    MongooseModule.forRoot(process.env.MONGODB_URL)
+  ],
   controllers: [AppController],
-  providers: [AppService, MailService],
+  providers: [MailService]
 })
 export class AppModule {}
