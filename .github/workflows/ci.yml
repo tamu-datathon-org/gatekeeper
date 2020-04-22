@@ -24,10 +24,9 @@ jobs:
   unit-tests:
 
     runs-on: ubuntu-latest
-    container: node:12.16.2-stretch
     services:
       mongodb:
-        image: mongo:4.2.6-bionic
+        image: healthcheck/mongo
         ports:
           - 27017:27017
     steps:
