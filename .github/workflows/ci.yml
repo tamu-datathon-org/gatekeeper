@@ -21,15 +21,63 @@ jobs:
         run: npm ci
       - name: 'Run Linter'
         run: npm run lint
-  # unit-tests:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Setup Node 12.x
-  #       uses: actions/setup-node@v1
-  #       with:
-  #         node-version: '12.x'
-  #     - name: 'Install Dependancies'
-  #       run: npm ci
-  #     - name: 'Run Unit Tests'
-  #       run: npm run test:ci -- --coverage
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: 'Install Dependancies'
+        run: npm ci
+      - name: 'Run Unit Tests'
+        run: | 
+          npm run test:ci -- --coverage > report_stdout.txt 2> report_stderr.txt
+          mv report_stdout.txt coverage/
+          mv report_stderr.txt coverage/
+      - name: Print Results
+        run: |
+          echo "Test Results:"
+          cat report_stderr.txt| awk '/Test Suites/,0'
+          echo "\nCoverage:"
+          cat report_stdout.txt| awk '/--\|/,0'
+      - name: Upload Coverage Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: coverage
+          path: ./coverage
+  publish-coverage:
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+      - name: Download Coverage Artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: coverage
+      - uses: amondnet/now-deployment@v2.0.2
+        id: publisher
+        name: Create a PR deployment in now.sh
+        with:
+          github-comment: false
+          zeit-token: ${{ secrets.ZEIT_TOKEN }}
+          now-org-id: ${{ secrets.ORG_ID }}
+          working-directory: ./coverage
+          now-project-id: ${{ secrets.ZEIT_PROJECT_ID }}
+      - name: Read Results
+        id: results
+        run: |
+          echo "::set-output name=test-results::$( cat coverage/report_stderr.txt | awk '/Test Suites/,0' )"
+          echo "::set-output name=coverage-results::$( cat coverage/report_stdout.txt | awk '/--\|/,0' )"
+      - name: Publish URL in comment
+        uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          msg: |
+            *Link to code coverage report:* ${{ steps.publisher.outputs.preview-url }}
+            *Jest Test Results:*
+            ```${steps.results.outputs.test-results}```
+            *Code Coverage Preview:*
+            ```${steps.results.outputs.coverage-results}```
+          check_for_duplicate_msg: false
