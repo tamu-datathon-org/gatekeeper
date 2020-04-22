@@ -10,7 +10,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
     MongooseModule.forRootAsync({
       useFactory: async () => {
         if (process.env.CI) {
-          return Promise.resolve("mongodb://localhost:27017/testGatekeeperDb");
+          return { uri: "mongodb://localhost:27017/db" };
         }
         const mongod = new MongoMemoryServer();
         const uri = await mongod.getConnectionString();

@@ -22,7 +22,6 @@ jobs:
       - name: 'Run Linter'
         run: npm run lint
   unit-tests:
-
     runs-on: ubuntu-latest
     services:
       mongodb:
