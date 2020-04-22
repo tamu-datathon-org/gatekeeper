@@ -11,7 +11,13 @@ import { MongoMemoryServer } from "mongodb-memory-server";
       useFactory: async () => {
         if (process.env.CI) {
           // http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
-          const randomDBName = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 20);
+          const randomDBName =
+            Math.random()
+              .toString(36)
+              .substring(2, 15) +
+            Math.random()
+              .toString(36)
+              .substring(2, 20);
           return { uri: `mongodb://localhost:27017/${randomDBName}` };
         }
         const mongod = new MongoMemoryServer();

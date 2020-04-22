@@ -40,7 +40,7 @@ jobs:
         env:
           CI: true
         run: | 
-          npm run test:ci
+          npm run test:ci -- --detectOpenHandles
           npm run test:ci -- --coverage > report_stdout.txt 2> report_stderr.txt
           mv report_stdout.txt coverage/
           mv report_stderr.txt coverage/
