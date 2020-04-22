@@ -32,6 +32,8 @@ jobs:
       - name: 'Install Dependancies'
         run: npm ci
       - name: 'Run Unit Tests'
+        env:
+          CI: true
         run: | 
           npm run test:ci -- --coverage > report_stdout.txt 2> report_stderr.txt
           mv report_stdout.txt coverage/
