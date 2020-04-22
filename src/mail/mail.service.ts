@@ -1,100 +1,102 @@
-import { Injectable } from "@nestjs/common";
-import axios, { AxiosResponse } from "axios";
 import * as ejs from "ejs";
+import { Injectable } from "@nestjs/common";
+import { SendEmailParamsDto } from "./dto/send-email-params.dto";
+import { MailCoreService } from "./mail-core.service";
 
 @Injectable()
 export class MailService {
-  private readonly mailgunAPIBaseURL = `${process.env.MAILGUN_API_URL}/${process.env.MAILGUN_EMAIL_DOMAIN}`;
   private readonly emailFromString = `${process.env.MAILGUN_DEFAULT_NAME} <${process.env.MAILGUN_DEFAULT_EMAIL}>`;
 
-  // Private helper function to send a payload to mailgun API.
-  // Exists to reduce code redundancy.
-  private sendMailPayload(params: Record<string, any>): Promise<AxiosResponse> {
-    return axios.post(
-      `${this.mailgunAPIBaseURL}/messages`,
-      {} /* Mailgun needs the payload to be in params, leave body empty */,
-      {
-        auth: { username: "api", password: process.env.MAILGUN_API_KEY },
-        params
-      }
-    );
-  }
+  constructor(private mailCoreService: MailCoreService) {}
 
   // Sends a simple email with a plain text body.
   async sendTextEmail(
-    emailTo: string,
-    subject: string,
-    bodyText: string,
-    emailsCC?: [string],
-    emailsBCC?: [string]
-  ): Promise<[number, string]> {
+    sendEmailParams: SendEmailParamsDto
+  ): Promise<Error | undefined> {
+    if (!sendEmailParams.bodyText) {
+      throw new Error("Email params must include body text.");
+    }
+
     const payload = {
       from: this.emailFromString,
-      to: emailTo,
-      cc: emailsCC ? emailsCC.join(",") : undefined,
-      bcc: emailsCC ? emailsBCC.join(",") : undefined,
-      subject,
-      text: bodyText
+      to: sendEmailParams.emailTo,
+      cc: sendEmailParams.emailsCC
+        ? sendEmailParams.emailsCC.join(",")
+        : undefined,
+      bcc: sendEmailParams.emailsCC
+        ? sendEmailParams.emailsBCC.join(",")
+        : undefined,
+      subject: sendEmailParams.subject,
+      text: sendEmailParams.bodyText
     };
 
     try {
-      const res = await this.sendMailPayload(payload);
-      return [res.status, "Email queued."];
+      const res = await this.mailCoreService.sendMailPayload(payload);
     } catch (err) {
-      return [err.status, "Error in sending email."];
+      return err;
     }
   }
 
   // Sends a simple email with an HTML body.
   async sendHTMLEmail(
-    emailTo: string,
-    subject: string,
-    bodyHTML: string,
-    emailsCC?: [string],
-    emailsBCC?: [string]
-  ): Promise<[number, string]> {
+    sendEmailParams: SendEmailParamsDto
+  ): Promise<Error | undefined> {
+    if (!sendEmailParams.bodyHTML) {
+      throw new Error("Email params must include body HTML.");
+    }
+
     const payload = {
       from: this.emailFromString,
-      to: emailTo,
-      cc: emailsCC ? emailsCC.join(",") : undefined,
-      bcc: emailsCC ? emailsBCC.join(",") : undefined,
-      subject,
-      html: bodyHTML
+      to: sendEmailParams.emailTo,
+      cc: sendEmailParams.emailsCC
+        ? sendEmailParams.emailsCC.join(",")
+        : undefined,
+      bcc: sendEmailParams.emailsCC
+        ? sendEmailParams.emailsBCC.join(",")
+        : undefined,
+      subject: sendEmailParams.subject,
+      html: sendEmailParams.bodyHTML
     };
 
     try {
-      const res = await this.sendMailPayload(payload);
-      return [res.status, "Email queued."];
+      const res = await this.mailCoreService.sendMailPayload(payload);
     } catch (err) {
-      return [err.status, "Error in sending email."];
+      return err;
     }
   }
 
   // Sends an email to a **single** recipient after rendering the given template.
   async sendTemplatedEmail(
-    emailTo: string,
-    subject: string,
-    templatePath: string,
-    templateVariables: Record<string, any>,
-    emailsCC?: [string],
-    emailsBCC?: [string]
-  ): Promise<[number, string]> {
+    sendEmailParams: SendEmailParamsDto
+  ): Promise<Error | undefined> {
+    if (!sendEmailParams.templateFile || !sendEmailParams.templateParams) {
+      throw new Error(
+        "Email params must include template file and template params"
+      );
+    }
+
     try {
-      const emailHTML = await ejs.renderFile(templatePath, templateVariables);
+      const emailHTML = await ejs.renderFile(
+        sendEmailParams.templateFile,
+        sendEmailParams.templateParams
+      );
 
       const payload = {
         from: this.emailFromString,
-        to: emailTo,
-        cc: emailsCC ? emailsCC.join(",") : undefined,
-        bcc: emailsCC ? emailsBCC.join(",") : undefined,
-        subject,
+        to: sendEmailParams.emailTo,
+        cc: sendEmailParams.emailsCC
+          ? sendEmailParams.emailsCC.join(",")
+          : undefined,
+        bcc: sendEmailParams.emailsCC
+          ? sendEmailParams.emailsBCC.join(",")
+          : undefined,
+        subject: sendEmailParams.subject,
         html: emailHTML
       };
-      const res = await this.sendMailPayload(payload);
-      return [res.status, "Email queued."];
+      const res = await this.mailCoreService.sendMailPayload(payload);
     } catch (err) {
       console.log(err);
-      return [err.status, "Error in sending email."];
+      return err;
     }
   }
 }

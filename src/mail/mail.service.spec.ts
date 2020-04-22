@@ -1,5 +1,14 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { MailService } from "./mail.service";
+import { AxiosResponse } from "axios";
+
+class MockMailCoreService {
+  sendMailPayload(params: Record<string, any>): Promise<AxiosResponse> {
+    return new Promise((res, reject) => {
+
+    });
+  }
+};
 
 const testRecipientEmail = "admin@tamudatathon.com";
 
