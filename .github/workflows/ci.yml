@@ -24,7 +24,6 @@ jobs:
   unit-tests:
     if: ${{ github.event == "pull_request"}}
     runs-on: ubuntu-latest
-    timeout-minutes: 20
     services:
       mongodb:
         image: healthcheck/mongo
