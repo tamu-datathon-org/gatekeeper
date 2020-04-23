@@ -3,7 +3,6 @@ import { MailService } from "./mail.service";
 import { MailCoreService } from "./mail-core.service";
 import { MailgunPayloadDto } from "./dto/mailgun-payload.dto";
 import { Injectable } from "@nestjs/common";
-import { ResponseStatus } from "../common/dto/response-base";
 
 @Injectable()
 class MockMailCoreService {
@@ -40,7 +39,6 @@ describe("MailService", () => {
 
   describe("sendTextEmail", () => {
     it("should successfully send a test text email.", async () => {
-      const result = { status: ResponseStatus.Success };
       const mailParams = {
         emailTo: testRecipientEmail,
         subject: "Gatekeeper Test: sendTextMail",
@@ -48,13 +46,14 @@ describe("MailService", () => {
       };
 
       // Function returns void, test that no error is thrown.
-      expect(async () => await mailService.sendTextEmail(mailParams)).not.toThrow();
+      expect(
+        async () => await mailService.sendTextEmail(mailParams)
+      ).not.toThrow();
     });
   });
 
   describe("sendHTMLEmail", () => {
     it("should successfully send a test HTML email.", async () => {
-      const result = { status: ResponseStatus.Success };
       const mailParams = {
         emailTo: testRecipientEmail,
         subject: "Gatekeeper Test: sendHTMLEmail",
@@ -62,13 +61,14 @@ describe("MailService", () => {
       };
 
       // Function returns void, test that no error is thrown.
-      expect(async () => await mailService.sendHTMLEmail(mailParams)).not.toThrow();
+      expect(
+        async () => await mailService.sendHTMLEmail(mailParams)
+      ).not.toThrow();
     });
   });
 
   describe("sendTemplatedEmail", () => {
     it("should successfully send a templated email.", async () => {
-      const result = { status: ResponseStatus.Success };
       const mailParams = {
         emailTo: testRecipientEmail,
         subject: "Gatekeeper Test: sendTemplatedEmail",
@@ -81,7 +81,9 @@ describe("MailService", () => {
       };
 
       // Function returns void, test that no error is thrown.
-      expect(async () => await mailService.sendTemplatedEmail(mailParams)).not.toThrow();
+      expect(
+        async () => await mailService.sendTemplatedEmail(mailParams)
+      ).not.toThrow();
     });
   });
 });

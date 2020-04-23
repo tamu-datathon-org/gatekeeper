@@ -15,9 +15,7 @@ export class MailService {
    * Sends an email with a text body to a single recipient.
    * @param sendEmailParams SendEmailParamsDto
    */
-  async sendTextEmail(
-    sendEmailParams: SendEmailParamsDto
-  ): Promise<void> {
+  async sendTextEmail(sendEmailParams: SendEmailParamsDto): Promise<void> {
     if (!sendEmailParams.bodyText) {
       throw new Error("Email params must include body text.");
     }
@@ -41,9 +39,7 @@ export class MailService {
    * Sends an email with a HTML body to a single recipient.
    * @param sendEmailParams SendEmailParamsDto
    */
-  async sendHTMLEmail(
-    sendEmailParams: SendEmailParamsDto
-  ): Promise<void> {
+  async sendHTMLEmail(sendEmailParams: SendEmailParamsDto): Promise<void> {
     if (!sendEmailParams.bodyHTML) {
       throw new Error("Email params must include body HTML.");
     }
@@ -71,9 +67,7 @@ export class MailService {
    *   from the env variable EMAIL_TEMPLATES_DIR
    * @param sendEmailParams SendEmailParamsDto
    */
-  async sendTemplatedEmail(
-    sendEmailParams: SendEmailParamsDto
-  ): Promise<void> {
+  async sendTemplatedEmail(sendEmailParams: SendEmailParamsDto): Promise<void> {
     if (!sendEmailParams.templateFile || !sendEmailParams.templateParams) {
       throw new Error(
         "Email params must include template file and template params"
