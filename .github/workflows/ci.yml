@@ -23,6 +23,7 @@ jobs:
         run: npm run lint
   unit-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     services:
       mongodb:
         image: healthcheck/mongo
@@ -44,12 +45,14 @@ jobs:
           mv report_stdout.txt coverage/
           mv report_stderr.txt coverage/
       - name: Print Results
+        if: succeeded() || failed()
         run: |
           echo "Test Results:"
           cat coverage/report_stderr.txt | awk '/Test Suites/,0'
           echo "\nCoverage:"
           cat coverage/report_stdout.txt | awk '/--\|/,0'
       - name: Upload Coverage Artifact
+        if: succeeded() || failed()
         uses: actions/upload-artifact@v1
         with:
           name: coverage
