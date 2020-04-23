@@ -46,14 +46,14 @@ jobs:
           mv report_stdout.txt coverage/
           mv report_stderr.txt coverage/
       - name: Print Results
-        if: succeeded() || failed()
+        if: success() || failure()
         run: |
           echo "Test Results:"
           cat coverage/report_stderr.txt | awk '/Test Suites/,0'
           echo "\nCoverage:"
           cat coverage/report_stdout.txt | awk '/--\|/,0'
       - name: Upload Coverage Artifact
-        if: succeeded() || failed()
+        if: success() || failure()
         uses: actions/upload-artifact@v1
         with:
           name: coverage
