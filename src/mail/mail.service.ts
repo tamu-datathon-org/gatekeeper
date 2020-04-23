@@ -1,9 +1,7 @@
 import * as ejs from "ejs";
 import { Injectable, Inject } from "@nestjs/common";
 import { SendEmailParamsDto } from "./dto/send-email-params.dto";
-import { MailResponse } from "./dto/mail-response";
 import { MailCoreService } from "./mail-core.service";
-import { ResponseStatus } from "../common/dto/response-base";
 
 @Injectable()
 export class MailService {
@@ -19,7 +17,7 @@ export class MailService {
    */
   async sendTextEmail(
     sendEmailParams: SendEmailParamsDto
-  ): Promise<MailResponse> {
+  ): Promise<void> {
     if (!sendEmailParams.bodyText) {
       throw new Error("Email params must include body text.");
     }
@@ -36,16 +34,7 @@ export class MailService {
       subject: sendEmailParams.subject,
       text: sendEmailParams.bodyText
     };
-
-    try {
-      await this.mailCoreService.sendMailPayload(payload);
-      return { status: ResponseStatus.Success };
-    } catch (err) {
-      return {
-        status: ResponseStatus.Failure,
-        error: err
-      };
-    }
+    await this.mailCoreService.sendMailPayload(payload);
   }
 
   /**
@@ -54,7 +43,7 @@ export class MailService {
    */
   async sendHTMLEmail(
     sendEmailParams: SendEmailParamsDto
-  ): Promise<MailResponse> {
+  ): Promise<void> {
     if (!sendEmailParams.bodyHTML) {
       throw new Error("Email params must include body HTML.");
     }
@@ -71,16 +60,7 @@ export class MailService {
       subject: sendEmailParams.subject,
       html: sendEmailParams.bodyHTML
     };
-
-    try {
-      await this.mailCoreService.sendMailPayload(payload);
-      return { status: ResponseStatus.Success };
-    } catch (err) {
-      return {
-        status: ResponseStatus.Failure,
-        error: err
-      };
-    }
+    await this.mailCoreService.sendMailPayload(payload);
   }
 
   // Sends an email to a **single** recipient after rendering the given template.
@@ -93,38 +73,30 @@ export class MailService {
    */
   async sendTemplatedEmail(
     sendEmailParams: SendEmailParamsDto
-  ): Promise<MailResponse> {
+  ): Promise<void> {
     if (!sendEmailParams.templateFile || !sendEmailParams.templateParams) {
       throw new Error(
         "Email params must include template file and template params"
       );
     }
 
-    try {
-      const emailHTML = await ejs.renderFile(
-        process.env.EMAIL_TEMPLATES_DIR + sendEmailParams.templateFile,
-        sendEmailParams.templateParams
-      );
+    const emailHTML = await ejs.renderFile(
+      process.env.EMAIL_TEMPLATES_DIR + sendEmailParams.templateFile,
+      sendEmailParams.templateParams
+    );
 
-      const payload = {
-        from: this.emailFromString,
-        to: sendEmailParams.emailTo,
-        cc: sendEmailParams.emailsCC
-          ? sendEmailParams.emailsCC.join(",")
-          : undefined,
-        bcc: sendEmailParams.emailsCC
-          ? sendEmailParams.emailsBCC.join(",")
-          : undefined,
-        subject: sendEmailParams.subject,
-        html: emailHTML
-      };
-      await this.mailCoreService.sendMailPayload(payload);
-      return { status: ResponseStatus.Success };
-    } catch (err) {
-      return {
-        status: ResponseStatus.Failure,
-        error: err
-      };
-    }
+    const payload = {
+      from: this.emailFromString,
+      to: sendEmailParams.emailTo,
+      cc: sendEmailParams.emailsCC
+        ? sendEmailParams.emailsCC.join(",")
+        : undefined,
+      bcc: sendEmailParams.emailsCC
+        ? sendEmailParams.emailsBCC.join(",")
+        : undefined,
+      subject: sendEmailParams.subject,
+      html: emailHTML
+    };
+    await this.mailCoreService.sendMailPayload(payload);
   }
 }

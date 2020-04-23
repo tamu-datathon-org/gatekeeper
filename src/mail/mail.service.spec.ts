@@ -47,8 +47,8 @@ describe("MailService", () => {
         bodyText: "Ignore this, it's a test"
       };
 
-      // Function should return nothing if it succeeds.
-      expect(await mailService.sendTextEmail(mailParams)).toEqual(result);
+      // Function returns void, test that no error is thrown.
+      expect(async () => await mailService.sendTextEmail(mailParams)).not.toThrow();
     });
   });
 
@@ -61,8 +61,8 @@ describe("MailService", () => {
         bodyHTML: "<h1>Ignore this, it's a test<h1>"
       };
 
-      // Function should return nothing if it succeeds.
-      expect(await mailService.sendHTMLEmail(mailParams)).toEqual(result);
+      // Function returns void, test that no error is thrown.
+      expect(async () => await mailService.sendHTMLEmail(mailParams)).not.toThrow();
     });
   });
 
@@ -80,8 +80,8 @@ describe("MailService", () => {
         }
       };
 
-      // Function should return nothing if it succeeds.
-      expect(await mailService.sendTemplatedEmail(mailParams)).toEqual(result);
+      // Function returns void, test that no error is thrown.
+      expect(async () => await mailService.sendTemplatedEmail(mailParams)).not.toThrow();
     });
   });
 });
