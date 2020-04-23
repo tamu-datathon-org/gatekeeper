@@ -79,8 +79,16 @@ jobs:
       - name: Read Results
         id: results
         run: |
-          echo "::set-output name=test-results::$( cat coverage/report_stderr.txt | awk '/Test Suites/,0' )"
-          echo "::set-output name=coverage-results::$( cat coverage/report_stdout.txt | awk '/--\|/,0' )"
+          report_stderr=$( cat coverage/report_stderr.txt | awk '/Test Suites/,0' )
+          report_stderr="${report_stderr//'%'/'%25'}"
+          report_stderr="${report_stderr//$'\n'/'%0A'}"
+          report_stderr="${report_stderr//$'\r'/'%0D'}"
+          report_stdout=$( cat coverage/report_stdout.txt | awk '/--\|/,0' )
+          report_stdout="${report_stdout//'%'/'%25'}"
+          report_stdout="${report_stdout//$'\n'/'%0A'}"
+          report_stdout="${report_stdout//$'\r'/'%0D'}"
+          echo "::set-output name=test-results::$report_stderr"
+          echo "::set-output name=coverage-results::$report_stdout"
       - name: Publish URL in comment
         uses: unsplash/comment-on-pr@master
         env:
@@ -90,7 +98,11 @@ jobs:
             **Link to code coverage report:** ${{ steps.publisher.outputs.preview-url }}
             
             **Jest Unit Test Results:**
-            ```${{steps.results.outputs.test-results}}```
+            ```
+            ${{steps.results.outputs.test-results}}
+            ```
             **Code Coverage Preview:**
-            ```${{steps.results.outputs.coverage-results}}```
+            ```
+            ${{steps.results.outputs.coverage-results}}
+            ```
           check_for_duplicate_msg: false
