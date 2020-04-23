@@ -16,7 +16,7 @@ export class MailCoreService {
    * Sends the given email data payload to the Mailgun messages API.
    * @param params MailgunPayloadDto
    */
-  sendMailPayload(params: MailgunPayloadDto): Promise<any> {
+  sendMailPayload(params: MailgunPayloadDto): Promise<void> {
     return axios.post(
       this.mailgunMessagesURL,
       {} /* Mailgun needs the payload to be in params, leave body empty */,

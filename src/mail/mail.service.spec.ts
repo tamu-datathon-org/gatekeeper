@@ -7,7 +7,7 @@ import { ResponseStatus } from "../common/dto/response-base";
 
 @Injectable()
 class MockMailCoreService {
-  async sendMailPayload(params: MailgunPayloadDto): Promise<any> {
+  async sendMailPayload(params: MailgunPayloadDto): Promise<void> {
     const requiredParams = ["to", "from", "subject"];
     if (!requiredParams.every(key => params[key])) {
       throw new Error("Required params not found");
