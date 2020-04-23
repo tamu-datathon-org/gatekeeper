@@ -57,11 +57,11 @@ jobs:
         if: failure()
         id: results
         run: |
-          report_stderr=$( cat coverage/report_stderr.txt | awk '/Test Suites/,0' )
+          report_stderr=$( cat coverage/report_stderr.txt )
           report_stderr="${report_stderr//'%'/'%25'}"
           report_stderr="${report_stderr//$'\n'/'%0A'}"
           report_stderr="${report_stderr//$'\r'/'%0D'}"
-          report_stdout=$( cat coverage/report_stdout.txt | awk '/--\|/,0' )
+          report_stdout=$( cat coverage/report_stdout.txt )
           report_stdout="${report_stdout//'%'/'%25'}"
           report_stdout="${report_stdout//$'\n'/'%0A'}"
           report_stdout="${report_stdout//$'\r'/'%0D'}"
