@@ -5,9 +5,10 @@ import { TestDatabaseModule } from "./test-database/test-database.module";
 
 describe("App Controller", () => {
   let controller: AppController;
+  let module: TestingModule;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [TestDatabaseModule, UserAuthModule],
       controllers: [AppController]
     }).compile();
@@ -18,4 +19,8 @@ describe("App Controller", () => {
   it("should be defined", () => {
     expect(controller).toBeDefined();
   });
+
+  afterAll(() => {
+    return module.close();
+  }, 10000);
 });

@@ -9,9 +9,10 @@ import { UserAuthService } from "../user-auth/user-auth.service";
 describe("AuthService", () => {
   let service: AuthService;
   let userAuthService: UserAuthService;
+  let module: TestingModule;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [TestDatabaseModule, UserAuthModule, PassportModule],
       providers: [AuthService, LocalStrategy]
     }).compile();
@@ -79,4 +80,8 @@ describe("AuthService", () => {
       );
     }
   });
+
+  afterAll(() => {
+    return module.close();
+  }, 10000);
 });
