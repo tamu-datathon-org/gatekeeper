@@ -54,7 +54,7 @@ jobs:
           echo "Jest stdout:"
           cat coverage/report_stdout.txt
       - name: Prepare Unit Test Fail Comment
-        if: faliure()
+        if: failure()
         id: results
         run: |
           report_stderr=$( cat coverage/report_stderr.txt | awk '/Test Suites/,0' )
