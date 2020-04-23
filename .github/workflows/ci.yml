@@ -87,9 +87,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           msg: |
-            *Link to code coverage report:* ${{ steps.publisher.outputs.preview-url }}
-            *Jest Test Results:*
-            ```${steps.results.outputs.test-results}```
-            *Code Coverage Preview:*
-            ```${steps.results.outputs.coverage-results}```
+            **Link to code coverage report:** ${{ steps.publisher.outputs.preview-url }}
+            
+            **Jest Unit Test Results:**
+            ```${{steps.results.outputs.test-results}}```
+            **Code Coverage Preview:**
+            ```${{steps.results.outputs.coverage-results}}```
           check_for_duplicate_msg: false

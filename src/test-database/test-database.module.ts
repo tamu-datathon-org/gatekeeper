@@ -18,7 +18,12 @@ import { MongoMemoryServer } from "mongodb-memory-server";
             Math.random()
               .toString(36)
               .substring(2, 20);
-          return { uri: `mongodb://localhost:27017/${randomDBName}` };
+          return {
+            uri: `mongodb://localhost:27017/${randomDBName}`,
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useCreateIndex: true
+          };
         }
         const mongod = new MongoMemoryServer();
         const uri = await mongod.getConnectionString();
