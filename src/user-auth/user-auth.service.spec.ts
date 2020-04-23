@@ -6,9 +6,10 @@ import { TestDatabaseModule } from "../test-database/test-database.module";
 
 describe("UserAuthService", () => {
   let service: UserAuthService;
+  let module: TestingModule;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [
         TestDatabaseModule,
         MongooseModule.forFeature([
@@ -203,4 +204,7 @@ describe("UserAuthService", () => {
     expect(user).toBeDefined();
     expect(user.email).toBe("bob@example.com");
   });
+  afterAll(() => {
+    return module.close();
+  }, 10000);
 });
