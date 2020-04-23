@@ -22,7 +22,7 @@ jobs:
       - name: 'Run Linter'
         run: npm run lint
   unit-tests:
-    if: "github.event == 'pull_request'"
+    if: "github.event_name == 'pull_request'"
     runs-on: ubuntu-latest
     timeout-minutes: 20
     services:
