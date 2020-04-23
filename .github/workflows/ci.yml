@@ -22,6 +22,7 @@ jobs:
       - name: 'Run Linter'
         run: npm run lint
   unit-tests:
+    if: ${{ github.event == "pull_request"}}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     services:
@@ -100,12 +101,24 @@ jobs:
           msg: |
             **Link to code coverage report:** ${{ steps.publisher.outputs.preview-url }}
             
-            **Jest Unit Test Results:**
+            <details><summary>Jest Unit Test Results:</summary>
+            <p>
+
             ```
             ${{steps.results.outputs.test-results}}
             ```
-            **Code Coverage Preview:**
+
+            </p>
+            </details>
+
+            <details><summary>Code Coverage Preview:</summary>
+            <p>
+
             ```
             ${{steps.results.outputs.coverage-results}}
             ```
+
+            </p>
+            </details>
+
           check_for_duplicate_msg: false
