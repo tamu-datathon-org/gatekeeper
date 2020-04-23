@@ -11,7 +11,7 @@ class MockMailCoreService {
     const requiredParams = ["to", "from", "subject"];
     if (!requiredParams.every(key => params[key])) {
       throw new Error("Required params not found");
-    } 
+    }
     return undefined;
   }
 }
@@ -45,7 +45,7 @@ describe("MailService", () => {
         emailTo: testRecipientEmail,
         subject: "Gatekeeper Test: sendTextMail",
         bodyText: "Ignore this, it's a test"
-      }
+      };
 
       // Function should return nothing if it succeeds.
       expect(await mailService.sendTextEmail(mailParams)).toEqual(undefined);
@@ -58,12 +58,10 @@ describe("MailService", () => {
         emailTo: testRecipientEmail,
         subject: "Gatekeeper Test: sendHTMLEmail",
         bodyHTML: "<h1>Ignore this, it's a test<h1>"
-      }
+      };
 
       // Function should return nothing if it succeeds.
-      expect(
-        await mailService.sendHTMLEmail(mailParams)
-      ).toEqual(undefined);
+      expect(await mailService.sendHTMLEmail(mailParams)).toEqual(undefined);
     });
   });
 
@@ -78,12 +76,12 @@ describe("MailService", () => {
           listStuff: ["The Force", "Lightsabers", "C3P0", "Seagulls"],
           randomWord: "Apricots"
         }
-      }
+      };
 
       // Function should return nothing if it succeeds.
-      expect(
-        await mailService.sendTemplatedEmail(mailParams)
-      ).toEqual(undefined);
+      expect(await mailService.sendTemplatedEmail(mailParams)).toEqual(
+        undefined
+      );
     });
   });
 });

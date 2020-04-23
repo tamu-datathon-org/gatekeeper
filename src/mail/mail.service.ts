@@ -7,8 +7,10 @@ import { MailCoreService } from "./mail-core.service";
 export class MailService {
   private readonly emailFromString = `${process.env.MAILGUN_DEFAULT_NAME} <${process.env.MAILGUN_DEFAULT_EMAIL}>`;
 
-  constructor(@Inject(MailCoreService) private mailCoreService: MailCoreService) {}
-  
+  constructor(
+    @Inject(MailCoreService) private mailCoreService: MailCoreService
+  ) {}
+
   // Sends a simple email with a plain text body.
   async sendTextEmail(
     sendEmailParams: SendEmailParamsDto
