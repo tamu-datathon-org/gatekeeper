@@ -53,7 +53,7 @@ describe("MailService", () => {
   });
 
   describe("sendHTMLEmail", () => {
-    it("should successfully send a test HTL email.", async () => {
+    it("should successfully send a test HTML email.", async () => {
       const result = { status: ResponseStatus.Success };
       const mailParams = {
         emailTo: testRecipientEmail,
@@ -67,7 +67,7 @@ describe("MailService", () => {
   });
 
   describe("sendTemplatedEmail", () => {
-    it("should successfully send a test HTL email.", async () => {
+    it("should successfully send a templated email.", async () => {
       const result = { status: ResponseStatus.Success };
       const mailParams = {
         emailTo: testRecipientEmail,
