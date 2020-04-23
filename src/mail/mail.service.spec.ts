@@ -1,14 +1,20 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { MailService } from "./mail.service";
 import { AxiosResponse } from "axios";
+import { MailCoreService } from "./mail-core.service";
+import { MailgunPayloadDto } from "./dto/mailgun-payload.dto";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 class MockMailCoreService {
-  sendMailPayload(params: Record<string, any>): Promise<AxiosResponse> {
-    return new Promise((res, reject) => {
-
-    });
+  async sendMailPayload(params: MailgunPayloadDto): Promise<AxiosResponse> {
+    const requiredParams = ["to", "from", "subject"];
+    if (!requiredParams.every(key => params[key])) {
+      throw new Error("Required params not found");
+    } 
+    return undefined;
   }
-};
+}
 
 const testRecipientEmail = "admin@tamudatathon.com";
 
@@ -17,7 +23,13 @@ describe("MailService", () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [MailService]
+      providers: [
+        MailService,
+        {
+          provide: MailCoreService,
+          useValue: new MockMailCoreService()
+        }
+      ]
     }).compile();
 
     mailService = module.get<MailService>(MailService);
@@ -29,50 +41,49 @@ describe("MailService", () => {
 
   describe("sendTextEmail", () => {
     it("should successfully send a test text email.", async () => {
-      const result = [200, "Email queued."];
+      const mailParams = {
+        emailTo: testRecipientEmail,
+        subject: "Gatekeeper Test: sendTextMail",
+        bodyText: "Ignore this, it's a test"
+      }
 
-      expect(
-        await mailService.sendTextEmail(
-          testRecipientEmail,
-          "Gatekeeper Test: sendTextMail",
-          "Ignore this, it's a test"
-        )
-      ).toEqual(result);
+      // Function should return nothing if it succeeds.
+      expect(await mailService.sendTextEmail(mailParams)).toEqual(undefined);
     });
   });
 
   describe("sendHTMLEmail", () => {
     it("should successfully send a test HTL email.", async () => {
-      const result = [200, "Email queued."];
+      const mailParams = {
+        emailTo: testRecipientEmail,
+        subject: "Gatekeeper Test: sendHTMLEmail",
+        bodyHTML: "<h1>Ignore this, it's a test<h1>"
+      }
 
+      // Function should return nothing if it succeeds.
       expect(
-        await mailService.sendHTMLEmail(
-          testRecipientEmail,
-          "Gatekeeper Test: sendHTMLMail",
-          "<h1>Ignore this, it's a test<h1>"
-        )
-      ).toEqual(result);
+        await mailService.sendHTMLEmail(mailParams)
+      ).toEqual(undefined);
     });
   });
 
   describe("sendTemplatedEmail", () => {
     it("should successfully send a test HTL email.", async () => {
-      const result = [200, "Email queued."];
-      const templateFilePath = "src/mail/templates/test.ejs";
-      const templateVariables = {
-        name: "JarJarBinks",
-        listStuff: ["The Force", "Lightsabers", "C3P0", "Seagulls"],
-        randomWord: "Apricots"
-      };
+      const mailParams = {
+        emailTo: testRecipientEmail,
+        subject: "Gatekeeper Test: sendTemplatedEmail",
+        templateFile: "test.ejs",
+        templateParams: {
+          name: "JarJarBinks",
+          listStuff: ["The Force", "Lightsabers", "C3P0", "Seagulls"],
+          randomWord: "Apricots"
+        }
+      }
 
+      // Function should return nothing if it succeeds.
       expect(
-        await mailService.sendTemplatedEmail(
-          testRecipientEmail,
-          "Gatekeeper Test: sendSingleTemplatedEmail",
-          templateFilePath,
-          templateVariables
-        )
-      ).toEqual(result);
+        await mailService.sendTemplatedEmail(mailParams)
+      ).toEqual(undefined);
     });
   });
 });

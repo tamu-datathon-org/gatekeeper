@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import axios, { AxiosResponse } from "axios";
+import { MailgunPayloadDto } from "./dto/mailgun-payload.dto";
 
 @Injectable()
 export class MailCoreService {
@@ -11,9 +12,7 @@ export class MailCoreService {
     this.mailgunApiKey = process.env.MAILGUN_API_KEY;
   }
 
-  // Private helper function to send a payload to mailgun API.
-  // Exists to reduce code redundancy.
-  sendMailPayload(params: Record<string, any>): Promise<AxiosResponse> {
+  sendMailPayload(params: MailgunPayloadDto): Promise<AxiosResponse> {
     return axios.post(
       this.mailgunMessagesURL,
       {} /* Mailgun needs the payload to be in params, leave body empty */,

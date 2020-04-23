@@ -1,5 +1,5 @@
 import * as ejs from "ejs";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Inject } from "@nestjs/common";
 import { SendEmailParamsDto } from "./dto/send-email-params.dto";
 import { MailCoreService } from "./mail-core.service";
 
@@ -7,8 +7,8 @@ import { MailCoreService } from "./mail-core.service";
 export class MailService {
   private readonly emailFromString = `${process.env.MAILGUN_DEFAULT_NAME} <${process.env.MAILGUN_DEFAULT_EMAIL}>`;
 
-  constructor(private mailCoreService: MailCoreService) {}
-
+  constructor(@Inject(MailCoreService) private mailCoreService: MailCoreService) {}
+  
   // Sends a simple email with a plain text body.
   async sendTextEmail(
     sendEmailParams: SendEmailParamsDto
@@ -31,7 +31,7 @@ export class MailService {
     };
 
     try {
-      const res = await this.mailCoreService.sendMailPayload(payload);
+      await this.mailCoreService.sendMailPayload(payload);
     } catch (err) {
       return err;
     }
@@ -59,7 +59,7 @@ export class MailService {
     };
 
     try {
-      const res = await this.mailCoreService.sendMailPayload(payload);
+      await this.mailCoreService.sendMailPayload(payload);
     } catch (err) {
       return err;
     }
@@ -77,7 +77,7 @@ export class MailService {
 
     try {
       const emailHTML = await ejs.renderFile(
-        sendEmailParams.templateFile,
+        process.env.EMAIL_TEMPLATES_DIR + sendEmailParams.templateFile,
         sendEmailParams.templateParams
       );
 
@@ -93,9 +93,8 @@ export class MailService {
         subject: sendEmailParams.subject,
         html: emailHTML
       };
-      const res = await this.mailCoreService.sendMailPayload(payload);
+      await this.mailCoreService.sendMailPayload(payload);
     } catch (err) {
-      console.log(err);
       return err;
     }
   }
