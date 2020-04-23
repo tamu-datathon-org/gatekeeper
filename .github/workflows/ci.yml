@@ -22,7 +22,7 @@ jobs:
       - name: 'Run Linter'
         run: npm run lint
   unit-tests:
-    if: "github.event_name == 'pull_request'"
+    if: "github.event_name == 'pull_request' & github.base_ref == 'master'"
     runs-on: ubuntu-latest
     timeout-minutes: 20
     services:
@@ -99,7 +99,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           msg: |
-            **Link to code coverage report:** ${{ steps.publisher.outputs.preview-url }}
+            ### Report for commit: `${{ github.sha }}`
+            Link to code coverage report: ${{ steps.publisher.outputs.preview-url }}
             
             <details><summary>Jest Unit Test Results:</summary>
             <p>
