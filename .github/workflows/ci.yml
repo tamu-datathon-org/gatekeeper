@@ -50,7 +50,7 @@ jobs:
           mv report_stderr.txt coverage/
           echo "Jest stderr:"
           cat coverage/report_stderr.txt
-          echot ""
+          echo ""
           echo "Jest stdout:"
           cat coverage/report_stdout.txt
       - name: Prepare Unit Test Fail Comment
@@ -67,7 +67,8 @@ jobs:
           report_stdout="${report_stdout//$'\r'/'%0D'}"
           echo "::set-output name=jest-stderr::$report_stderr"
           echo "::set-output name=jest-stdout::$report_stdout"
-      - name: Publish URL in comment
+      - name: Publish Jest Failure Output
+        if: failure()
         uses: unsplash/comment-on-pr@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
