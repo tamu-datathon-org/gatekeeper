@@ -13,7 +13,10 @@ export class MailService {
     @Inject(MailCoreService) private mailCoreService: MailCoreService
   ) {}
 
-  // Sends a simple email with a plain text body.
+  /**
+   * Sends an email with a text body to a single recipient.
+   * @param sendEmailParams SendEmailParamsDto
+   */
   async sendTextEmail(
     sendEmailParams: SendEmailParamsDto
   ): Promise<MailResponse> {
@@ -45,7 +48,10 @@ export class MailService {
     }
   }
 
-  // Sends a simple email with an HTML body.
+  /**
+   * Sends an email with a HTML body to a single recipient.
+   * @param sendEmailParams SendEmailParamsDto
+   */
   async sendHTMLEmail(
     sendEmailParams: SendEmailParamsDto
   ): Promise<MailResponse> {
@@ -78,6 +84,13 @@ export class MailService {
   }
 
   // Sends an email to a **single** recipient after rendering the given template.
+  /**
+   * Sends an email to a single recipient using the given template file and given template parameters.
+   * Note: The template file renderer is EJS.
+   * Note: The template file variable should contain the relative path (preferably just a file-name)
+   *   from the env variable EMAIL_TEMPLATES_DIR
+   * @param sendEmailParams SendEmailParamsDto
+   */
   async sendTemplatedEmail(
     sendEmailParams: SendEmailParamsDto
   ): Promise<MailResponse> {

@@ -12,6 +12,10 @@ export class MailCoreService {
     this.mailgunApiKey = process.env.MAILGUN_API_KEY;
   }
 
+  /**
+   * Sends the given email data payload to the Mailgun messages API.
+   * @param params MailgunPayloadDto
+   */
   sendMailPayload(params: MailgunPayloadDto): Promise<any> {
     return axios.post(
       this.mailgunMessagesURL,
