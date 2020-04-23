@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { MailgunPayloadDto } from "./dto/mailgun-payload.dto";
 
 @Injectable()
@@ -12,7 +12,7 @@ export class MailCoreService {
     this.mailgunApiKey = process.env.MAILGUN_API_KEY;
   }
 
-  sendMailPayload(params: MailgunPayloadDto): Promise<AxiosResponse> {
+  sendMailPayload(params: MailgunPayloadDto): Promise<any> {
     return axios.post(
       this.mailgunMessagesURL,
       {} /* Mailgun needs the payload to be in params, leave body empty */,

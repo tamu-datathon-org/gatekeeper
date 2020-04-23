@@ -1,7 +1,9 @@
 import * as ejs from "ejs";
 import { Injectable, Inject } from "@nestjs/common";
 import { SendEmailParamsDto } from "./dto/send-email-params.dto";
+import { MailResponse } from "./dto/mail-response";
 import { MailCoreService } from "./mail-core.service";
+import { ResponseStatus } from "../common/dto/response-base";
 
 @Injectable()
 export class MailService {
@@ -14,7 +16,7 @@ export class MailService {
   // Sends a simple email with a plain text body.
   async sendTextEmail(
     sendEmailParams: SendEmailParamsDto
-  ): Promise<Error | undefined> {
+  ): Promise<MailResponse> {
     if (!sendEmailParams.bodyText) {
       throw new Error("Email params must include body text.");
     }
@@ -34,15 +36,19 @@ export class MailService {
 
     try {
       await this.mailCoreService.sendMailPayload(payload);
+      return { status: ResponseStatus.Success };
     } catch (err) {
-      return err;
+      return {
+        status: ResponseStatus.Failure,
+        error: err
+      };
     }
   }
 
   // Sends a simple email with an HTML body.
   async sendHTMLEmail(
     sendEmailParams: SendEmailParamsDto
-  ): Promise<Error | undefined> {
+  ): Promise<MailResponse> {
     if (!sendEmailParams.bodyHTML) {
       throw new Error("Email params must include body HTML.");
     }
@@ -62,15 +68,19 @@ export class MailService {
 
     try {
       await this.mailCoreService.sendMailPayload(payload);
+      return { status: ResponseStatus.Success };
     } catch (err) {
-      return err;
+      return {
+        status: ResponseStatus.Failure,
+        error: err
+      };
     }
   }
 
   // Sends an email to a **single** recipient after rendering the given template.
   async sendTemplatedEmail(
     sendEmailParams: SendEmailParamsDto
-  ): Promise<Error | undefined> {
+  ): Promise<MailResponse> {
     if (!sendEmailParams.templateFile || !sendEmailParams.templateParams) {
       throw new Error(
         "Email params must include template file and template params"
@@ -96,8 +106,12 @@ export class MailService {
         html: emailHTML
       };
       await this.mailCoreService.sendMailPayload(payload);
+      return { status: ResponseStatus.Success };
     } catch (err) {
-      return err;
+      return {
+        status: ResponseStatus.Failure,
+        error: err
+      };
     }
   }
 }

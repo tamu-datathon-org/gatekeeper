@@ -1,18 +1,17 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { MailService } from "./mail.service";
-import { AxiosResponse } from "axios";
 import { MailCoreService } from "./mail-core.service";
 import { MailgunPayloadDto } from "./dto/mailgun-payload.dto";
 import { Injectable } from "@nestjs/common";
+import { ResponseStatus } from "../common/dto/response-base";
 
 @Injectable()
 class MockMailCoreService {
-  async sendMailPayload(params: MailgunPayloadDto): Promise<AxiosResponse> {
+  async sendMailPayload(params: MailgunPayloadDto): Promise<any> {
     const requiredParams = ["to", "from", "subject"];
     if (!requiredParams.every(key => params[key])) {
       throw new Error("Required params not found");
     }
-    return undefined;
   }
 }
 
@@ -41,6 +40,7 @@ describe("MailService", () => {
 
   describe("sendTextEmail", () => {
     it("should successfully send a test text email.", async () => {
+      const result = { status: ResponseStatus.Success };
       const mailParams = {
         emailTo: testRecipientEmail,
         subject: "Gatekeeper Test: sendTextMail",
@@ -48,12 +48,13 @@ describe("MailService", () => {
       };
 
       // Function should return nothing if it succeeds.
-      expect(await mailService.sendTextEmail(mailParams)).toEqual(undefined);
+      expect(await mailService.sendTextEmail(mailParams)).toEqual(result);
     });
   });
 
   describe("sendHTMLEmail", () => {
     it("should successfully send a test HTL email.", async () => {
+      const result = { status: ResponseStatus.Success };
       const mailParams = {
         emailTo: testRecipientEmail,
         subject: "Gatekeeper Test: sendHTMLEmail",
@@ -61,12 +62,13 @@ describe("MailService", () => {
       };
 
       // Function should return nothing if it succeeds.
-      expect(await mailService.sendHTMLEmail(mailParams)).toEqual(undefined);
+      expect(await mailService.sendHTMLEmail(mailParams)).toEqual(result);
     });
   });
 
   describe("sendTemplatedEmail", () => {
     it("should successfully send a test HTL email.", async () => {
+      const result = { status: ResponseStatus.Success };
       const mailParams = {
         emailTo: testRecipientEmail,
         subject: "Gatekeeper Test: sendTemplatedEmail",
@@ -79,9 +81,7 @@ describe("MailService", () => {
       };
 
       // Function should return nothing if it succeeds.
-      expect(await mailService.sendTemplatedEmail(mailParams)).toEqual(
-        undefined
-      );
+      expect(await mailService.sendTemplatedEmail(mailParams)).toEqual(result);
     });
   });
 });

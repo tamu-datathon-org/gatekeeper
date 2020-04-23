@@ -1,4 +1,7 @@
+import { IsEmail } from "class-validator";
+
 export class SendEmailParamsDto {
+  @IsEmail()
   emailTo: string;
   subject: string;
   emailsCC?: [string];
