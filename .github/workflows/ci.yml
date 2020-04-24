@@ -75,7 +75,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           msg: |
-            **❌ Jest Unit Test(s) failed for commit: [`${{ steps.results.outputs.short-commit }}`](https://github.com/tamu-datathon-org/gatekeeper/commits/${{ github.event.after }})**
+            **❌ Jest Unit Test(s) failed for commit [`${{ steps.results.outputs.short-commit }}`](https://github.com/tamu-datathon-org/gatekeeper/commit/${{ github.event.after }})**
 
             <details><summary>Jest stderr:</summary>
             <p>
@@ -146,7 +146,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           msg: |
-            **✅ Jest Unit Test(s) passed for commit: [`${{ steps.results.outputs.short-commit }}`](https://github.com/tamu-datathon-org/gatekeeper/commits/${{ github.event.after }})**
+            **✅ Jest Unit Test(s) passed for commit [`${{ steps.results.outputs.short-commit }}`](https://github.com/tamu-datathon-org/gatekeeper/commit/${{ github.event.after }})**
             Link to code coverage report: ${{ steps.publisher.outputs.preview-url }}
             
             <details><summary>Jest Unit Test Results:</summary>
