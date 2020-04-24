@@ -129,6 +129,7 @@ jobs:
       - name: Read Results
         id: results
         run: |
+          echo "${{ github.event }}"
           report_stderr=$( cat coverage/report_stderr.txt | awk '/Test Suites/,0' )
           report_stderr="${report_stderr//'%'/'%25'}"
           report_stderr="${report_stderr//$'\n'/'%0A'}"
