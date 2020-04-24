@@ -67,7 +67,7 @@ jobs:
           report_stdout="${report_stdout//$'\r'/'%0D'}"
           echo "::set-output name=jest-stderr::$report_stderr"
           echo "::set-output name=jest-stdout::$report_stdout"
-          echo "::set-output name=short-commit::$(git rev-parse --short ${{ github.event.after }})"
+          echo "::set-output name=short-commit::$(git rev-parse --short ${{ github.event.head_commit.message }})"
       - name: Publish Jest Failure Output
         if: failure()
         uses: unsplash/comment-on-pr@master
@@ -75,7 +75,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           msg: |
-            **❌ Jest Unit Test(s) failed for commit: [`${{ steps.results.outputs.short-commit }}`](https://github.com/tamu-datathon-org/gatekeeper/commits/${{ github.event.after }})**
+            **❌ Jest Unit Test(s) failed for commit: [`${{ steps.results.outputs.short-commit }}`](https://github.com/tamu-datathon-org/gatekeeper/commits/${{ github.event.head_commit.message }})**
 
             <details><summary>Jest stderr:</summary>
             <p>
@@ -139,14 +139,14 @@ jobs:
           report_stdout="${report_stdout//$'\r'/'%0D'}"
           echo "::set-output name=test-results::$report_stderr"
           echo "::set-output name=coverage-results::$report_stdout"
-          echo "::set-output name=short-commit::$(git rev-parse --short ${{ github.event.after }})"
+          echo "::set-output name=short-commit::$(git rev-parse --short ${{ github.event.head_commit.message }})"
       - name: Publish URL in comment
         uses: unsplash/comment-on-pr@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           msg: |
-            **✅ Jest Unit Test(s) passed for commit: [`${{ steps.results.outputs.short-commit }}`](https://github.com/tamu-datathon-org/gatekeeper/commits/${{ github.event.after }})**
+            **✅ Jest Unit Test(s) passed for commit: [`${{ steps.results.outputs.short-commit }}`](https://github.com/tamu-datathon-org/gatekeeper/commits/${{ github.event.head_commit.message }})**
             Link to code coverage report: ${{ steps.publisher.outputs.preview-url }}
             
             <details><summary>Jest Unit Test Results:</summary>
