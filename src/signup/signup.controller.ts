@@ -1,11 +1,16 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Render, Req, Post, Body } from "@nestjs/common";
+import { SignupUserDto } from "./dto/signup-use.dto";
 
-@Controller('signup')
+@Controller("signup")
 export class SignupController {
-
   @Get()
-  @Render('signup/index')
-  root() {
-    return {}
+  @Render("signup/index")
+  root(@Req() req) {
+    return { csrfToken: req.csrfToken() };
+  }
+
+  @Post()
+  signupUser(@Body() signupUserDto: SignupUserDto) {
+    console.log(signupUserDto);
   }
 }
