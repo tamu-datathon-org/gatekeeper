@@ -6,7 +6,7 @@ import { join } from "path";
 import * as cookieParser from "cookie-parser";
 import passport = require("passport");
 import csrf = require("csurf");
-import bodyParser = require('body-parser');
+import bodyParser = require("body-parser");
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {

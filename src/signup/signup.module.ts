@@ -1,11 +1,13 @@
-import { Module } from '@nestjs/common';
-import { UserAuthModule } from 'src/user-auth/user-auth.module';
-import { SignupController } from './signup.controller';
-import { SignupService } from './signup.service';
+import { Module } from "@nestjs/common";
+import { UserAuthModule } from "../user-auth/user-auth.module";
+import { SignupController } from "./signup.controller";
+import { SignupService } from "./signup.service";
+import { MailModule } from "src/mail/mail.module";
 
 @Module({
-  imports: [UserAuthModule],
+  imports: [UserAuthModule, MailModule],
   controllers: [SignupController],
-  providers: [SignupService]
+  providers: [SignupService],
+  exports: [SignupService]
 })
 export class SignupModule {}
