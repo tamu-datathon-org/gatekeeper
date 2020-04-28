@@ -1,18 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { MailService } from "./mail.service";
 import { MailCoreService } from "./mail-core.service";
-import { MailgunPayloadDto } from "./dto/mailgun-payload.dto";
-import { Injectable } from "@nestjs/common";
-
-@Injectable()
-class MockMailCoreService {
-  async sendMailPayload(params: MailgunPayloadDto): Promise<void> {
-    const requiredParams = ["to", "from", "subject"];
-    if (!requiredParams.every(key => params[key])) {
-      throw new Error("Required params not found");
-    }
-  }
-}
+import { MockMailCoreService } from './mocks/mock-mail-core.service';
 
 const testRecipientEmail = "admin@tamudatathon.com";
 
