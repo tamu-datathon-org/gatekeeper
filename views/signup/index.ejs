@@ -1,11 +1,45 @@
-<h1>This is the signup page</h1>
+<!DOCTYPE html>
+<html lang="en">
+  <%- include ("../partials/head") %>
 
-<form method="post">
-  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <body>
+    <h1 class="text-center py-5">&#x1F6E1; Gatekeeper &#x1F6E1;</h1>
 
-  Email: <input type="text" name="email">
-  Password: <input type="text" name="password">
-  Confirm Password: <input type="text" name="confirmPassword">
+    <div class="container">
+      <form method="post" style="max-width: 400px;" class="mx-auto">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <div class="form-group">
+          <label for="signupEmail">Email</label>
+          <input
+            type="email"
+            class="form-control <%= locals.userExistsError ? 'is-invalid' : null%>"
+            id="signupEmail"
+            name="email"
+          />
+          <% if (locals.userExistsError) { %>
+            <div class="invalid-feedback">A user with this email already exists.</div>
+          <% } %>
+        </div>
+        <div class="form-group">
+          <label for="signupPassword">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="signupPassword"
+            name="password"
+          />
+        </div>
+        <div class="form-group">
+          <label for="signupConfirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="signupConfirmPassword"
+          />
+        </div>
 
-  <button type="submit">Submit</button>
-</form>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </body>
+</html>
