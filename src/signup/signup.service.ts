@@ -3,7 +3,7 @@ import { UserAuthService } from "../user-auth/user-auth.service";
 import { SignupUserDto } from "./dto/signup-user.dto";
 import { CreateUserAuthDto } from "..//user-auth/dto/create-user-auth.dto";
 import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
-import { MailService } from "src/mail/mail.service";
+import { MailService } from "../mail/mail.service";
 
 @Injectable()
 export class SignupService {
@@ -22,7 +22,7 @@ export class SignupService {
       isVerified: false
     };
     const user = await this.userAuthService.create(createUserPayload);
-    
+
     await this.mailService.sendTemplatedEmail({
       emailTo: user.email,
       subject: "Activate your account!",

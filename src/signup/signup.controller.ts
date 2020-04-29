@@ -39,7 +39,7 @@ export class SignupController {
         userEmail: user.email
       });
     } catch (e) {
-      // Show error on the signup-form
+      // Show error on the signup-form.
       if(e instanceof ConflictException)
         return res.render("signup/index", {
           csrfToken: req.csrfToken(),
