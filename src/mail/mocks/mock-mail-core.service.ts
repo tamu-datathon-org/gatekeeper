@@ -1,4 +1,3 @@
-
 import { Injectable } from "@nestjs/common";
 import { MailgunPayloadDto } from "../dto/mailgun-payload.dto";
 

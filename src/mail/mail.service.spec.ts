@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { MailService } from "./mail.service";
 import { MailCoreService } from "./mail-core.service";
-import { MockMailCoreService } from './mocks/mock-mail-core.service';
+import { MockMailCoreService } from "./mocks/mock-mail-core.service";
 
 const testRecipientEmail = "admin@tamudatathon.com";
 
