@@ -5,43 +5,36 @@ import {
   Req,
   Post,
   Body,
-  Res,
   ConflictException
 } from "@nestjs/common";
-import { Response } from "express";
 import { SignupUserDto } from "./dto/signup-user.dto";
 import { SignupService } from "./signup.service";
 
 @Controller("signup")
 export class SignupController {
-  constructor(
-    private signupService: SignupService
-  ) {}
+  constructor(private signupService: SignupService) {}
 
   @Get()
-  @Render("signup/index")
   root(@Req() req) {
-    return { csrfToken: req.csrfToken() };
+    return this.renderEmailPaswwordSignupForm({ csrfToken: req.csrfToken() });
   }
 
   @Post()
-  async signupUser(
+  async signupUserEmailAndPassword(
     @Req() req,
-    @Body() signupUserDto: SignupUserDto,
-    @Res() res: Response
+    @Body() signupUserDto: SignupUserDto
   ) {
-
     try {
       const user = await this.signupService.signupUserEmailAndPassword(
         signupUserDto
       );
-      return res.render("signup/email-pwd-signup-success", {
+      return this.renderEmailPasswordSignupSuccess({
         userEmail: user.email
       });
     } catch (e) {
       // Show error on the signup-form.
-      if(e instanceof ConflictException)
-        return res.render("signup/index", {
+      if (e instanceof ConflictException)
+        return this.renderEmailPaswwordSignupForm({
           csrfToken: req.csrfToken(),
           userExistsError: true
         });
@@ -49,5 +42,15 @@ export class SignupController {
       // TODO: Change this to a standard way of handling 5XX errors.
       throw e;
     }
+  }
+
+  @Render("signup/email-pwd-signup-success")
+  private renderEmailPasswordSignupSuccess(params) {
+    return params;
+  }
+
+  @Render("signup/index")
+  private renderEmailPaswwordSignupForm(params) {
+    return params;
   }
 }

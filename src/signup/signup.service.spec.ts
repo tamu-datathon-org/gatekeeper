@@ -24,7 +24,7 @@ describe("SignupService", () => {
         MailService,
         {
           provide: MailCoreService,
-          useValue: new MockMailCoreService(),
+          useValue: new MockMailCoreService()
         },
         UserAuthService
       ]

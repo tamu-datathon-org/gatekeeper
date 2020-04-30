@@ -12,6 +12,11 @@ export class SignupService {
     private mailService: MailService
   ) {}
 
+  /**
+   * Uses UserAuthService to signup a user with the given email and password
+   * @param  {SignupUserDto} signupUserDto
+   * @returns Promise
+   */
   async signupUserEmailAndPassword(
     signupUserDto: SignupUserDto
   ): Promise<UserAuth> {
