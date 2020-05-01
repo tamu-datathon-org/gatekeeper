@@ -13,7 +13,7 @@ export class SignupService {
   ) {}
 
   /**
-   * Uses UserAuthService to signup a user with the given email and password
+   * Uses UserAuthService to signup a user with the given email and password.
    * @param  {SignupUserDto} signupUserDto
    * @returns Promise
    */

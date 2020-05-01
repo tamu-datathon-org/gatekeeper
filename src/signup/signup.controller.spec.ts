@@ -13,9 +13,16 @@ const mockCsrfGenerator = (): string => mockCsrfToken;
 const csrfReq = {
   csrfToken: mockCsrfGenerator
 };
+const mockBaseResponse = {
+  render: (path, params): Record<string, any> => {
+    return { path, params };
+  }
+};
 
 class MockSignupService {
-  async signupUserEmailAndPassword(signupUserDto: SignupUserDto) {
+  async signupUserEmailAndPassword(
+    signupUserDto: SignupUserDto
+  ): Promise<Record<string, any>> {
     if (!signupUserDto.email)
       throw new BadRequestException(
         "Email is required to be a non-empty string"
@@ -71,12 +78,15 @@ describe("Signup Controller", () => {
       email: mockEmail,
       password: mockPassword
     };
-    const res = await controller.signupUserEmailAndPassword(
+
+    const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
-      signupUserDto
+      signupUserDto,
+      mockBaseResponse
     );
-    // Response will be the templateParams for renderer.
-    expect(res.userEmail).toBe(signupUserDto.email);
+    // Response will be the templatePath and templateParams for renderer.
+    expect(path).toBe("signup/email-pwd-signup-success");
+    expect(params.userEmail).toBe(signupUserDto.email);
   });
 
   it("should return the signup form with an error if user already exists", async () => {
@@ -84,13 +94,16 @@ describe("Signup Controller", () => {
       email: "already@exists.com",
       password: mockPassword
     };
-    const res = await controller.signupUserEmailAndPassword(
+
+    const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
-      signupUserDto
+      signupUserDto,
+      mockBaseResponse
     );
-    // Response will be the templateParams for renderer.
-    expect(res.csrfToken).toBe(mockCsrfToken);
-    expect(res.userExistsError).toBe(true);
+    // Response will be the templatePath and templateParams for renderer.
+    expect(path).toBe("signup/index");
+    expect(params.csrfToken).toBe(mockCsrfToken);
+    expect(params.userExistsError).toBe(true);
   });
 
   it("should return a bad request exception on an email-password signup with an empty email", async () => {
@@ -100,7 +113,11 @@ describe("Signup Controller", () => {
     };
 
     try {
-      await controller.signupUserEmailAndPassword(csrfReq, signupUserDto);
+      await controller.signupUserEmailAndPassword(
+        csrfReq,
+        signupUserDto,
+        mockBaseResponse
+      );
     } catch (e) {
       // Extract error from NestJS Exception Filter.
       const err = e.message;
@@ -117,7 +134,11 @@ describe("Signup Controller", () => {
     };
 
     try {
-      await controller.signupUserEmailAndPassword(csrfReq, signupUserDto);
+      await controller.signupUserEmailAndPassword(
+        csrfReq,
+        signupUserDto,
+        mockBaseResponse
+      );
     } catch (e) {
       // Extract error from NestJS Exception Filter.
       const err = e.message;
