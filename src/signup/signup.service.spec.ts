@@ -8,20 +8,19 @@ import { MockMailCoreService } from "../mail/mocks/mock-mail-core.service";
 import { MailCoreService } from "../mail/mail-core.service";
 
 class MockUserAuthService {
-  async create(createUserAuth: CreateUserAuthDto) {
-    if (!createUserAuth.email)
-      throw new BadRequestException();
+  async create(
+    createUserAuth: CreateUserAuthDto
+  ): Promise<Record<string, any>> {
+    if (!createUserAuth.email) throw new BadRequestException();
 
     // Existing user errors should be tested using spyOn and mockImplementation.
 
     if (createUserAuth.authType === "EmailAndPassword") {
-      if (!createUserAuth.password)
-        throw new BadRequestException();
+      if (!createUserAuth.password) throw new BadRequestException();
     } else {
-      if (!createUserAuth.oAuthToken)
-        throw new BadRequestException();
+      if (!createUserAuth.oAuthToken) throw new BadRequestException();
     }
-    return {email: createUserAuth.email};
+    return { email: createUserAuth.email };
   }
 }
 
@@ -37,7 +36,7 @@ describe("SignupService", () => {
         MailService,
         {
           provide: MailCoreService,
-          useValue: new MockMailCoreService(),
+          useValue: new MockMailCoreService()
         },
         {
           provide: UserAuthService,
