@@ -17,7 +17,6 @@ import { SignupModule } from "./signup/signup.module";
     MailModule,
     SignupModule
   ],
-  controllers: [AppController, LoginController],
-  providers: []
+  controllers: [AppController, LoginController]
 })
 export class AppModule {}

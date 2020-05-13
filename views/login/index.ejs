@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include ("../partials/head") %>
+
+  <body>
+    <h1 class="text-center py-5">&#x1F6E1; Gatekeeper - Login &#x1F6E1;</h1>
+
+    <div class="container">
+      <form method="post" style="max-width: 400px;" class="mx-auto">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <div class="form-group">
+          <label for="signupEmail">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="loginEmail"
+            name="email"
+          />
+        </div>
+        <div class="form-group">
+          <label for="signupPassword">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="loginPassword"
+            name="password"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </body>
+</html>
