@@ -14,16 +14,19 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
       clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
       callbackURL: 'http://localhost:3000/signup/google/callback',
       passReqToCallback: true,
-      scope: ["profile"]
+      scope: ["profile", "email"]
     });
   }
 
-  async validate(request: any, accessToken: string, refreshToken: string, profile, done: Function) {
-    console.log("Passport called Google Validate function")
-    console.log(profile)
+  async validate(request: any, accessToken: string, refreshToken: string, profile, done: (err: any, id?: any) => void) {
+    console.log(profile);
     const user = {
-      id: profile.id
+      id: profile.id,
+      name: profile.displayName,
+      email: profile.emails[0].value
     }
+
+    console.log(`Google login for user: ${user}`)
 
     try {
       // TODO: Add logic to register user to database and other needed validation.
