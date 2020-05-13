@@ -1,5 +1,9 @@
 import { Model } from "mongoose";
-import { Injectable } from "@nestjs/common";
+import {
+  Injectable,
+  BadRequestException,
+  ConflictException
+} from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { UserAuth } from "./interfaces/user-auth.interface";
 import * as bcrypt from "bcrypt";
@@ -19,18 +23,22 @@ export class UserAuthService {
   async create(createUserAuth: CreateUserAuthDto): Promise<UserAuth> {
     let existingUser: UserAuth | undefined = undefined;
     if (!createUserAuth.email)
-      throw new Error("Email is required to be a non-empty string");
+      throw new BadRequestException(
+        "Email is required to be a non-empty string"
+      );
     try {
       existingUser = await this.findByEmail(createUserAuth.email);
     } catch (e) {
       existingUser = undefined;
     }
     if (existingUser) {
-      throw new Error("A user with the same email address already exists");
+      throw new ConflictException(
+        "A user with the same email address already exists"
+      );
     }
     if (createUserAuth.authType === "EmailAndPassword") {
       if (!createUserAuth.password)
-        throw new Error(
+        throw new BadRequestException(
           "Password is required if the authType is EmailAndPassword"
         );
       const { password, ...userAuth } = createUserAuth;
@@ -44,7 +52,7 @@ export class UserAuthService {
       return createdUserAuth.save();
     } else {
       if (!createUserAuth.oAuthToken)
-        throw new Error(
+        throw new BadRequestException(
           "oAuthToken is required if the authType is not EmailAndPassword"
         );
       const createdUserAuth = new this.userAuthModel({
