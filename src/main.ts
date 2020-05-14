@@ -7,7 +7,6 @@ import * as cookieParser from "cookie-parser";
 import passport = require("passport");
 import csrf = require("csurf");
 import bodyParser = require("body-parser");
-import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -34,9 +33,6 @@ async function bootstrap(): Promise<void> {
   app.useStaticAssets(join(__dirname, "..", "public"));
   app.setBaseViewsDir(join(__dirname, "..", "views"));
   app.setViewEngine("ejs");
-
-  // For validation
-  app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(3000);
 }

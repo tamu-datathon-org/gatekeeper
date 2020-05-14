@@ -6,6 +6,7 @@ import { UserAuthModule } from "./user-auth/user-auth.module";
 import { MailModule } from "./mail/mail.module";
 import { AppController } from "./app.controller";
 import { SignupModule } from "./signup/signup.module";
+import { ValidatorService } from "./validator/validator.service";
 
 @Module({
   imports: [
