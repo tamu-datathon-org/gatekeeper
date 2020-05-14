@@ -1,12 +1,19 @@
-# gatekeeper
-Central Authentication Service for Datathon Apps (Registration, forms, etc)
+<h1 align="center">
+  :european_castle:
+  gatekeeper
+  :european_castle:
+</h1>
 
-## Used Frameworks
+<p align="center">
+  Central Authentication Service for Datathon Apps (Registration, forms, etc)
+</p>
+
+## :package: Used Frameworks
 - Web App Framework: https://docs.nestjs.com/
 - Database ODM (Object Database Mapping): https://mongoosejs.com/
 - Database: https://www.mongodb.com/
 
-## Running the app
+## :bullettrain_side: Running the app
 ```bash
 # development (you can load the site through http://localhost:4000)
 $ npm run dev
@@ -24,7 +31,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## :white_check_mark: Test
 ```bash
 # unit tests
 $ npm run test
