@@ -14,6 +14,7 @@ module.exports = {
     "import/no-default-export": "error",
     "import/default": "off",
     "import/named": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": 0
   },
   parserOptions: {

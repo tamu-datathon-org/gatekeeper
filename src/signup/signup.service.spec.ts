@@ -57,7 +57,8 @@ describe("SignupService", () => {
   it("should be able to signup a user with email and password and send email", async () => {
     const signupPayload = {
       email: "testy@mcface.com",
-      password: "TestPassword"
+      password: "TestPassword",
+      confirmPassword: "TestPassword"
     };
 
     const sendEmailFunc = jest.spyOn(mailService, "sendTemplatedEmail");
@@ -71,7 +72,8 @@ describe("SignupService", () => {
   it("should propagate the user conflict error for a user that already exists", async () => {
     const signupPayload = {
       email: "already@exists.com",
-      password: "TestPassword"
+      password: "TestPassword",
+      confirmPassword: "TestPassword"
     };
 
     jest.spyOn(userAuthService, "create").mockImplementation(() => {
@@ -91,7 +93,8 @@ describe("SignupService", () => {
   it("should propagate the bad request error for an empty email string", async () => {
     const signupPayload = {
       email: "",
-      password: "TestPassword"
+      password: "TestPassword",
+      confirmPassword: "TestPassword"
     };
 
     jest.spyOn(userAuthService, "create").mockImplementation(() => {
@@ -111,7 +114,8 @@ describe("SignupService", () => {
   it("should propagate the bad request error for an empty password", async () => {
     const signupPayload = {
       email: "testy@mcface.com",
-      password: ""
+      password: "",
+      confirmPassword: ""
     };
 
     jest.spyOn(userAuthService, "create").mockImplementation(() => {
