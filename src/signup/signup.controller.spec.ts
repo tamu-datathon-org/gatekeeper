@@ -14,14 +14,14 @@ const mockCsrfGenerator = (): string => mockCsrfToken;
 const csrfReq = {
   csrfToken: mockCsrfGenerator
 };
-const baseResponse = {
+const response = {
   code: 200,
   render: (path, params): Record<string, any> => {
     return { path, params };
   },
   status: (statusCode: number) => {
-    baseResponse.code = statusCode;
-    return baseResponse
+    response.code = statusCode;
+    return response
   }
 };
 
@@ -76,7 +76,6 @@ describe("Signup Controller", () => {
 
   it("should return a signup form with a CSRF token", () => {
     const res = controller.root(csrfReq);
-    // Response will be the templateParams for renderer.
     expect(res.csrfToken).toBe(mockCsrfToken);
   });
 
@@ -90,9 +89,8 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      baseResponse
+      response
     );
-    // Response will be the templatePath and templateParams for renderer.
     expect(path).toBe("signup/email-pwd-signup-success");
     expect(params.userEmail).toBe(signupUserDto.email);
   });
@@ -107,10 +105,9 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      baseResponse
+      response
     );
-    // Response will be the templatePath and templateParams for renderer.
-    expect(baseResponse.code).toBe(409);
+    expect(response.code).toBe(409);
     expect(path).toBe("signup/index");
     expect(params.csrfToken).toBe(mockCsrfToken);
     expect(params.emailPrefill).toBe("already@exists.com");
@@ -127,9 +124,9 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      baseResponse
+      response
     );
-    expect(baseResponse.code).toBe(400);
+    expect(response.code).toBe(400);
     expect(path).toBe("signup/index");
     expect(params.csrfToken).toBe(mockCsrfToken);
     expect(params.emailError).toBe(controller.controllerErrors.invalidEmail);
@@ -145,9 +142,9 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      baseResponse
+      response
     );
-    expect(baseResponse.code).toBe(400);
+    expect(response.code).toBe(400);
     expect(path).toBe("signup/index");
     expect(params.csrfToken).toBe(mockCsrfToken);
     expect(params.emailError).toBe(controller.controllerErrors.invalidEmail);
@@ -163,9 +160,9 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      baseResponse
+      response
     );
-    expect(baseResponse.code).toBe(400);
+    expect(response.code).toBe(400);
     expect(path).toBe("signup/index");
     expect(params.csrfToken).toBe(mockCsrfToken);
     expect(params.emailPrefill).toBe(mockEmail);
@@ -182,9 +179,9 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      baseResponse
+      response
     );
-    expect(baseResponse.code).toBe(400);
+    expect(response.code).toBe(400);
     expect(path).toBe("signup/index");
     expect(params.csrfToken).toBe(mockCsrfToken);
     expect(params.emailPrefill).toBe(mockEmail);
@@ -201,9 +198,9 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      baseResponse
+      response
     );
-    expect(baseResponse.code).toBe(400);
+    expect(response.code).toBe(400);
     expect(path).toBe("signup/index");
     expect(params.csrfToken).toBe(mockCsrfToken);
     expect(params.emailPrefill).toBe(mockEmail);
