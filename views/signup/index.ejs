@@ -39,6 +39,7 @@
             type="password"
             class="form-control <%= locals.confirmPasswordError ? 'is-invalid' : null%>"
             id="signupConfirmPassword"
+            name="confirmPassword"
           />
           <% if (locals.confirmPasswordError) { %>
             <div class="invalid-feedback"><%= locals.confirmPasswordError %></div>

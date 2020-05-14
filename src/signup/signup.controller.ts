@@ -14,6 +14,13 @@ import { ValidatorService } from "../validator/validator.service";
 
 @Controller("signup")
 export class SignupController {
+  public readonly controllerErrors = {
+    invalidEmail: "Please enter a valid email.",
+    invalidPassword: "A password must contain atleast 6 characters.",
+    invalidConfirmPassword: "Value must match the given password.",
+    userExists: "A user with this email already exists."
+  }
+
   constructor(
     private signupService: SignupService,
     private validatorService: ValidatorService
@@ -32,19 +39,19 @@ export class SignupController {
     @Res() res
   ) {
     // Validate signupUserDto.
-    const validationErrors = {};
+    let validationErrors = undefined;
     if (!signupUserDto.email ||
         !this.validatorService.validateEmail(signupUserDto.email))
-      validationErrors["emailError"] = "Please enter a valid email.";
+        validationErrors = { emailError: this.controllerErrors.invalidEmail };
     else if (!signupUserDto.password ||
       !this.validatorService.validatePassword(signupUserDto.password))
-      validationErrors["passwordError"] = "A password must contain atleast 6 characters.";
+      validationErrors = { passwordError: this.controllerErrors.invalidPassword };
     else if (!signupUserDto.confirmPassword || 
       signupUserDto.confirmPassword !== signupUserDto.password)
-      validationErrors["confirmPasswordError"] = "Value must match the given password.";
+      validationErrors = { confirmPasswordError: this.controllerErrors.invalidConfirmPassword };
     
-    if (validationErrors) 
-      return res.render("signup/index", {
+    if (validationErrors)
+      return res.status(400).render("signup/index", {
         csrfToken: req.csrfToken(),
         emailPrefill: signupUserDto.email,
         ...validationErrors
@@ -60,10 +67,10 @@ export class SignupController {
     } catch (e) {
       // Show user-already-exists error on the signup-form.
       if (e instanceof ConflictException)
-        return res.render("signup/index", {
+        return res.status(409).render("signup/index", {
           csrfToken: req.csrfToken(),
           emailPrefill: signupUserDto.email,
-          emailError: "A user with this email already exists."
+          emailError: this.controllerErrors.userExists
         });
 
       // TODO: Change this to a standard way of handling 5XX errors.
