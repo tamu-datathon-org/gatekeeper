@@ -19,7 +19,7 @@ export class SignupController {
     invalidPassword: "A password must contain atleast 6 characters.",
     invalidConfirmPassword: "Value must match the given password.",
     userExists: "A user with this email already exists."
-  }
+  };
 
   constructor(
     private signupService: SignupService,
@@ -40,16 +40,26 @@ export class SignupController {
   ) {
     // Validate signupUserDto.
     let validationErrors = undefined;
-    if (!signupUserDto.email ||
-        !this.validatorService.validateEmail(signupUserDto.email))
-        validationErrors = { emailError: this.controllerErrors.invalidEmail };
-    else if (!signupUserDto.password ||
-      !this.validatorService.validatePassword(signupUserDto.password))
-      validationErrors = { passwordError: this.controllerErrors.invalidPassword };
-    else if (!signupUserDto.confirmPassword || 
-      signupUserDto.confirmPassword !== signupUserDto.password)
-      validationErrors = { confirmPasswordError: this.controllerErrors.invalidConfirmPassword };
-    
+    if (
+      !signupUserDto.email ||
+      !this.validatorService.validateEmail(signupUserDto.email)
+    )
+      validationErrors = { emailError: this.controllerErrors.invalidEmail };
+    else if (
+      !signupUserDto.password ||
+      !this.validatorService.validatePassword(signupUserDto.password)
+    )
+      validationErrors = {
+        passwordError: this.controllerErrors.invalidPassword
+      };
+    else if (
+      !signupUserDto.confirmPassword ||
+      signupUserDto.confirmPassword !== signupUserDto.password
+    )
+      validationErrors = {
+        confirmPasswordError: this.controllerErrors.invalidConfirmPassword
+      };
+
     if (validationErrors)
       return res.status(400).render("signup/index", {
         csrfToken: req.csrfToken(),

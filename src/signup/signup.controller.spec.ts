@@ -21,7 +21,7 @@ const response = {
   },
   status: (statusCode: number) => {
     response.code = statusCode;
-    return response
+    return response;
   }
 };
 
@@ -166,7 +166,9 @@ describe("Signup Controller", () => {
     expect(path).toBe("signup/index");
     expect(params.csrfToken).toBe(mockCsrfToken);
     expect(params.emailPrefill).toBe(mockEmail);
-    expect(params.passwordError).toBe(controller.controllerErrors.invalidPassword);
+    expect(params.passwordError).toBe(
+      controller.controllerErrors.invalidPassword
+    );
   });
 
   it("should return the signup form with an error if given an invalid password", async () => {
@@ -185,7 +187,9 @@ describe("Signup Controller", () => {
     expect(path).toBe("signup/index");
     expect(params.csrfToken).toBe(mockCsrfToken);
     expect(params.emailPrefill).toBe(mockEmail);
-    expect(params.passwordError).toBe(controller.controllerErrors.invalidPassword);
+    expect(params.passwordError).toBe(
+      controller.controllerErrors.invalidPassword
+    );
   });
 
   it("should return the signup form with an error if confirmPassword does not match password", async () => {
@@ -204,6 +208,8 @@ describe("Signup Controller", () => {
     expect(path).toBe("signup/index");
     expect(params.csrfToken).toBe(mockCsrfToken);
     expect(params.emailPrefill).toBe(mockEmail);
-    expect(params.confirmPasswordError).toBe(controller.controllerErrors.invalidConfirmPassword);
+    expect(params.confirmPasswordError).toBe(
+      controller.controllerErrors.invalidConfirmPassword
+    );
   });
 });
