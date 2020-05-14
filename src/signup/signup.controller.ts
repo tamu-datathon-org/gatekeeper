@@ -6,12 +6,10 @@ import {
   Post,
   Body,
   ConflictException,
-  Res,
-  UseGuards
+  Res
 } from "@nestjs/common";
 import { SignupUserDto } from "./dto/signup-user.dto";
 import { SignupService } from "./signup.service";
-import { AuthGuard } from "@nestjs/passport";
 
 @Controller("signup")
 export class SignupController {
@@ -47,17 +45,5 @@ export class SignupController {
       // TODO: Change this to a standard way of handling 5XX errors.
       throw e;
     }
-  }
-
-  @Get("google")
-  @UseGuards(AuthGuard('google'))
-  googleLogin() {
-    console.log("Google login ENDPOINT called")
-  }
-
-  @Get("google/callback")
-  @UseGuards(AuthGuard('google'))
-  googleLoginCallback(@Req() req) {
-    console.log("Google login CALLBACK called")
   }
 }
