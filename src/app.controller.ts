@@ -1,6 +1,5 @@
-import { Controller, Post, UseGuards, Get, Req } from "@nestjs/common";
+import { Controller, UseGuards, Get, Req } from "@nestjs/common";
 import { ResponseBase, ResponseStatus } from "./common/dto/response-base";
-import { LoginGuard } from "./auth/login.guard";
 import { UserAuthService } from "./user-auth/user-auth.service";
 import { Request } from "express";
 import { UserAuth } from "./user-auth/interfaces/user-auth.interface";
@@ -11,16 +10,6 @@ type RequestWithUser = Request & { user: UserAuth };
 @Controller()
 export class AppController {
   constructor(private readonly userAuthService: UserAuthService) {}
-
-  @Post("/login")
-  @UseGuards(LoginGuard)
-  login(@Req() req: RequestWithUser): ResponseBase & { userAuthId: string } {
-    return {
-      userAuthId: req.user.id,
-      status: ResponseStatus.Success
-    };
-  }
-
   // THESE ENDPOINTS BELOW ARE TEMPORARY, REMOVE LATER
   @UseGuards(AuthenticatedGuard)
   @Get("/me")
