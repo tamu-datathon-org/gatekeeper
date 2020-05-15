@@ -15,6 +15,7 @@
             class="form-control <%= locals.emailError ? 'is-invalid' : null%>"
             id="loginEmail"
             name="username"
+            value="<%= locals.emailPrefill ? locals.emailPrefill : null %>"
           /> <!--Input name must be "username" for passport authentication strategy-->
           <% if (locals.emailError) { %>
             <div class="invalid-feedback"><%= locals.emailError %></div>

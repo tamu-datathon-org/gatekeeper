@@ -1,8 +1,9 @@
-import { Controller, Get, Render, Req, UseGuards, Post, Res } from "@nestjs/common";
+import { Controller, Get, Render, Req, UseGuards, Post, Res, UseFilters } from "@nestjs/common";
 import { LoginGuard } from "../auth/login.guard";
 import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 import { AuthService } from "src/auth/auth.service";
 import { AuthGuard } from "@nestjs/passport";
+import { LoginRootExceptionFilter } from './filters/login-root-exception.filter';
 
 type RequestWithUser = Request & { user: UserAuth };
 
@@ -24,6 +25,7 @@ export class LoginController {
     return { csrfToken: req.csrfToken() };
   }
 
+  @UseFilters(new LoginRootExceptionFilter()) // Need exception filter to handle guard fails.
   @UseGuards(LoginGuard)
   @Post()
   loginEmailAndPassword(@Req() req: RequestWithUser, @Res() res) {
@@ -31,6 +33,7 @@ export class LoginController {
     return res.redirect("/login/main")
   }
 
+  //  THIS IS A TEMPORARY TEST ENDPOINT. Remove later.
   @Get("main")
   @UseGuards(AuthGuard("jwt"))
   testMain() {
