@@ -9,16 +9,16 @@
       <form method="post" style="max-width: 400px;" class="mx-auto">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
         <div class="form-group">
-          <label for="signupEmail">Email</label>
+          <label for="loginEmail">Email</label>
           <input
             type="email"
             class="form-control"
             id="loginEmail"
-            name="email"
-          />
+            name="username"
+          /> <!--Input name must be "username" for passport authentication strategy-->
         </div>
         <div class="form-group">
-          <label for="signupPassword">Password</label>
+          <label for="loginPassword">Password</label>
           <input
             type="password"
             class="form-control"
@@ -29,12 +29,19 @@
         <div class="text-center">
           <button type="submit" class="btn btn-primary text-center mx-auto">Submit</button>
         </div>
-        <div class="oauth-login-btns text-center mt-4">
-          <button class="btn">
+        <div class="oauth-login-btns text-center">
+          <a class="btn btn-primary google-login-btn" href="/login/google">
+            <i class="fab fa-google"></i>
             Login with Google
-          </button>
+          </a>
+          <a class="btn btn-primary facebook-login-btn" href="/login/facebook">
+            <i class="fab fa-facebook-f"></i>
+            Login with Facebook
+          </a>
         </div>
       </form>
     </div>
+
+  <%- include ("../partials/scripts") %>
   </body>
 </html>
