@@ -16,7 +16,7 @@ import { ValidatorService } from "../validator/validator.service";
 export class SignupController {
   public readonly controllerErrors = {
     invalidEmail: "Please enter a valid email.",
-    invalidPassword: "A password must contain atleast 6 characters.",
+    invalidPassword: "A password must contain at least 6 characters.",
     invalidConfirmPassword: "Value must match the given password.",
     userExists: "A user with this email already exists."
   };
