@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include ("../partials/head") %>
+
+  <body>
+    <h1 class="text-center py-5">&#x1F6E1; Gatekeeper &#x1F6E1;</h1>
+
+    <div class="container">
+      <form method="post" style="max-width: 400px;" class="mx-auto">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+        <div class="form-group">
+          <label for="signupEmail">Email</label>
+          <input
+            type="email"
+            class="form-control <%= locals.emailError ? 'is-invalid' : null%>"
+            id="signupEmail"
+            name="email"
+            value="<%= locals.emailPrefill ? locals.emailPrefill : null%>"
+          />
+          <% if (locals.emailError) { %>
+            <div class="invalid-feedback"><%= locals.emailError %></div>
+          <% } %>
+        </div>
+        <div class="form-group">
+          <label for="signupPassword">Password</label>
+          <input
+            type="password"
+            class="form-control <%= locals.passwordError ? 'is-invalid' : null%>"
+            id="signupPassword"
+            name="password"
+          />
+          <% if (locals.passwordError) { %>
+            <div class="invalid-feedback"><%= locals.passwordError %></div>
+          <% } %>
+        </div>
+        <div class="form-group">
+          <label for="signupConfirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            class="form-control <%= locals.confirmPasswordError ? 'is-invalid' : null%>"
+            id="signupConfirmPassword"
+            name="confirmPassword"
+          />
+          <% if (locals.confirmPasswordError) { %>
+            <div class="invalid-feedback"><%= locals.confirmPasswordError %></div>
+          <% } %>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  <%- include ("../partials/head") %>
+  </body>
+</html>

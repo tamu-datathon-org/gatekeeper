@@ -63,7 +63,11 @@ describe("UserAuthService", () => {
         isVerified: false
       });
     } catch (e) {
-      expect(e.message).toEqual(
+      // Extract error from NestJS Exception Filter.
+      const err = e.message;
+      expect(err.statusCode).toEqual(409);
+      expect(err.error).toEqual("Conflict");
+      expect(err.message).toEqual(
         "A user with the same email address already exists"
       );
     }
@@ -77,7 +81,11 @@ describe("UserAuthService", () => {
         isVerified: false
       });
     } catch (e) {
-      expect(e.message).toEqual(
+      // Extract error from NestJS Exception Filter.
+      const err = e.message;
+      expect(err.statusCode).toEqual(400);
+      expect(err.error).toEqual("Bad Request");
+      expect(err.message).toEqual(
         "Password is required if the authType is EmailAndPassword"
       );
     }
@@ -89,7 +97,11 @@ describe("UserAuthService", () => {
         isVerified: false
       });
     } catch (e) {
-      expect(e.message).toEqual(
+      // Extract error from NestJS Exception Filter.
+      const err = e.message;
+      expect(err.statusCode).toEqual(400);
+      expect(err.error).toEqual("Bad Request");
+      expect(err.message).toEqual(
         "Password is required if the authType is EmailAndPassword"
       );
     }
@@ -103,7 +115,11 @@ describe("UserAuthService", () => {
         isVerified: false
       });
     } catch (e) {
-      expect(e.message).toEqual(
+      // Extract error from NestJS Exception Filter.
+      const err = e.message;
+      expect(err.statusCode).toEqual(400);
+      expect(err.error).toEqual("Bad Request");
+      expect(err.message).toEqual(
         "oAuthToken is required if the authType is not EmailAndPassword"
       );
     }
@@ -115,7 +131,11 @@ describe("UserAuthService", () => {
         isVerified: false
       });
     } catch (e) {
-      expect(e.message).toEqual(
+      // Extract error from NestJS Exception Filter.
+      const err = e.message;
+      expect(err.statusCode).toEqual(400);
+      expect(err.error).toEqual("Bad Request");
+      expect(err.message).toEqual(
         "oAuthToken is required if the authType is not EmailAndPassword"
       );
     }
@@ -129,7 +149,11 @@ describe("UserAuthService", () => {
         isVerified: false
       });
     } catch (e) {
-      expect(e.message).toEqual("Email is required to be a non-empty string");
+      // Extract error from NestJS Exception Filter.
+      const err = e.message;
+      expect(err.statusCode).toEqual(400);
+      expect(err.error).toEqual("Bad Request");
+      expect(err.message).toEqual("Email is required to be a non-empty string");
     }
   });
 
