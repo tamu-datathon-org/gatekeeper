@@ -1,10 +1,15 @@
-
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException, UnauthorizedException } from '@nestjs/common';
-import { Response } from 'express';
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+  UnauthorizedException
+} from "@nestjs/common";
+import { Response } from "express";
 
 @Catch(HttpException)
 export class LoginRootExceptionFilter implements ExceptionFilter {
-  private templatePath = "login/index"
+  private templatePath = "login/index";
 
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -17,7 +22,7 @@ export class LoginRootExceptionFilter implements ExceptionFilter {
         csrfToken: request.csrfToken(),
         emailPrefill: request.body.username,
         emailError: "Email and password combination is invalid."
-      })
+      });
     }
 
     // TODO: Add better error handling if needed.

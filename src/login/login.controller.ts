@@ -1,9 +1,18 @@
-import { Controller, Get, Render, Req, UseGuards, Post, Res, UseFilters } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Render,
+  Req,
+  UseGuards,
+  Post,
+  Res,
+  UseFilters
+} from "@nestjs/common";
 import { LoginGuard } from "../auth/login.guard";
 import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
-import { AuthService } from "src/auth/auth.service";
+import { AuthService } from "../auth/auth.service";
 import { AuthGuard } from "@nestjs/passport";
-import { LoginRootExceptionFilter } from './filters/login-root-exception.filter';
+import { LoginRootExceptionFilter } from "./filters/login-root-exception.filter";
 
 type RequestWithUser = Request & { user: UserAuth };
 
@@ -30,7 +39,7 @@ export class LoginController {
   @Post()
   loginEmailAndPassword(@Req() req: RequestWithUser, @Res() res) {
     this.applyJwt(req, res);
-    return res.redirect("/login/main")
+    return res.redirect("/login/main");
   }
 
   //  THIS IS A TEMPORARY TEST ENDPOINT. Remove later.
