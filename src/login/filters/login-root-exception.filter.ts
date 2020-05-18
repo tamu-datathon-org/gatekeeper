@@ -15,7 +15,6 @@ export class LoginRootExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest();
-    const status = exception.getStatus();
 
     if (exception instanceof UnauthorizedException) {
       return response.status(401).render(this.templatePath, {

@@ -33,6 +33,10 @@ export class AuthService {
     }
   }
 
+  /**
+   * Generate a JWT token for the user
+   * @param user UserAuth object
+   */
   getJwtForUser(user: UserAuth) {
     const payload = {
       email: user.email

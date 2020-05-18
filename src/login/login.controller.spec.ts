@@ -2,7 +2,6 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { LoginController } from "./login.controller";
 import { AuthModule } from "../auth/auth.module";
 import { TestDatabaseModule } from "../test-database/test-database.module";
-import { JwtService } from "@nestjs/jwt";
 
 const mockCsrfToken = "test-csrf";
 const mockCsrfGenerator = (): string => mockCsrfToken;
@@ -11,7 +10,6 @@ const csrfReq = {
 };
 
 describe("Login Controller", () => {
-  let jwtService: JwtService;
   let controller: LoginController;
 
   beforeEach(async () => {
@@ -21,7 +19,6 @@ describe("Login Controller", () => {
     }).compile();
 
     controller = module.get<LoginController>(LoginController);
-    jwtService = module.get<JwtService>(JwtService);
   });
 
   it("should be defined", () => {

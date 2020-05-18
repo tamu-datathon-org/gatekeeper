@@ -4,10 +4,18 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { UserAuth } from "../../user-auth/interfaces/user-auth.interface";
 import { AuthService } from "../auth.service";
 
+/**
+ * Strategy to allow requests to authenticate with a username and password in the request body.
+ */
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, "local") {
   constructor(private authService: AuthService) {
-    super();
+    // change the expected request fields to be email and password
+    // instead of username and password
+    super({
+      usernameField: "email",
+      passwordField: "password"
+    });
   }
 
   /**

@@ -4,7 +4,7 @@ import { PassportModule } from "@nestjs/passport";
 import { AuthService } from "./auth.service";
 import { LocalStrategy } from "./strategies/local.strategy";
 import { LocalSerializer } from "./local.serializer";
-import { JwtModule } from "@nestjs/jwt";
+import { JwtModule, JwtModuleOptions } from "@nestjs/jwt";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 
 @Module({
@@ -13,7 +13,9 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
     PassportModule.register({ session: true, defaultStrategy: "local" }),
     JwtModule.registerAsync({
       // Needs to be async as it uses env variable that's loaded after module is registered.
-      useFactory: () => ({ secret: process.env.AUTH_JWT_SECRET })
+      useFactory: (): JwtModuleOptions => ({
+        secret: process.env.AUTH_JWT_SECRET
+      })
     })
   ],
   providers: [AuthService, LocalStrategy, LocalSerializer, JwtStrategy],
