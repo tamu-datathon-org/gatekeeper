@@ -7,6 +7,7 @@ import { MailModule } from "./mail/mail.module";
 import { AppController } from "./app.controller";
 import { LoginController } from "./login/login.controller";
 import { SignupModule } from "./signup/signup.module";
+import { UserModule } from "./user/user.module";
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { SignupModule } from "./signup/signup.module";
     EasyconfigModule.register({ safe: true }),
     MongooseModule.forRoot(process.env.MONGODB_URL),
     MailModule,
-    SignupModule
+    SignupModule,
+    UserModule
   ],
   controllers: [AppController, LoginController]
 })
