@@ -1,0 +1,23 @@
+.oauth-login-btns {
+  a {
+    padding: 0 0.7em 0 0;
+    margin-top: 10px;
+  }
+  
+  a > i {
+    padding: 0.7em;
+    margin-right: 0.2em;
+    background: rgba(0, 0, 0, 0.15)
+  }
+
+  .google-login-btn {
+    background-color: $splash-light-purple;
+    color: #fff;
+  }
+
+  .google-login-btn:hover {
+    background-color: darken($splash-light-purple, 5%);
+    color: #fff;
+  }
+}
+

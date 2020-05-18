@@ -21,7 +21,6 @@ export class AuthService {
    */
   async validateUser(email: string, password: string): Promise<UserAuth> {
     const user = await this.userAuthService.findByEmail(email);
-
     if (
       user &&
       user.authType === "EmailAndPassword" &&
@@ -52,6 +51,10 @@ export class AuthService {
     return user;
   }
 
+  /**
+   * Generate a JWT token for the user
+   * @param user UserAuth object
+   */
   getJwtForUser(user: UserAuth) {
     const payload = {
       email: user.email
