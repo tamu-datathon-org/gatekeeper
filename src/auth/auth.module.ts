@@ -19,7 +19,13 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
       })
     })
   ],
-  providers: [AuthService, LocalStrategy, LocalSerializer, JwtStrategy, GoogleStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    LocalSerializer,
+    JwtStrategy,
+    GoogleStrategy
+  ],
   exports: [PassportModule, AuthService]
 })
 export class AuthModule {}

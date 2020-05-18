@@ -16,8 +16,6 @@ import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 import { LoginRootExceptionFilter } from "./filters/login-root-exception.filter";
 import { AuthGuard } from "@nestjs/passport";
 
-type RequestWithUser = Request & { user: UserAuth };
-
 @Controller("login")
 export class LoginController {
   constructor(private authService: AuthService) {}
@@ -45,9 +43,13 @@ export class LoginController {
   @Get("google/callback")
   // The Strategy (GoogleStrategy) does not re-validate for this endpoint
   @UseGuards(AuthGuard("Google"))
-  googleLoginCallback(@Req() req,
-  @Param("r") redirect: string | undefined, @Res() res) {
-    this.applyJwt(req.user, res);
+  googleLoginCallback(
+    @GetUserAuth() user: UserAuth,
+    @Param("r") redirect: string | undefined,
+    @Res() res
+  ) {
+    // TODO: Add error handling for when user does not exist. That mostly shouldn't happen due to the Google AuthGuard
+    this.applyJwt(user, res);
     // TODO: make sure the redirect is only a relative url and cannot be a URL outside (like https://google.com)
     return res.redirect(redirect || "/auth/me");
   }
