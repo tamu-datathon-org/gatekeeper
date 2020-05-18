@@ -35,7 +35,11 @@ export class AuthService {
       throw new NotFoundException("Invalid Credentials");
     }
   }
-
+  /**
+   * Validate a user login with OAuthProviders
+   * @param {string} email User email
+   * @param {OAuthProviders} provider The type of provider being used
+   */
   async validateOAuthUser(
     email: string,
     provider: OAuthProviders

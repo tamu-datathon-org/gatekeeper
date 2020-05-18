@@ -17,12 +17,20 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "Google") {
     super({
       clientID: process.env.GOOGLE_OAUTH_CLIENT_ID,
       clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/login/google/callback",
+      callbackURL: process.env.GOOGLE_OAUTH_CALLBACK_URL,
       passReqToCallback: true,
       scope: ["profile", "email"]
     });
   }
-
+  /**
+   * Validates a login through an OAuth provider.
+   * NOTE: If a user is not found, it automatically creates the user.
+   * @param  {any} request Request object
+   * @param  {string} accessToken OAuth Access Token
+   * @param  {string} refreshToken OAuth Refresh Token
+   * @param  {} profile The user profile from the oAuth provider
+   * @param  {(err:any,id?:any)=>void} done Passport strategy callback function
+   */
   async validate(
     request: any,
     accessToken: string,

@@ -19,7 +19,11 @@ import { AuthGuard } from "@nestjs/passport";
 @Controller("login")
 export class LoginController {
   constructor(private authService: AuthService) {}
-
+  /**
+   * Gets the JWT for the given user and attaches it to the response in a cookie.
+   * @param {UserAuth} user The UserAuth object for the given user
+   * @param {} res The request response object to attach the JWT to
+  */
   private applyJwt(user: UserAuth, res) {
     const jwt = this.authService.getJwtForUser(user);
     return res.cookie("accessToken", jwt, {
@@ -50,7 +54,7 @@ export class LoginController {
   ) {
     // TODO: Add error handling for when user does not exist. That mostly shouldn't happen due to the Google AuthGuard
     this.applyJwt(user, res);
-    // TODO: make sure the redirect is only a relative url and cannot be a URL outside (like https://google.com)
+    // TODO: Based on how redirects are done, implement the propagation of the URL from the original request to the callback
     return res.redirect(redirect || "/auth/me");
   }
 
