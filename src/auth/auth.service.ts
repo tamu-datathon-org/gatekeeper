@@ -2,10 +2,14 @@ import { Injectable } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 import { UserAuthService } from "../user-auth/user-auth.service";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userAuthService: UserAuthService) {}
+  constructor(
+    private readonly userAuthService: UserAuthService,
+    private readonly jwtService: JwtService
+  ) {}
 
   /**
    * Validate User using Email and Password
@@ -14,7 +18,6 @@ export class AuthService {
    */
   async validateUser(email: string, password: string): Promise<UserAuth> {
     const user = await this.userAuthService.findByEmail(email);
-
     if (
       user &&
       user.authType === "EmailAndPassword" &&
@@ -28,5 +31,18 @@ export class AuthService {
     } else {
       throw new Error("Invalid Credentials");
     }
+  }
+
+  /**
+   * Generate a JWT token for the user
+   * @param user UserAuth object
+   */
+  getJwtForUser(user: UserAuth) {
+    const payload = {
+      email: user.email
+    };
+    return this.jwtService.sign(payload, {
+      expiresIn: process.env.AUTH_JWT_EXPIRATION
+    });
   }
 }

@@ -2,7 +2,7 @@ import { Injectable, ExecutionContext } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 
 /**
- * Guard for Login Endpoint
+ * Guard for Login Endpoint. Parses the login request and uses the local.strategy to firgure out the passed email and password
  */
 @Injectable()
 export class LoginGuard extends AuthGuard("local") {

@@ -64,7 +64,7 @@ describe("UserAuthService", () => {
       });
     } catch (e) {
       // Extract error from NestJS Exception Filter.
-      const err = e.message;
+      const err = e.response;
       expect(err.statusCode).toEqual(409);
       expect(err.error).toEqual("Conflict");
       expect(err.message).toEqual(
@@ -82,7 +82,7 @@ describe("UserAuthService", () => {
       });
     } catch (e) {
       // Extract error from NestJS Exception Filter.
-      const err = e.message;
+      const err = e.response;
       expect(err.statusCode).toEqual(400);
       expect(err.error).toEqual("Bad Request");
       expect(err.message).toEqual(
@@ -98,7 +98,7 @@ describe("UserAuthService", () => {
       });
     } catch (e) {
       // Extract error from NestJS Exception Filter.
-      const err = e.message;
+      const err = e.response;
       expect(err.statusCode).toEqual(400);
       expect(err.error).toEqual("Bad Request");
       expect(err.message).toEqual(
@@ -116,7 +116,7 @@ describe("UserAuthService", () => {
       });
     } catch (e) {
       // Extract error from NestJS Exception Filter.
-      const err = e.message;
+      const err = e.response;
       expect(err.statusCode).toEqual(400);
       expect(err.error).toEqual("Bad Request");
       expect(err.message).toEqual(
@@ -132,7 +132,7 @@ describe("UserAuthService", () => {
       });
     } catch (e) {
       // Extract error from NestJS Exception Filter.
-      const err = e.message;
+      const err = e.response;
       expect(err.statusCode).toEqual(400);
       expect(err.error).toEqual("Bad Request");
       expect(err.message).toEqual(
@@ -150,7 +150,7 @@ describe("UserAuthService", () => {
       });
     } catch (e) {
       // Extract error from NestJS Exception Filter.
-      const err = e.message;
+      const err = e.response;
       expect(err.statusCode).toEqual(400);
       expect(err.error).toEqual("Bad Request");
       expect(err.message).toEqual("Email is required to be a non-empty string");

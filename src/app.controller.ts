@@ -1,32 +1,19 @@
-import { Controller, Post, UseGuards, Get, Req } from "@nestjs/common";
+import { Controller, Get, UseGuards } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
 import { ResponseBase, ResponseStatus } from "./common/dto/response-base";
-import { LoginGuard } from "./auth/login.guard";
-import { UserAuthService } from "./user-auth/user-auth.service";
-import { Request } from "express";
 import { UserAuth } from "./user-auth/interfaces/user-auth.interface";
-import { AuthenticatedGuard } from "./auth/authenticated.guard";
-
-type RequestWithUser = Request & { user: UserAuth };
+import { GetUserAuth } from "./user-auth/user-auth.decorator";
+import { UserAuthService } from "./user-auth/user-auth.service";
 
 @Controller()
 export class AppController {
   constructor(private readonly userAuthService: UserAuthService) {}
-
-  @Post("/login")
-  @UseGuards(LoginGuard)
-  login(@Req() req: RequestWithUser): ResponseBase & { userAuthId: string } {
-    return {
-      userAuthId: req.user.id,
-      status: ResponseStatus.Success
-    };
-  }
-
   // THESE ENDPOINTS BELOW ARE TEMPORARY, REMOVE LATER
-  @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthGuard("jwt"))
   @Get("/me")
-  me(@Req() req: RequestWithUser): ResponseBase & { user: UserAuth } {
+  me(@GetUserAuth() user: UserAuth): ResponseBase & { yourEmail: string } {
     return {
-      user: req.user,
+      yourEmail: user.email,
       status: ResponseStatus.Success
     };
   }

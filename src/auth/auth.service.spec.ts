@@ -5,6 +5,7 @@ import { UserAuthModule } from "../user-auth/user-auth.module";
 import { PassportModule } from "@nestjs/passport";
 import { TestDatabaseModule } from "../test-database/test-database.module";
 import { UserAuthService } from "../user-auth/user-auth.service";
+import { JwtModule } from "@nestjs/jwt";
 
 describe("AuthService", () => {
   let service: AuthService;
@@ -13,7 +14,12 @@ describe("AuthService", () => {
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
-      imports: [TestDatabaseModule, UserAuthModule, PassportModule],
+      imports: [
+        TestDatabaseModule,
+        UserAuthModule,
+        PassportModule,
+        JwtModule.register({ secret: "TEST_SECRET" })
+      ],
       providers: [AuthService, LocalStrategy]
     }).compile();
 
