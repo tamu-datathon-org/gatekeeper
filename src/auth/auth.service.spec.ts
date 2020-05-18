@@ -123,7 +123,9 @@ describe("AuthService", () => {
       "george@example.com",
       "Google"
     );
-    await expect(validatePromise).rejects.toThrow("User signed up with a different authentication provider");
+    await expect(validatePromise).rejects.toThrow(
+      "User signed up with a different authentication provider"
+    );
   });
 
   afterAll(() => {
