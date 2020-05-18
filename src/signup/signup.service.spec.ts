@@ -84,9 +84,9 @@ describe("SignupService", () => {
       await service.signupUserEmailAndPassword(signupPayload);
     } catch (e) {
       // Extract error from NestJS Exception Filter.
-      const err = e.message;
+      const err = e.response;
       expect(err.statusCode).toEqual(409);
-      expect(err.error).toEqual("Conflict");
+      expect(err.message).toEqual("Conflict");
     }
   });
 
@@ -105,9 +105,9 @@ describe("SignupService", () => {
       await service.signupUserEmailAndPassword(signupPayload);
     } catch (e) {
       // Extract error from NestJS Exception Filter.
-      const err = e.message;
+      const err = e.response;
       expect(err.statusCode).toEqual(400);
-      expect(err.error).toEqual("Bad Request");
+      expect(err.message).toEqual("Bad Request");
     }
   });
 
@@ -126,9 +126,9 @@ describe("SignupService", () => {
       await service.signupUserEmailAndPassword(signupPayload);
     } catch (e) {
       // Extract error from NestJS Exception Filter.
-      const err = e.message;
+      const err = e.response;
       expect(err.statusCode).toEqual(400);
-      expect(err.error).toEqual("Bad Request");
+      expect(err.message).toEqual("Bad Request");
     }
   });
 });
