@@ -6,6 +6,7 @@ import { PassportModule } from "@nestjs/passport";
 import { TestDatabaseModule } from "../test-database/test-database.module";
 import { UserAuthService } from "../user-auth/user-auth.service";
 import { JwtModule } from "@nestjs/jwt";
+import { NotFoundException } from "@nestjs/common";
 
 describe("AuthService", () => {
   let service: AuthService;
@@ -85,6 +86,44 @@ describe("AuthService", () => {
         "User signed up with a different authentication provider"
       );
     }
+  });
+
+  it("should validate a user with an OAuth account", async () => {
+    const userAuth = await userAuthService.create({
+      authType: "Google",
+      email: "george@example.com",
+      isVerified: true,
+      oAuthToken: "test"
+    });
+
+    const userAuthReturned = await service.validateOAuthUser(
+      "george@example.com",
+      "Google"
+    );
+    expect(userAuthReturned.id).toEqual(userAuth.id);
+  });
+
+  it("should fail oAuth validation when validating a non-existent user", async () => {
+    const validatePromise = service.validateOAuthUser(
+      "george@example.com",
+      "Google"
+    );
+    await expect(validatePromise).rejects.toThrow(NotFoundException);
+  });
+
+  it("should fail oAuth validation when validating an EmailAndPassword user", async () => {
+    const userAuth = await userAuthService.create({
+      authType: "EmailAndPassword",
+      email: "george@example.com",
+      password: "Testing123",
+      isVerified: false
+    });
+
+    const validatePromise = service.validateOAuthUser(
+      "george@example.com",
+      "Google"
+    );
+    await expect(validatePromise).rejects.toThrow("User signed up with a different authentication provider");
   });
 
   afterAll(() => {

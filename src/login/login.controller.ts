@@ -23,7 +23,7 @@ export class LoginController {
    * Gets the JWT for the given user and attaches it to the response in a cookie.
    * @param {UserAuth} user The UserAuth object for the given user
    * @param {} res The request response object to attach the JWT to
-  */
+   */
   private applyJwt(user: UserAuth, res) {
     const jwt = this.authService.getJwtForUser(user);
     return res.cookie("accessToken", jwt, {
