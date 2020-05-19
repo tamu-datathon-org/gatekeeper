@@ -112,7 +112,7 @@ describe("AuthService", () => {
   });
 
   it("should fail oAuth validation when validating an EmailAndPassword user", async () => {
-    const userAuth = await userAuthService.create({
+    await userAuthService.create({
       authType: "EmailAndPassword",
       email: "george@example.com",
       password: "Testing123",
