@@ -10,7 +10,7 @@ export class AppController {
   constructor(private readonly userAuthService: UserAuthService) {}
   // THESE ENDPOINTS BELOW ARE TEMPORARY, REMOVE LATER
   @UseGuards(AuthGuard("jwt"))
-  @Get("/auth/me")
+  @Get("/me")
   me(@GetUserAuth() user: UserAuth): ResponseBase & { yourEmail: string } {
     return {
       yourEmail: user.email,
