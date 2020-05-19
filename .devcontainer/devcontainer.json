@@ -12,7 +12,7 @@
 		"terminal.integrated.shell.linux": "/bin/bash"
   },
   
-  "forwardPorts": [4000, 3000],
+  "forwardPorts": [4000, 3000, 35721],
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
