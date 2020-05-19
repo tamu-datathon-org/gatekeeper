@@ -7,7 +7,7 @@ import {
   Req,
   Res,
   UseFilters,
-  UseGuards
+  UseGuards,
 } from "@nestjs/common";
 import { GetUserAuth } from "../user-auth/user-auth.decorator";
 import { AuthService } from "../auth/auth.service";
@@ -34,13 +34,17 @@ export class LoginController {
 
   @Get("/")
   @Render("login/index")
-  root(@Req() req) {
-    return { csrfToken: req.csrfToken() };
+  root(@Req() req, @Param("r") redirect: string | undefined) {
+
+    return { 
+      csrfToken: req.csrfToken(),
+      redirectLink: redirect || "/auth/me"
+    };
   }
 
   @Get("google")
   @UseGuards(AuthGuard("Google"))
-  googleLogin() {
+  googleLogin(@Param("r") redirect: string | undefined) {
     // Passport handles redirects to google's login pages.
   }
 
@@ -48,12 +52,14 @@ export class LoginController {
   // The Strategy (GoogleStrategy) does not re-validate for this endpoint
   @UseGuards(AuthGuard("Google"))
   googleLoginCallback(
+    @Req() req,
     @GetUserAuth() user: UserAuth,
-    @Param("r") redirect: string | undefined,
     @Res() res
   ) {
     // TODO: Add error handling for when user does not exist. That mostly shouldn't happen due to the Google AuthGuard
     this.applyJwt(user, res);
+    const redirect = req.session.redirect;
+    req.session.redirect = null;
     // TODO: Based on how redirects are done, implement the propagation of the URL from the original request to the callback
     return res.redirect(redirect || "/auth/me");
   }
