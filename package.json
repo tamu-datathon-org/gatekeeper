@@ -59,6 +59,7 @@
     "@nestjs/cli": "^7.1.5",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.13",
+    "@types/passport-google-oauth20": "^2.0.3",
     "@types/bcrypt": "^3.0.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/ejs": "^3.0.2",
