@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException
+} from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import {
   UserAuth,
@@ -6,6 +10,7 @@ import {
 } from "../user-auth/interfaces/user-auth.interface";
 import { UserAuthService } from "../user-auth/user-auth.service";
 import { JwtService } from "@nestjs/jwt";
+import { AuthProviderException } from "./exceptions/auth-provider.exception";
 
 @Injectable()
 export class AuthService {
@@ -27,10 +32,10 @@ export class AuthService {
       (await bcrypt.compare(password, user.passwordHash))
     ) {
       return user;
-    } else if (user.authType !== "EmailAndPassword") {
-      throw new Error(
-        "User signed up with a different authentication provider"
-      );
+    } else if (user && user.authType !== "EmailAndPassword") {
+      throw new AuthProviderException(user.authType, 401);
+    } else if (user) {
+      throw new UnauthorizedException("Invalid Credentials");
     } else {
       throw new NotFoundException("Invalid Credentials");
     }
@@ -47,10 +52,9 @@ export class AuthService {
     const user = await this.userAuthService.findByEmail(email);
 
     if (!user) throw new NotFoundException("Invalid Credentials");
-    if (user.authType !== provider)
-      throw new Error(
-        "User signed up with a different authentication provider"
-      );
+    if (user.authType !== provider) {
+      throw new AuthProviderException(user.authType, 401);
+    }
 
     return user;
   }

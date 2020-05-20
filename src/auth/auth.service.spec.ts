@@ -82,9 +82,7 @@ describe("AuthService", () => {
       );
       expect(userAuthReturned).toBeNull();
     } catch (e) {
-      expect(e.message).toEqual(
-        "User signed up with a different authentication provider"
-      );
+      expect(e.message).toEqual("Google");
     }
   });
 
@@ -123,9 +121,7 @@ describe("AuthService", () => {
       "george@example.com",
       "Google"
     );
-    await expect(validatePromise).rejects.toThrow(
-      "User signed up with a different authentication provider"
-    );
+    await expect(validatePromise).rejects.toThrow("EmailAndPassword");
   });
 
   afterAll(() => {

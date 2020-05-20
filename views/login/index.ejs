@@ -6,7 +6,7 @@
     <h1 class="text-center py-5">&#x1F6E1; Gatekeeper - Login &#x1F6E1;</h1>
 
     <div class="container">
-      <form method="post" style="max-width: 400px;" class="mx-auto">
+      <form method="post" action="/auth/login?r=<%= locals.redirectLink %>" style="max-width: 400px;" class="mx-auto">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
         <div class="form-group">
           <label for="loginEmail">Email</label>

@@ -15,6 +15,7 @@ import { LoginGuard } from "../auth/login.guard";
 import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 import { LoginRootExceptionFilter } from "./filters/login-root-exception.filter";
 import { AuthGuard } from "@nestjs/passport";
+import { LoginProviderExceptionFilter } from "./filters/login-provider-exception-filter";
 
 @Controller("login")
 export class LoginController {
@@ -42,12 +43,14 @@ export class LoginController {
   }
 
   @Get("google")
+  @UseFilters(new LoginProviderExceptionFilter())
   @UseGuards(AuthGuard("Google"))
   googleLogin() {
     // Passport handles redirects to google's login pages.
   }
 
   @Get("google/callback")
+  @UseFilters(new LoginProviderExceptionFilter())
   // The Strategy (GoogleStrategy) does not re-validate for this endpoint
   @UseGuards(AuthGuard("Google"))
   googleLoginCallback(@Req() req, @GetUserAuth() user: UserAuth, @Res() res) {
@@ -65,6 +68,7 @@ export class LoginController {
     // Passport handles redirects to google's login pages.
   }
 
+  @UseFilters(new LoginProviderExceptionFilter())
   @Get("facebook/callback")
   // The Strategy (GoogleStrategy) does not re-validate for this endpoint
   @UseGuards(AuthGuard("Facebook"))
@@ -77,7 +81,7 @@ export class LoginController {
     return res.redirect(redirect || "/auth/me");
   }
 
-  @UseFilters(new LoginRootExceptionFilter()) // Need exception filter to handle guard fails.
+  @UseFilters(LoginRootExceptionFilter, LoginProviderExceptionFilter) // Need exception filter to handle guard fails (maintain order).
   @UseGuards(LoginGuard) // used to parse out the login credentials and generate a user
   @Post("/")
   loginEmailAndPassword(

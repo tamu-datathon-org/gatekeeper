@@ -41,7 +41,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "Facebook") {
     done: (err: any, id?: any) => void
   ) {
     const userEmail = profile.emails[0].value;
-    
+
     try {
       const user = await this.authService.validateOAuthUser(
         userEmail,
@@ -60,7 +60,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "Facebook") {
         return done(null, newUser);
       }
 
-      return done(e, null);
+      throw e;
     }
   }
 }
