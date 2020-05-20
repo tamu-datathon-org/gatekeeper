@@ -6,6 +6,7 @@ import { LocalStrategy } from "./strategies/local.strategy";
 import { LocalSerializer } from "./local.serializer";
 import { JwtModule, JwtModuleOptions } from "@nestjs/jwt";
 import { GoogleStrategy } from "./strategies/google.strategy";
+import { FacebookStrategy } from "./strategies/facebook.strategy";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 
 @Module({
@@ -24,7 +25,8 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
     LocalStrategy,
     LocalSerializer,
     JwtStrategy,
-    GoogleStrategy
+    GoogleStrategy,
+    FacebookStrategy
   ],
   exports: [PassportModule, AuthService]
 })

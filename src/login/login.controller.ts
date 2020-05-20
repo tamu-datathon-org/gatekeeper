@@ -59,6 +59,20 @@ export class LoginController {
     return res.redirect(redirect || "/auth/me");
   }
 
+  @Get("facebook")
+  @UseGuards(AuthGuard("Facebook"))
+  facebookLogin() {
+    // Passport handles redirects to google's login pages.
+  }
+
+  @Get("facebook/callback")
+  // The Strategy (GoogleStrategy) does not re-validate for this endpoint
+  @UseGuards(AuthGuard("Facebook"))
+  facebookLoginCallback(@Req() req) {
+    console.log(req.user);
+    return "Howdy";
+  }
+
   @UseFilters(new LoginRootExceptionFilter()) // Need exception filter to handle guard fails.
   @UseGuards(LoginGuard) // used to parse out the login credentials and generate a user
   @Post("/")
