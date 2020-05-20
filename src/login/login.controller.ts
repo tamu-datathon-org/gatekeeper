@@ -68,9 +68,13 @@ export class LoginController {
   @Get("facebook/callback")
   // The Strategy (GoogleStrategy) does not re-validate for this endpoint
   @UseGuards(AuthGuard("Facebook"))
-  facebookLoginCallback(@Req() req) {
-    console.log(req.user);
-    return "Howdy";
+  facebookLoginCallback(@Req() req, @GetUserAuth() user: UserAuth, @Res() res) {
+    // TODO: Add error handling for when user does not exist. That mostly shouldn't happen due to the Facebook AuthGuard
+    this.applyJwt(user, res);
+    const redirect = req.session.redirect;
+    req.session.redirect = null;
+    // TODO: Based on how redirects are done, implement the propagation of the URL from the original request to the callback
+    return res.redirect(redirect || "/auth/me");
   }
 
   @UseFilters(new LoginRootExceptionFilter()) // Need exception filter to handle guard fails.
