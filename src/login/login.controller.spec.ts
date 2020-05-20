@@ -26,7 +26,7 @@ describe("Login Controller", () => {
   });
 
   it("should return a login form with a CSRF token", () => {
-    const res = controller.root(csrfReq);
+    const res = controller.root(csrfReq, "/auth/me");
     expect(res.csrfToken).toBe(mockCsrfToken);
   });
 });

@@ -47,16 +47,20 @@
     "nestjs-easyconfig": "^1.8.10",
     "node-sass": "^4.14.1",
     "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
-    "rxjs": "^6.5.5"
+    "rxjs": "^6.5.5",
+    "uuid": "^8.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.1.5",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.13",
+    "@types/passport-google-oauth20": "^2.0.3",
     "@types/bcrypt": "^3.0.0",
     "@types/cookie-parser": "^1.4.2",
     "@types/ejs": "^3.0.2",

@@ -3,7 +3,7 @@
   <%- include ("../partials/head") %>
 
   <body>
-    <h1 class="text-center py-5">&#x1F6E1; Gatekeeper &#x1F6E1;</h1>
+    <h1 class="text-center py-5">&#x1F6E1; Gatekeeper - Signup &#x1F6E1;</h1>
 
     <div class="container">
       <form method="post" style="max-width: 400px;" class="mx-auto">
@@ -45,10 +45,24 @@
             <div class="invalid-feedback"><%= locals.confirmPasswordError %></div>
           <% } %>
         </div>
-
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+        <div class="text-center my-3">
+          - OR -
+        </div>
+        <div class="oauth-login-btns text-center">
+          <a class="btn btn-primary google-login-btn" href="/auth/login/google">
+            <i class="fab fa-google"></i>
+            Signup with Google
+          </a>
+          <a class="btn btn-primary facebook-login-btn" href="/auth/login/facebook">
+            <i class="fab fa-facebook-f"></i>
+            Signup with Facebook
+          </a>
+        </div>
       </form>
     </div>
-  <%- include ("../partials/head") %>
+  <%- include ("../partials/scripts") %>
   </body>
 </html>

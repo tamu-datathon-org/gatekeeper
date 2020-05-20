@@ -5,6 +5,8 @@ import { AuthService } from "./auth.service";
 import { LocalStrategy } from "./strategies/local.strategy";
 import { LocalSerializer } from "./local.serializer";
 import { JwtModule, JwtModuleOptions } from "@nestjs/jwt";
+import { GoogleStrategy } from "./strategies/google.strategy";
+import { FacebookStrategy } from "./strategies/facebook.strategy";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 
 @Module({
@@ -18,7 +20,14 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
       })
     })
   ],
-  providers: [AuthService, LocalStrategy, LocalSerializer, JwtStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    LocalSerializer,
+    JwtStrategy,
+    GoogleStrategy,
+    FacebookStrategy
+  ],
   exports: [PassportModule, AuthService]
 })
 export class AuthModule {}
