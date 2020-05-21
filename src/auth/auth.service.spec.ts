@@ -5,13 +5,15 @@ import { UserAuthModule } from "../user-auth/user-auth.module";
 import { PassportModule } from "@nestjs/passport";
 import { TestDatabaseModule } from "../test-database/test-database.module";
 import { UserAuthService } from "../user-auth/user-auth.service";
-import { JwtModule } from "@nestjs/jwt";
+import { JwtModule, JwtService } from "@nestjs/jwt";
 import { NotFoundException } from "@nestjs/common";
+import { UserAuth } from "src/user-auth/interfaces/user-auth.interface";
 
 describe("AuthService", () => {
   let service: AuthService;
   let userAuthService: UserAuthService;
   let module: TestingModule;
+  let jwtService: JwtService;
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
@@ -26,6 +28,7 @@ describe("AuthService", () => {
 
     service = module.get<AuthService>(AuthService);
     userAuthService = module.get<UserAuthService>(UserAuthService);
+    jwtService = module.get<JwtService>(JwtService);
   });
 
   it("should be defined", () => {
@@ -122,6 +125,25 @@ describe("AuthService", () => {
       "Google"
     );
     await expect(validatePromise).rejects.toThrow("EmailAndPassword");
+  });
+
+  it("should add a valid auth JWT to a response", async () => {
+    const user = {
+      email: "testy@mctest.com",
+      isVerified: false,
+      authType: "EmailAndPassword"
+    }
+    let res = {
+      cookie: (key, val, opt) => { 
+        this[key] = val; 
+        return this;
+      }
+    }
+    res = service.applyJwt(<UserAuth>user, res);
+    expect(res["accessToken"]).toBeDefined();
+    // Check that JWT is valid and has user email.
+    const payload = jwtService.verify(res["accessToken"]);
+    expect(payload.email).toEqual("testy@mctest.com");
   });
 
   afterAll(() => {
