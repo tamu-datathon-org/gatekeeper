@@ -242,7 +242,7 @@ describe("Signup Controller", () => {
 
   it("should return a success message and auto-login a valid confirmation", async () => {
     jest.spyOn(signupService, "confirmUserSignup").mockImplementation(async () => {
-      return { email: "testy@mctestface.com" } as UserAuth; // UserAuthService returns null when user does not exist.
+      return { email: "testy@mctestface.com" } as UserAuth;
     });
 
     const { path, params } = await controller.confirmSignup(
@@ -254,5 +254,21 @@ describe("Signup Controller", () => {
 
     expect(path).toBe("signup/verification-success");
     expect(params.redirectLink).toBe("/auth/me");
+  });
+
+  it("should return a failure screen for an invalid confirmation", async () => {
+    jest.spyOn(signupService, "confirmUserSignup").mockImplementation(async () => {
+      throw new Error(); // Mimics JWT errors and user not found errors.
+    });
+
+    const { path, params } = await controller.confirmSignup(
+      csrfReq,
+      "/auth/me",
+      "test.user.jwt",
+      response
+    );
+    
+    expect(response.code).toEqual(400);
+    expect(path).toBe("signup/verification-failure");
   });
 });

@@ -58,6 +58,8 @@ export class SignupService {
     const userPayload = this.jwtService.verify(userJwt); // Verify returns jwt payload and fails if JWT is invalid.
     const user = await this.userAuthService.findByEmail(userPayload.email);
     if (!user) throw new Error("Invalid user");
+    user.isVerified = true;
+    user.save();
     return user;
   }
 }
