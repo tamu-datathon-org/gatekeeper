@@ -25,12 +25,12 @@
 // https://getbootstrap.com/docs/4.0/examples/sign-in/signin.css
 // with some changes to target just signup body
 // ================================================
-html.loginPage,
-body.loginPage {
+html.AuthFormPage,
+body.AuthFormPage {
   min-height: 100%;
 }
 
-body.loginPage {
+body.AuthFormPage {
   display: -ms-flexbox;
   display: -webkit-box;
   display: flex;
@@ -44,7 +44,7 @@ body.loginPage {
   background-color: #f5f5f5;
 }
 
-.loginPage {
+.AuthFormPage {
   .form-signin {
     width: 100%;
     max-width: 400px;

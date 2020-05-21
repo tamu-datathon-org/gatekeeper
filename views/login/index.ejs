@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html class="loginPage" lang="en">
+<html class="AuthFormPage" lang="en">
 <%- include ("../partials/head") %>
 
-<body class="loginPage text-center">
+<body class="AuthFormPage text-center">
   <form class="form-signin mx-auto" method="post" action="/auth/login?r=<%= locals.redirectLink %>">
     <!-- csrf token for integrity :) -->
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     <!-- logo/image -->
     <!-- TODO: change the image link to static image -->
     <img class="mb-4" src="/auth/static/img/main.png" alt="" width="72" height="72" />
-    <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
+    <h1 class="h3 mb-3 font-weight-normal">Log in</h1>
 
-    <p>Sign in to continue to your application</p>
+    <p>to continue to your application</p>
 
     <!-- EMAIL -->
     <div id="email-input-div" class="text-left form-input-div <%= locals.emailError ? 'input-invalid' : null%>">
@@ -49,11 +49,11 @@
     <div class="oauth-login-btns text-center">
       <a class="btn btn-block btn-outline-primary" href="/auth/login/google?r=<%= locals.redirectLink %>">
         <i class="fab fa-google"></i>
-        Login with Google
+        Log in with Google
       </a>
       <a class="btn btn-block btn-outline-primary" href="/auth/login/facebook?r=<%= locals.redirectLink %>">
         <i class="fab fa-facebook-f"></i>
-        Login with Facebook
+        Log in with Facebook
       </a>
     </div>
 
