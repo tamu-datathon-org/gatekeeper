@@ -106,7 +106,7 @@ export class SignupController {
     @Res() res
   ) {
     try {
-      const user = await this.signupService.confirmUserSignup(userJwt)
+      const user = await this.signupService.confirmUserSignup(userJwt);
       this.authService.applyJwt(user, res);
       return res.render("signup/verification-success", {
         redirectLink

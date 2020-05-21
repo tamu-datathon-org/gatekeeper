@@ -69,7 +69,9 @@ describe("Signup Controller", () => {
         {
           provide: AuthService,
           useValue: {
-            applyJwt: () => {}
+            applyJwt: () => {
+              // Should be overriden using spyOn
+            }
           }
         },
         {
@@ -241,9 +243,11 @@ describe("Signup Controller", () => {
   });
 
   it("should return a success message and auto-login a valid confirmation", async () => {
-    jest.spyOn(signupService, "confirmUserSignup").mockImplementation(async () => {
-      return { email: "testy@mctestface.com" } as UserAuth;
-    });
+    jest
+      .spyOn(signupService, "confirmUserSignup")
+      .mockImplementation(async () => {
+        return { email: "testy@mctestface.com" } as UserAuth;
+      });
 
     const { path, params } = await controller.confirmSignup(
       csrfReq,
@@ -257,17 +261,19 @@ describe("Signup Controller", () => {
   });
 
   it("should return a failure screen for an invalid confirmation", async () => {
-    jest.spyOn(signupService, "confirmUserSignup").mockImplementation(async () => {
-      throw new Error(); // Mimics JWT errors and user not found errors.
-    });
+    jest
+      .spyOn(signupService, "confirmUserSignup")
+      .mockImplementation(async () => {
+        throw new Error(); // Mimics JWT errors and user not found errors.
+      });
 
-    const { path, params } = await controller.confirmSignup(
+    const { path } = await controller.confirmSignup(
       csrfReq,
       "/auth/me",
       "test.user.jwt",
       response
     );
-    
+
     expect(response.code).toEqual(400);
     expect(path).toBe("signup/verification-failure");
   });
