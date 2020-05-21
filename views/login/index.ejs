@@ -4,7 +4,8 @@
 
 <body class="loginPage text-center">
   <!-- try and retain some of old form / login card -->
-  <form class="form-signin" method="post" action="/auth/login?r=<%= locals.redirectLink %>" style="max-width: 400px;" class="mx-auto">
+  <form class="form-signin" method="post" action="/auth/login?r=<%= locals.redirectLink %>" style="max-width: 400px;"
+    class="mx-auto">
     <!-- <h1 class="text-center py-5">Login &#x1F6E1;</h1> -->
     <!-- csrf token for safety :) -->
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
@@ -12,25 +13,17 @@
     <!-- TODO: change the image link to static image -->
     <img class="mb-4" src="https://tamudatathon.com/static/img/logos/main.png" alt="" width="72" height="72" />
     <!-- EMAIL -->
-    <!-- <label for="inputEmail" class="sr-only">Email address</label>
-    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus> -->
-    <div class="form-group">
-      <label for="loginEmail">Email</label>
-      <input type="email" class="form-control <%= locals.emailError ? 'is-invalid' : null%>" id="loginEmail"
-        name="email" value="<%= locals.emailPrefill ? locals.emailPrefill : null %>" />
-      <!--Input name must be "username" for passport authentication strategy-->
-      <% if (locals.emailError) { %>
-      <div class="invalid-feedback"><%= locals.emailError %></div>
-      <% } %>
-    </div>
+    <label for="loginEmail" class="sr-only">Email</label>
+    <input required autofocus type="email" class="form-control <%= locals.emailError ? 'is-invalid' : null%>"
+      id="loginEmail" name="email" value="<%= locals.emailPrefill ? locals.emailPrefill : null %>"
+      placeholder="Email address" />
+    <!-- not sure what to do with this part -->
+    <!--Input name must be "username" for passport authentication strategy-->
+    <div class="invalid-feedback">sdfasd</div>
 
     <!-- PASSWORD -->
-    <!-- <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required> -->
-    <div class="form-group">
-      <label for="loginPassword">Password</label>
-      <input type="password" class="form-control" id="loginPassword" name="password" />
-    </div>
+    <label for="loginPassword" class="sr-only">Password</label>
+    <input required type="password" class="form-control" id="loginPassword" name="password" placeholder="Password" />
 
     <!-- should we keep remember me? -->
     <!-- <div class="checkbox mb-3">
@@ -40,21 +33,21 @@
     </div> -->
 
     <div class="text-center">
-        <button type="submit" class="btn btn-primary text-center mx-auto">Submit</button>
-      </div>
-      <div class="text-center my-3">
-        - OR -
-      </div>
-      <div class="oauth-login-btns text-center">
-        <a class="btn btn-primary google-login-btn" href="/auth/login/google?r=<%= locals.redirectLink %>">
-          <i class="fab fa-google"></i>
-          Login with Google
-        </a>
-        <a class="btn btn-primary facebook-login-btn" href="/auth/login/facebook?r=<%= locals.redirectLink %>">
-          <i class="fab fa-facebook-f"></i>
-          Login with Facebook
-        </a>
-      </div>
+      <button type="submit" class="btn btn-primary text-center mx-auto">Submit</button>
+    </div>
+    <div class="text-center my-3">
+      - OR -
+    </div>
+    <div class="oauth-login-btns text-center">
+      <a class="btn btn-primary google-login-btn" href="/auth/login/google?r=<%= locals.redirectLink %>">
+        <i class="fab fa-google"></i>
+        Login with Google
+      </a>
+      <a class="btn btn-primary facebook-login-btn" href="/auth/login/facebook?r=<%= locals.redirectLink %>">
+        <i class="fab fa-facebook-f"></i>
+        Login with Facebook
+      </a>
+    </div>
   </form>
 
   <%- include ("../partials/scripts") %>
