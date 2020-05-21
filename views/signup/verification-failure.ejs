@@ -9,8 +9,9 @@
       <div class="text-center">
         <h2>Verification failure.</h2>
         <div class="my-4">
-          <p>There was an error in verifying your account. Please request a new verification link.</p>
+          <p>There was an error in verifying your account. Please request a new verification link by logging in.</p>
         </div>
+        <a class="btn btn-primary" href="/auth/login?r=<%= locals.redirectLink %>">Login</a>
       </div>
     </div>
     <%- include ("../partials/scripts") %>
