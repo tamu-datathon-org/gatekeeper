@@ -7,7 +7,7 @@ import { TestDatabaseModule } from "../test-database/test-database.module";
 import { UserAuthService } from "../user-auth/user-auth.service";
 import { JwtModule, JwtService } from "@nestjs/jwt";
 import { NotFoundException } from "@nestjs/common";
-import { UserAuth } from "src/user-auth/interfaces/user-auth.interface";
+import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 
 describe("AuthService", () => {
   let service: AuthService;
@@ -132,14 +132,14 @@ describe("AuthService", () => {
       email: "testy@mctest.com",
       isVerified: false,
       authType: "EmailAndPassword"
-    }
+    };
     let res = {
-      cookie: (key, val, opt) => { 
-        this[key] = val; 
+      cookie: (key, val) => {
+        this[key] = val;
         return this;
       }
-    }
-    res = service.applyJwt(<UserAuth>user, res);
+    };
+    res = service.applyJwt(user as UserAuth, res);
     expect(res["accessToken"]).toBeDefined();
     // Check that JWT is valid and has user email.
     const payload = jwtService.verify(res["accessToken"]);

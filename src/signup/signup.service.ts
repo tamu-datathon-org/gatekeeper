@@ -30,7 +30,7 @@ export class SignupService {
    * Uses UserAuthService to signup a user with the given email and password.
    * @param  {SignupUserDto} signupUserDto
    * @returns Promise
-  */
+   */
   async signupUserEmailAndPassword(
     signupUserDto: SignupUserDto,
     redirectLink: string
@@ -57,8 +57,7 @@ export class SignupService {
   async confirmUserSignup(userJwt: string): Promise<UserAuth> {
     const userPayload = this.jwtService.verify(userJwt); // Verify returns jwt payload and fails if JWT is invalid.
     const user = await this.userAuthService.findByEmail(userPayload.email);
-    if(!user)
-      throw new Error("Invalid user");
+    if (!user) throw new Error("Invalid user");
     return user;
   }
 }

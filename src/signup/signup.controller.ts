@@ -12,7 +12,7 @@ import {
 import { SignupUserDto } from "./dto/signup-user.dto";
 import { SignupService } from "./signup.service";
 import { ValidatorService } from "../validator/validator.service";
-import { AuthService } from "src/auth/auth.service";
+import { AuthService } from "../auth/auth.service";
 
 @Controller("signup")
 export class SignupController {
@@ -70,6 +70,7 @@ export class SignupController {
     if (validationErrors)
       return res.status(400).render("signup/index", {
         csrfToken: req.csrfToken(),
+        redirectLink: redirect,
         emailPrefill: signupUserDto.email,
         ...validationErrors
       });
@@ -87,6 +88,7 @@ export class SignupController {
       if (e instanceof ConflictException)
         return res.status(409).render("signup/index", {
           csrfToken: req.csrfToken(),
+          redirectLink: redirect,
           emailPrefill: signupUserDto.email,
           emailError: this.controllerErrors.userExists
         });
@@ -109,7 +111,7 @@ export class SignupController {
       return res.render("signup/verification-success", {
         redirectLink
       });
-    } catch(e) {
+    } catch (e) {
       return res.status(400).render("signup/verification-failure");
     }
   }
