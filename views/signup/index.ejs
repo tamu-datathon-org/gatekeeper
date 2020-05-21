@@ -6,7 +6,7 @@
     <h1 class="text-center py-5">&#x1F6E1; Gatekeeper - Signup &#x1F6E1;</h1>
 
     <div class="container">
-      <form method="post" style="max-width: 400px;" class="mx-auto">
+      <form method="post" action="/auth/signup?r=<%= locals.redirectLink %>" style="max-width: 400px;" class="mx-auto">
         <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
         <div class="form-group">
           <label for="signupEmail">Email</label>
@@ -52,11 +52,11 @@
           - OR -
         </div>
         <div class="oauth-login-btns text-center">
-          <a class="btn btn-primary google-login-btn" href="/auth/login/google">
+          <a class="btn btn-primary google-login-btn" href="/auth/login/google?r=<%= locals.redirectLink %>">
             <i class="fab fa-google"></i>
             Signup with Google
           </a>
-          <a class="btn btn-primary facebook-login-btn" href="/auth/login/facebook">
+          <a class="btn btn-primary facebook-login-btn" href="/auth/login/facebook?r=<%= locals.redirectLink %>">
             <i class="fab fa-facebook-f"></i>
             Signup with Facebook
           </a>
