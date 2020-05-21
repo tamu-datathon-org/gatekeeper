@@ -112,7 +112,6 @@ export class SignupController {
         redirectLink
       });
     } catch (e) {
-      console.log(e);
       return res.status(400).render("signup/verification-failure");
     }
   }

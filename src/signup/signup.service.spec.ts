@@ -145,7 +145,10 @@ describe("SignupService", () => {
     );
 
     jest.spyOn(userAuthService, "findByEmail").mockImplementation(async () => {
-      return { email: "testy@mctestface.com" } as UserAuth;
+      return { 
+        email: "testy@mctestface.com", 
+        save: () => { /* no implementation needed */ } 
+      } as UserAuth;
     });
 
     const user = await service.confirmUserSignup(userJwt);
