@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, ConflictException } from "@nestjs/common";
 import { UserAuthService } from "../user-auth/user-auth.service";
 import { SignupUserDto } from "./dto/signup-user.dto";
 import { CreateUserAuthDto } from "..//user-auth/dto/create-user-auth.dto";
@@ -58,6 +58,7 @@ export class SignupService {
     const userPayload = this.jwtService.verify(userJwt); // Verify returns jwt payload and fails if JWT is invalid.
     const user = await this.userAuthService.findByEmail(userPayload.email);
     if (!user) throw new Error("Invalid user");
+    if (user.isVerified) throw new ConflictException("User is already verified");
     user.isVerified = true;
     user.save();
     return user;

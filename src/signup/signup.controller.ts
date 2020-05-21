@@ -112,7 +112,14 @@ export class SignupController {
         redirectLink
       });
     } catch (e) {
-      return res.status(400).render("signup/verification-failure");
+      if (e instanceof ConflictException) {
+        return res.status(409).render("signup/user-already-verified", {
+          redirectLink
+        });
+      }
+      return res.status(400).render("signup/verification-failure", {
+        redirectLink
+      });
     }
   }
 }

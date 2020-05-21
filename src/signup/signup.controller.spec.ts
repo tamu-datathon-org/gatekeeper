@@ -105,7 +105,7 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      "/auth/me",
+      "/app/me",
       response
     );
     expect(path).toBe("signup/email-pwd-signup-success");
@@ -122,7 +122,7 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      "/auth/me",
+      "/app/me",
       response
     );
     expect(response.code).toBe(409);
@@ -130,7 +130,7 @@ describe("Signup Controller", () => {
     expect(params.csrfToken).toBe(mockCsrfToken);
     expect(params.emailPrefill).toBe("already@exists.com");
     expect(params.emailError).toBe(controller.controllerErrors.userExists);
-    expect(params.redirectLink).toBe("/auth/me");
+    expect(params.redirectLink).toBe("/app/me");
   });
 
   it("should return the signup form with an error if given an empty email", async () => {
@@ -143,14 +143,14 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      "/auth/me",
+      "/app/me",
       response
     );
     expect(response.code).toBe(400);
     expect(path).toBe("signup/index");
     expect(params.csrfToken).toBe(mockCsrfToken);
     expect(params.emailError).toBe(controller.controllerErrors.invalidEmail);
-    expect(params.redirectLink).toBe("/auth/me");
+    expect(params.redirectLink).toBe("/app/me");
   });
 
   it("should return the signup form with an error if given an invalid email", async () => {
@@ -163,14 +163,14 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      "/auth/me",
+      "/app/me",
       response
     );
     expect(response.code).toBe(400);
     expect(path).toBe("signup/index");
     expect(params.csrfToken).toBe(mockCsrfToken);
     expect(params.emailError).toBe(controller.controllerErrors.invalidEmail);
-    expect(params.redirectLink).toBe("/auth/me");
+    expect(params.redirectLink).toBe("/app/me");
   });
 
   it("should return the signup form with an error if given an empty password", async () => {
@@ -183,7 +183,7 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      "/auth/me",
+      "/app/me",
       response
     );
     expect(response.code).toBe(400);
@@ -193,7 +193,7 @@ describe("Signup Controller", () => {
     expect(params.passwordError).toBe(
       controller.controllerErrors.invalidPassword
     );
-    expect(params.redirectLink).toBe("/auth/me");
+    expect(params.redirectLink).toBe("/app/me");
   });
 
   it("should return the signup form with an error if given an invalid password", async () => {
@@ -206,7 +206,7 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      "/auth/me",
+      "/app/me",
       response
     );
     expect(response.code).toBe(400);
@@ -216,7 +216,7 @@ describe("Signup Controller", () => {
     expect(params.passwordError).toBe(
       controller.controllerErrors.invalidPassword
     );
-    expect(params.redirectLink).toBe("/auth/me");
+    expect(params.redirectLink).toBe("/app/me");
   });
 
   it("should return the signup form with an error if confirmPassword does not match password", async () => {
@@ -229,7 +229,7 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      "/auth/me",
+      "/app/me",
       response
     );
     expect(response.code).toBe(400);
@@ -239,7 +239,7 @@ describe("Signup Controller", () => {
     expect(params.confirmPasswordError).toBe(
       controller.controllerErrors.invalidConfirmPassword
     );
-    expect(params.redirectLink).toBe("/auth/me");
+    expect(params.redirectLink).toBe("/app/me");
   });
 
   it("should return a success message and auto-login a valid confirmation", async () => {
@@ -251,13 +251,13 @@ describe("Signup Controller", () => {
 
     const { path, params } = await controller.confirmSignup(
       csrfReq,
-      "/auth/me",
+      "/app/me",
       "test.user.jwt",
       response
     );
 
     expect(path).toBe("signup/verification-success");
-    expect(params.redirectLink).toBe("/auth/me");
+    expect(params.redirectLink).toBe("/app/me");
   });
 
   it("should return a failure screen for an invalid confirmation", async () => {
@@ -267,14 +267,15 @@ describe("Signup Controller", () => {
         throw new Error(); // Mimics JWT errors and user not found errors.
       });
 
-    const { path } = await controller.confirmSignup(
+    const { path, params } = await controller.confirmSignup(
       csrfReq,
-      "/auth/me",
+      "/app/me",
       "test.user.jwt",
       response
     );
 
     expect(response.code).toEqual(400);
     expect(path).toBe("signup/verification-failure");
+    expect(params.redirectLink).toBe("/app/me")
   });
 });
