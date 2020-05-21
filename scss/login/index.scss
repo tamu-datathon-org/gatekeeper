@@ -7,7 +7,6 @@
   a > i {
     padding: 0.7em;
     margin-right: 0.2em;
-    background: rgba(0, 0, 0, 0.15);
   }
 
   .google-login-btn {
@@ -48,7 +47,7 @@ body.loginPage {
 .loginPage {
   .form-signin {
     width: 100%;
-    max-width: 330px;
+    max-width: 400px;
     margin-top: 40px;
 
     .form-control {

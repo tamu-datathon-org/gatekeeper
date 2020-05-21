@@ -40,18 +40,18 @@
     </div>
 
     <div class="text-center mt-3">
-      Don't have an account? <a href="/auth/signup">Sign up</a>
+      <a href="/auth/signup">Create an account</a>
     </div>
 
     <div class="text-center my-3">
       - OR -
     </div>
     <div class="oauth-login-btns text-center">
-      <a class="btn btn-primary google-login-btn" href="/auth/login/google?r=<%= locals.redirectLink %>">
+      <a class="btn btn-block btn-outline-primary" href="/auth/login/google?r=<%= locals.redirectLink %>">
         <i class="fab fa-google"></i>
         Login with Google
       </a>
-      <a class="btn btn-primary facebook-login-btn" href="/auth/login/facebook?r=<%= locals.redirectLink %>">
+      <a class="btn btn-block btn-outline-primary" href="/auth/login/facebook?r=<%= locals.redirectLink %>">
         <i class="fab fa-facebook-f"></i>
         Login with Facebook
       </a>
