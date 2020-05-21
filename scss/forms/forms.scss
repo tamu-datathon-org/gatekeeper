@@ -1,0 +1,72 @@
+.form-input-div {
+  background-color: white;
+  padding: 7px 10px;
+  border: solid $gray-400 1px;
+
+  label {
+    font-size: 0.8em;
+  }
+
+  input {
+    border-radius: 0;
+    border: none;
+    padding: none;
+    display: block;
+    width: 100%;
+  }
+
+  input:focus {
+    outline: none;
+  }
+
+  &.input-invalid {
+    border-color: red !important;
+  }
+
+  &:focus-within {
+    border-color: $theme-light-blue;
+  }
+}
+
+.form-invalid-feedback {
+  color: red;
+  font-size: 0.7rem;
+}
+
+// ============================
+// decrease height of page by shrinking
+// margins/heights of elements
+
+
+label {
+  margin-bottom: 0;
+}
+
+// image
+.mb-4, .my-4 {
+  margin-bottom: 0.8rem !important;
+}
+
+.mb-3, .my-3 {
+  margin-bottom: 0.9rem !important;
+}
+// OR section
+.text-center.my-3 {
+  margin: 0.7rem 0 0.3rem !important;
+}
+
+p.mt-5.mb-3.text-muted.text-center {
+  margin-top: 1.5rem !important;
+}
+
+// ROUNDED form inputs
+#email-input-div {
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
+
+#submit-btn-div button {
+  border-radius: 0;
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
