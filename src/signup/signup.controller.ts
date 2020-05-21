@@ -6,7 +6,8 @@ import {
   Post,
   Body,
   ConflictException,
-  Res
+  Res,
+  Query
 } from "@nestjs/common";
 import { SignupUserDto } from "./dto/signup-user.dto";
 import { SignupService } from "./signup.service";
@@ -28,14 +29,18 @@ export class SignupController {
 
   @Get()
   @Render("signup/index")
-  root(@Req() req) {
-    return { csrfToken: req.csrfToken() };
+  root(@Req() req, @Query("r") redirect: string | undefined) {
+    return {
+      csrfToken: req.csrfToken(),
+      redirectLink: redirect || "/auth/me"
+    };
   }
 
   @Post("")
   async signupUserEmailAndPassword(
     @Req() req,
     @Body() signupUserDto: SignupUserDto,
+    @Query("r") redirect: string | undefined,
     @Res() res
   ) {
     // Validate signupUserDto.
@@ -69,7 +74,8 @@ export class SignupController {
 
     try {
       const user = await this.signupService.signupUserEmailAndPassword(
-        signupUserDto
+        signupUserDto,
+        redirect
       );
       return res.render("signup/email-pwd-signup-success", {
         userEmail: user.email
@@ -85,6 +91,23 @@ export class SignupController {
 
       // TODO: Change this to a standard way of handling 5XX errors.
       throw e;
+    }
+  }
+
+  @Get("verify")
+  confirmSignup(
+    @Req() req,
+    @Query("r") redirectLink: string | undefined,
+    @Query("user") userJwt: string,
+    @Res() res
+  ) {
+    try {
+      const jwtPayload = this.signupService.confirmUserSignup(userJwt);
+      return res.render("signup/verification-success", {
+        redirectLink
+      });
+    } catch(e) {
+      return res.status(400).render("signup/verification-failure");
     }
   }
 }
