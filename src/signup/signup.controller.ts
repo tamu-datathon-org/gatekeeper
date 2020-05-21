@@ -12,6 +12,7 @@ import {
 import { SignupUserDto } from "./dto/signup-user.dto";
 import { SignupService } from "./signup.service";
 import { ValidatorService } from "../validator/validator.service";
+import { AuthService } from "src/auth/auth.service";
 
 @Controller("signup")
 export class SignupController {
@@ -23,6 +24,7 @@ export class SignupController {
   };
 
   constructor(
+    private authService: AuthService,
     private signupService: SignupService,
     private validatorService: ValidatorService
   ) {}
@@ -95,14 +97,15 @@ export class SignupController {
   }
 
   @Get("verify")
-  confirmSignup(
+  async confirmSignup(
     @Req() req,
     @Query("r") redirectLink: string | undefined,
     @Query("user") userJwt: string,
     @Res() res
   ) {
     try {
-      const jwtPayload = this.signupService.confirmUserSignup(userJwt);
+      const user = await this.signupService.confirmUserSignup(userJwt);
+      this.authService.applyJwt(user, res);
       return res.render("signup/verification-success", {
         redirectLink
       });

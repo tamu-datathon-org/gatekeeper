@@ -5,9 +5,11 @@ import { SignupService } from "./signup.service";
 import { MailModule } from "../mail/mail.module";
 import { ValidatorService } from "../validator/validator.service";
 import { JwtModule, JwtModuleOptions } from "@nestjs/jwt";
+import { AuthModule } from "src/auth/auth.module";
 
 @Module({
   imports: [
+    AuthModule,
     UserAuthModule,
     MailModule,
     JwtModule.registerAsync({
