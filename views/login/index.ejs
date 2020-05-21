@@ -3,29 +3,29 @@
 <%- include ("../partials/head") %>
 
 <body class="loginPage text-center">
-  <!-- try and retain some of old form / login card -->
   <form class="form-signin" method="post" action="/auth/login?r=<%= locals.redirectLink %>" style="max-width: 400px;"
     class="mx-auto">
-    <!-- <h1 class="text-center py-5">Login &#x1F6E1;</h1> -->
-    <!-- csrf token for safety :) -->
+    <!-- csrf token for integrity :) -->
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     <!-- logo/image -->
     <!-- TODO: change the image link to static image -->
     <img class="mb-4" src="https://tamudatathon.com/static/img/logos/main.png" alt="" width="72" height="72" />
+
     <!-- EMAIL -->
     <label for="loginEmail" class="sr-only">Email</label>
     <input required autofocus type="email" class="form-control <%= locals.emailError ? 'is-invalid' : null%>"
       id="loginEmail" name="email" value="<%= locals.emailPrefill ? locals.emailPrefill : null %>"
       placeholder="Email address" />
-    <!-- not sure what to do with this part -->
-    <!--Input name must be "username" for passport authentication strategy-->
-    <div class="invalid-feedback">sdfasd</div>
+    <!-- Input name must be "username" for passport authentication strategy-->
+    <% if (locals.emailError) { %>
+    <div class="invalid-feedback"><%= locals.emailError %></div>
+    <% } %>
 
     <!-- PASSWORD -->
     <label for="loginPassword" class="sr-only">Password</label>
     <input required type="password" class="form-control" id="loginPassword" name="password" placeholder="Password" />
 
-    <!-- should we keep remember me? -->
+    <!-- TODO: should we keep remember me? -->
     <!-- <div class="checkbox mb-3">
       <label>
         <input type="checkbox" value="remember-me"> Remember me
