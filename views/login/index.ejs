@@ -3,28 +3,28 @@
 <%- include ("../partials/head") %>
 
 <body class="loginPage text-center">
-  <form class="form-signin" method="post" action="/auth/login?r=<%= locals.redirectLink %>" style="max-width: 400px;"
-    class="mx-auto">
+  <form class="form-signin mx-auto" method="post" action="/auth/login?r=<%= locals.redirectLink %>">
     <!-- csrf token for integrity :) -->
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     <!-- logo/image -->
     <!-- TODO: change the image link to static image -->
-    <img class="mb-4" src="/static/img/main.png" alt="" width="72" height="72" />
+    <img class="mb-4" src="/auth/static/img/main.png" alt="" width="72" height="72" />
     <h1 class="h3 mb-3 font-weight-normal">Sign in</h1>
 
     <!-- EMAIL -->
-    <label for="loginEmail" class="sr-only">Email</label>
-    <input required autofocus type="email" class="form-control <%= locals.emailError ? 'is-invalid' : null%>"
-      id="loginEmail" name="email" value="<%= locals.emailPrefill ? locals.emailPrefill : null %>"
-      placeholder="Email address" />
-    <!-- Input name must be "username" for passport authentication strategy-->
-    <% if (locals.emailError) { %>
-    <div class="invalid-feedback"><%= locals.emailError %></div>
-    <% } %>
+    <div class="text-left form-input-div <%= locals.emailError ? 'input-invalid' : null%>">
+      <label for="loginEmail" class="text-muted">Email</label>
+      <input autofocus id="loginEmail" name="email" value="<%= locals.emailPrefill ? locals.emailPrefill : null %>" />
+      <% if (locals.emailError) { %>
+        <div class="form-invalid-feedback"><%= locals.emailError %></div>
+      <% } %>
+    </div>
 
     <!-- PASSWORD -->
-    <label for="loginPassword" class="sr-only">Password</label>
-    <input required type="password" class="form-control" id="loginPassword" name="password" placeholder="Password" />
+    <div class="form-input-div text-left">
+      <label for="loginPassword" class="text-muted">Password</label>
+      <input type="password" id="loginPassword" name="password" />
+    </div>
 
     <!-- TODO: should we keep remember me? -->
     <!-- <div class="checkbox mb-3">
@@ -33,7 +33,7 @@
       </label>
     </div> -->
 
-    <div class="text-center">
+    <div class="text-center mt-3">
       <button type="submit" class="btn btn-primary text-center mx-auto">Submit</button>
     </div>
     <div class="text-center my-3">
@@ -51,7 +51,7 @@
     </div>
 
     <!-- copyright TD -->
-    <p class="mt-5 mb-3 text-muted text-center">&copy; TAMUDatathon 2020</p>
+    <p class="mt-5 mb-3 text-muted text-center">&copy; TAMU Datathon 2020</p>
   </form>
 
   <%- include ("../partials/scripts") %>
