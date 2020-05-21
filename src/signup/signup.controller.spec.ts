@@ -4,6 +4,8 @@ import { SignupService } from "./signup.service";
 import { SignupUserDto } from "./dto/signup-user.dto";
 import { BadRequestException, ConflictException } from "@nestjs/common";
 import { ValidatorService } from "../validator/validator.service";
+import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
+import { AuthService } from "../auth/auth.service";
 
 const existingUserEmails = ["already@exists.com"];
 const mockEmail = "testy@mctestface.com";
@@ -50,15 +52,26 @@ class MockSignupService {
       isVerified: false
     };
   }
+
+  async confirmUserSignup() {
+    // Should be overriden using spyOn
+  }
 }
 
 describe("Signup Controller", () => {
   let controller: SignupController;
+  let signupService: SignupService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [SignupController],
       providers: [
+        {
+          provide: AuthService,
+          useValue: {
+            applyJwt: () => {}
+          }
+        },
         {
           provide: SignupService,
           useValue: new MockSignupService()
@@ -68,6 +81,7 @@ describe("Signup Controller", () => {
     }).compile();
 
     controller = module.get<SignupController>(SignupController);
+    signupService = module.get<SignupService>(SignupService);
   });
 
   it("should be defined", () => {
@@ -94,7 +108,6 @@ describe("Signup Controller", () => {
     );
     expect(path).toBe("signup/email-pwd-signup-success");
     expect(params.userEmail).toBe(signupUserDto.email);
-    expect(params.redirectLink).toBe("/auth/me");
   });
 
   it("should return the signup form with an error if user already exists", async () => {
@@ -224,6 +237,22 @@ describe("Signup Controller", () => {
     expect(params.confirmPasswordError).toBe(
       controller.controllerErrors.invalidConfirmPassword
     );
+    expect(params.redirectLink).toBe("/auth/me");
+  });
+
+  it("should return a success message and auto-login a valid confirmation", async () => {
+    jest.spyOn(signupService, "confirmUserSignup").mockImplementation(async () => {
+      return { email: "testy@mctestface.com" } as UserAuth; // UserAuthService returns null when user does not exist.
+    });
+
+    const { path, params } = await controller.confirmSignup(
+      csrfReq,
+      "/auth/me",
+      "test.user.jwt",
+      response
+    );
+
+    expect(path).toBe("signup/verification-success");
     expect(params.redirectLink).toBe("/auth/me");
   });
 });
