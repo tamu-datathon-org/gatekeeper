@@ -3,7 +3,7 @@ import { UserAuthService } from "./user-auth.service";
 import { MongooseModule } from "@nestjs/mongoose";
 import { UserAuthSchema } from "./schemas/user-auth.schema";
 import { TestDatabaseModule } from "../test-database/test-database.module";
-import { ConflictException } from "@nestjs/common";
+import { ConflictException, BadRequestException } from "@nestjs/common";
 
 describe("UserAuthService", () => {
   let service: UserAuthService;
@@ -56,22 +56,16 @@ describe("UserAuthService", () => {
       password: "SomePassword",
       isVerified: false
     });
-    try {
-      await service.create({
-        email: "george@example.com",
-        authType: "EmailAndPassword",
-        password: "SomePassword",
-        isVerified: false
-      });
-    } catch (e) {
-      // Extract error from NestJS Exception Filter.
-      const err = e.response;
-      expect(err.statusCode).toEqual(409);
-      expect(err.error).toEqual("Conflict");
-      expect(err.message).toEqual(
-        "A user with the same email address already exists"
-      );
-    }
+    const promise = service.create({
+      email: "george@example.com",
+      authType: "EmailAndPassword",
+      password: "SomePassword",
+      isVerified: false
+    });
+
+    await expect(promise).rejects.toThrow(
+      new ConflictException("A user with the same email address already exists")
+    );
   });
 
   it("should not be able to create a users with the same email regardless of case", async () => {
@@ -94,87 +88,64 @@ describe("UserAuthService", () => {
   });
 
   it("should only allow creation of a user if the password exists when AuthType is EmailAndPassword", async () => {
-    try {
-      await service.create({
-        email: "george@example.com",
-        authType: "EmailAndPassword",
-        isVerified: false
-      });
-    } catch (e) {
-      // Extract error from NestJS Exception Filter.
-      const err = e.response;
-      expect(err.statusCode).toEqual(400);
-      expect(err.error).toEqual("Bad Request");
-      expect(err.message).toEqual(
+    const promise1 = service.create({
+      email: "george@example.com",
+      authType: "EmailAndPassword",
+      isVerified: false
+    });
+    await expect(promise1).rejects.toThrow(
+      new BadRequestException(
         "Password is required if the authType is EmailAndPassword"
-      );
-    }
-    try {
-      await service.create({
-        email: "george@example.com",
-        authType: "EmailAndPassword",
-        password: "",
-        isVerified: false
-      });
-    } catch (e) {
-      // Extract error from NestJS Exception Filter.
-      const err = e.response;
-      expect(err.statusCode).toEqual(400);
-      expect(err.error).toEqual("Bad Request");
-      expect(err.message).toEqual(
+      )
+    );
+
+    const promise2 = service.create({
+      email: "george@example.com",
+      authType: "EmailAndPassword",
+      password: "",
+      isVerified: false
+    });
+    await expect(promise2).rejects.toThrow(
+      new BadRequestException(
         "Password is required if the authType is EmailAndPassword"
-      );
-    }
+      )
+    );
   });
 
   it("should only allow creation of a user if the oAuthToken exists when AuthType is not EmailAndPassword", async () => {
-    try {
-      await service.create({
-        email: "george@example.com",
-        authType: "Google",
-        isVerified: false
-      });
-    } catch (e) {
-      // Extract error from NestJS Exception Filter.
-      const err = e.response;
-      expect(err.statusCode).toEqual(400);
-      expect(err.error).toEqual("Bad Request");
-      expect(err.message).toEqual(
+    const promise1 = service.create({
+      email: "george@example.com",
+      authType: "Google",
+      isVerified: false
+    });
+    await expect(promise1).rejects.toThrow(
+      new BadRequestException(
         "oAuthToken is required if the authType is not EmailAndPassword"
-      );
-    }
-    try {
-      await service.create({
-        email: "george@example.com",
-        authType: "Facebook",
-        oAuthToken: "",
-        isVerified: false
-      });
-    } catch (e) {
-      // Extract error from NestJS Exception Filter.
-      const err = e.response;
-      expect(err.statusCode).toEqual(400);
-      expect(err.error).toEqual("Bad Request");
-      expect(err.message).toEqual(
+      )
+    );
+
+    const promise2 = service.create({
+      email: "george@example.com",
+      authType: "Facebook",
+      oAuthToken: "",
+      isVerified: false
+    });
+    await expect(promise2).rejects.toThrow(
+      new BadRequestException(
         "oAuthToken is required if the authType is not EmailAndPassword"
-      );
-    }
+      )
+    );
   });
 
   it("should only allow creation of a user email is there", async () => {
-    try {
-      await service.create({
-        email: "",
-        authType: "EmailAndPassword",
-        isVerified: false
-      });
-    } catch (e) {
-      // Extract error from NestJS Exception Filter.
-      const err = e.response;
-      expect(err.statusCode).toEqual(400);
-      expect(err.error).toEqual("Bad Request");
-      expect(err.message).toEqual("Email is required to be a non-empty string");
-    }
+    const promise = service.create({
+      email: "",
+      authType: "EmailAndPassword",
+      isVerified: false
+    });
+    await expect(promise).rejects.toThrow(
+      new BadRequestException("Email is required to be a non-empty string")
+    );
   });
 
   it("should be able to find all users", async () => {
