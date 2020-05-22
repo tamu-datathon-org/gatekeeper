@@ -1,17 +1,16 @@
 import {
   Controller,
   Get,
-  Param,
   Post,
   Render,
   Req,
   Res,
   UseFilters,
-  UseGuards
+  UseGuards,
+  Query
 } from "@nestjs/common";
 import { GetUserAuth } from "../user-auth/user-auth.decorator";
 import { AuthService } from "../auth/auth.service";
-import { LoginGuard } from "../auth/login.guard";
 import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 import { LoginRootExceptionFilter } from "./filters/login-root-exception.filter";
 import { AuthGuard } from "@nestjs/passport";
@@ -23,7 +22,7 @@ export class LoginController {
 
   @Get("/")
   @Render("login/index")
-  root(@Req() req, @Param("r") redirect: string | undefined) {
+  root(@Req() req, @Query("r") redirect: string | undefined) {
     return {
       csrfToken: req.csrfToken(),
       redirectLink: redirect || "/auth/me"
@@ -70,11 +69,11 @@ export class LoginController {
   }
 
   @UseFilters(LoginRootExceptionFilter, LoginProviderExceptionFilter) // Need exception filter to handle guard fails (maintain order).
-  @UseGuards(LoginGuard) // used to parse out the login credentials and generate a user
+  @UseGuards(AuthGuard("local")) // used to parse out the login credentials and generate a user
   @Post("/")
   loginEmailAndPassword(
     @GetUserAuth() user: UserAuth,
-    @Param("r") redirect: string | undefined,
+    @Query("r") redirect: string | undefined,
     @Res() res
   ) {
     this.authService.applyJwt(user, res);

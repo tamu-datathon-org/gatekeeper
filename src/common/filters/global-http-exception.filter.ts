@@ -7,18 +7,18 @@ import {
 import { Response } from "express";
 import { JwtUserNotVerifiedException } from "../../auth/exceptions/jwt-user-not-verified.exception";
 
-@Catch(HttpException)
+@Catch()
 export class GlobalHttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest();
-
+ 
     if (exception instanceof JwtUserNotVerifiedException) {
       return response
         .status(401)
         .render("signup/resend-verification-email.ejs", {
-          redirectLink: request.query.r || undefined
+          redirectLink: request.query.r || "/auth/me"
         });
     }
 
