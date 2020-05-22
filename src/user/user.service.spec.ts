@@ -1,18 +1,120 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { UserService } from "./user.service";
+import { UserAuthService } from "../user-auth/user-auth.service";
+import { CreateUserDto } from "./dto/create-user.dto";
+import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
+import { TestDatabaseModule } from "../test-database/test-database.module";
+import { MongooseModule } from "@nestjs/mongoose";
+import { UserSchema } from "./schemas/user.schema";
+
+class MockUserAuthService {
+  async create() {
+    /* Should be overriden using spyOn */
+  }
+  async findByEmail() {
+    /* Should be overriden using spyOn */
+  }
+  async findById() {
+    /* Should be overriden using spyOn */
+  }
+}
 
 describe("UserService", () => {
   let service: UserService;
+  let userAuthService: UserAuthService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UserService]
+      imports: [
+        TestDatabaseModule,
+        MongooseModule.forFeature([{ name: "User", schema: UserSchema }])
+      ],
+      providers: [
+        UserService,
+        { provide: UserAuthService, useValue: new MockUserAuthService() }
+      ]
     }).compile();
 
     service = module.get<UserService>(UserService);
+    userAuthService = module.get<UserAuthService>(UserAuthService);
   });
 
   it("should be defined", () => {
     expect(service).toBeDefined();
+  });
+
+  it("should be able to create a user", async () => {
+    const createPayload = {
+      userAuthId: "random",
+      name: "George Blah"
+    } as CreateUserDto;
+
+    jest.spyOn(userAuthService, "findById").mockImplementation(async () => {
+      return ({
+        email: "george@example.com",
+        id: "random",
+        isVerified: true,
+        authType: "EmailAndPassword",
+        passwordHash: "random"
+      } as unknown) as UserAuth;
+    });
+
+    const user = await service.create(createPayload);
+
+    expect(user).toBeDefined();
+    expect(user.email).toEqual("george@example.com");
+    expect(user.name).toEqual("George Blah");
+    expect(user.authId).toEqual("random");
+  });
+
+  it("should be fail to create a user when they are not verified", async () => {
+    const createPayload = {
+      userAuthId: "random",
+      name: "George Blah"
+    } as CreateUserDto;
+
+    jest.spyOn(userAuthService, "findById").mockImplementation(async () => {
+      return ({
+        email: "george@example.com",
+        id: "random",
+        isVerified: false,
+        authType: "EmailAndPassword",
+        passwordHash: "random"
+      } as unknown) as UserAuth;
+    });
+
+    try {
+      await service.create(createPayload);
+    } catch (e) {
+      expect(e).toBeDefined();
+      expect(e.status).toBe(400);
+      expect(e.message).toBe("User must be verified");
+    }
+  });
+
+  it("should fail to create a user that already exists", async () => {
+    const createPayload = {
+      userAuthId: "random",
+      name: "George Blah"
+    } as CreateUserDto;
+
+    jest.spyOn(userAuthService, "findById").mockImplementation(async () => {
+      return ({
+        email: "george@example.com",
+        id: "random",
+        isVerified: true,
+        authType: "EmailAndPassword",
+        passwordHash: "random"
+      } as unknown) as UserAuth;
+    });
+
+    await service.create(createPayload);
+    try {
+      await service.create(createPayload);
+    } catch (e) {
+      expect(e).toBeDefined();
+      expect(e.status).toBe(409);
+      expect(e.message).toBe("A user with the same authId already exists");
+    }
   });
 });

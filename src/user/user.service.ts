@@ -3,7 +3,7 @@ import {
   BadRequestException,
   ConflictException
 } from "@nestjs/common";
-import { Model } from "mongoose";
+import { Model, UpdateQuery } from "mongoose";
 import { User } from "./interfaces/user.interface";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -18,7 +18,7 @@ export class UserService {
 
   /**
    * Create a User. Note that the user must be verified.
-   * @param req CreateUserDto
+   * @param {CreateUserDto} req
    */
   async create(req: CreateUserDto): Promise<User> {
     const userAuth = await this.userAuthService.findById(req.userAuthId);
@@ -38,7 +38,7 @@ export class UserService {
     }
 
     const createdUser = new this.userModel({
-      userAuthId: userAuth.id,
+      authId: userAuth.id,
       email: userAuth.email,
       name: req.name
     });
@@ -54,8 +54,20 @@ export class UserService {
   }
 
   /**
+   * Update certain fields of a user (cannot update email or authId)
+   * @param {string} userAuthId authId of the user to update
+   * @param {UpdateQuery<User>} fields fields to update (cannot be email or authId)
+   */
+  async update(userAuthId: string, fields: UpdateQuery<User>): Promise<User> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { authId, email, ...fieldsToUpdate } = fields;
+    const user = await this.findByAuthId(userAuthId);
+    return await this.userModel.updateOne(user._id, fieldsToUpdate).exec();
+  }
+
+  /**
    * Finds a User with the matching AuthId
-   * @param authId User Auth Id to find
+   * @param {string} authId User Auth Id to find
    */
   async findByAuthId(authId: string): Promise<User> {
     return await this.userModel.findOne({ authId });
