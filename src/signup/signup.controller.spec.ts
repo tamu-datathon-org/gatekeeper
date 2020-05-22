@@ -4,6 +4,8 @@ import { SignupService } from "./signup.service";
 import { SignupUserDto } from "./dto/signup-user.dto";
 import { BadRequestException, ConflictException } from "@nestjs/common";
 import { ValidatorService } from "../validator/validator.service";
+import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
+import { AuthService } from "../auth/auth.service";
 
 const existingUserEmails = ["already@exists.com"];
 const mockEmail = "testy@mctestface.com";
@@ -21,6 +23,11 @@ const response = {
   },
   status: (statusCode: number) => {
     response.code = statusCode;
+    return response;
+  },
+  new: () => {
+    // Reset the state of the response
+    response.code = 200;
     return response;
   }
 };
@@ -50,15 +57,32 @@ class MockSignupService {
       isVerified: false
     };
   }
+
+  async confirmUserSignup() {
+    // Should be overriden using spyOn
+  }
+
+  async resendVerificationEmail() {
+    // Should be overriden using spyOn
+  }
 }
 
 describe("Signup Controller", () => {
   let controller: SignupController;
+  let signupService: SignupService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [SignupController],
       providers: [
+        {
+          provide: AuthService,
+          useValue: {
+            applyJwt: () => {
+              // Should be overriden using spyOn
+            }
+          }
+        },
         {
           provide: SignupService,
           useValue: new MockSignupService()
@@ -68,6 +92,7 @@ describe("Signup Controller", () => {
     }).compile();
 
     controller = module.get<SignupController>(SignupController);
+    signupService = module.get<SignupService>(SignupService);
   });
 
   it("should be defined", () => {
@@ -75,7 +100,7 @@ describe("Signup Controller", () => {
   });
 
   it("should return a signup form with a CSRF token", () => {
-    const res = controller.root(csrfReq);
+    const res = controller.root(csrfReq, "/auth/me");
     expect(res.csrfToken).toBe(mockCsrfToken);
   });
 
@@ -89,9 +114,10 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      response
+      "/app/me",
+      response.new()
     );
-    expect(path).toBe("signup/email-pwd-signup-success");
+    expect(path).toBe("signup/verification-email-sent");
     expect(params.userEmail).toBe(signupUserDto.email);
   });
 
@@ -105,13 +131,15 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      response
+      "/app/me",
+      response.new()
     );
     expect(response.code).toBe(409);
     expect(path).toBe("signup/index");
     expect(params.csrfToken).toBe(mockCsrfToken);
     expect(params.emailPrefill).toBe("already@exists.com");
     expect(params.emailError).toBe(controller.controllerErrors.userExists);
+    expect(params.redirectLink).toBe("/app/me");
   });
 
   it("should return the signup form with an error if given an empty email", async () => {
@@ -124,12 +152,14 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      response
+      "/app/me",
+      response.new()
     );
     expect(response.code).toBe(400);
     expect(path).toBe("signup/index");
     expect(params.csrfToken).toBe(mockCsrfToken);
     expect(params.emailError).toBe(controller.controllerErrors.invalidEmail);
+    expect(params.redirectLink).toBe("/app/me");
   });
 
   it("should return the signup form with an error if given an invalid email", async () => {
@@ -142,12 +172,14 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      response
+      "/app/me",
+      response.new()
     );
     expect(response.code).toBe(400);
     expect(path).toBe("signup/index");
     expect(params.csrfToken).toBe(mockCsrfToken);
     expect(params.emailError).toBe(controller.controllerErrors.invalidEmail);
+    expect(params.redirectLink).toBe("/app/me");
   });
 
   it("should return the signup form with an error if given an empty password", async () => {
@@ -160,7 +192,8 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      response
+      "/app/me",
+      response.new()
     );
     expect(response.code).toBe(400);
     expect(path).toBe("signup/index");
@@ -169,6 +202,7 @@ describe("Signup Controller", () => {
     expect(params.passwordError).toBe(
       controller.controllerErrors.invalidPassword
     );
+    expect(params.redirectLink).toBe("/app/me");
   });
 
   it("should return the signup form with an error if given an invalid password", async () => {
@@ -181,7 +215,8 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      response
+      "/app/me",
+      response.new()
     );
     expect(response.code).toBe(400);
     expect(path).toBe("signup/index");
@@ -190,6 +225,7 @@ describe("Signup Controller", () => {
     expect(params.passwordError).toBe(
       controller.controllerErrors.invalidPassword
     );
+    expect(params.redirectLink).toBe("/app/me");
   });
 
   it("should return the signup form with an error if confirmPassword does not match password", async () => {
@@ -202,7 +238,8 @@ describe("Signup Controller", () => {
     const { path, params } = await controller.signupUserEmailAndPassword(
       csrfReq,
       signupUserDto,
-      response
+      "/app/me",
+      response.new()
     );
     expect(response.code).toBe(400);
     expect(path).toBe("signup/index");
@@ -211,5 +248,103 @@ describe("Signup Controller", () => {
     expect(params.confirmPasswordError).toBe(
       controller.controllerErrors.invalidConfirmPassword
     );
+    expect(params.redirectLink).toBe("/app/me");
+  });
+
+  it("should return a success message and auto-login a valid confirmation", async () => {
+    jest
+      .spyOn(signupService, "confirmUserSignup")
+      .mockImplementation(async () => {
+        return { email: "testy@mctestface.com" } as UserAuth;
+      });
+
+    const { path, params } = await controller.confirmSignup(
+      csrfReq,
+      "/app/me",
+      "test.user.jwt",
+      response.new()
+    );
+
+    expect(path).toBe("signup/verification-success");
+    expect(params.redirectLink).toBe("/app/me");
+  });
+
+  it("should return a failure screen for an invalid confirmation", async () => {
+    jest
+      .spyOn(signupService, "confirmUserSignup")
+      .mockImplementation(async () => {
+        throw new Error(); // Mimics JWT errors and user not found errors.
+      });
+
+    const { path, params } = await controller.confirmSignup(
+      csrfReq,
+      "/app/me",
+      "test.user.jwt",
+      response.new()
+    );
+
+    expect(response.code).toEqual(400);
+    expect(path).toBe("signup/verification-failure");
+    expect(params.redirectLink).toBe("/app/me");
+  });
+
+  it("should return a verification-email-sent screen on success", async () => {
+    jest
+      .spyOn(signupService, "resendVerificationEmail")
+      .mockImplementation(async () => {
+        return "testy@mctestface.com";
+      });
+
+    const { path, params } = await controller.resendVerificationEmail(
+      {
+        cookies: { accessToken: "test.user.jwt" }
+      },
+      "/app/me",
+      response.new()
+    );
+
+    expect(response.code).toEqual(200);
+    expect(path).toBe("signup/verification-email-sent");
+    expect(params.userEmail).toBe("testy@mctestface.com");
+  });
+
+  it("should return an error screen when resending verification email if user is already verified", async () => {
+    jest
+      .spyOn(signupService, "resendVerificationEmail")
+      .mockImplementation(async () => {
+        throw new ConflictException("User is already verified");
+      });
+
+    const { path, params } = await controller.resendVerificationEmail(
+      {
+        cookies: { accessToken: "test.user.jwt" }
+      },
+      "/app/me",
+      response.new()
+    );
+
+    expect(response.code).toEqual(409);
+    expect(path).toBe("signup/user-already-verified");
+    expect(params.redirectLink).toBe("/app/me");
+  });
+
+  it("should return an error screen when resending verification email if user is invalid", async () => {
+    jest
+      .spyOn(signupService, "resendVerificationEmail")
+      .mockImplementation(async () => {
+        throw new Error("Invalid user");
+      });
+
+    const { path, params } = await controller.resendVerificationEmail(
+      {
+        cookies: { accessToken: "test.user.jwt" }
+      },
+      "/app/me",
+      response.new()
+    );
+
+    expect(response.code).toEqual(400);
+    expect(path).toBe("signup/verification-failure");
+    expect(params.redirectLink).toBe("/app/me");
   });
 });

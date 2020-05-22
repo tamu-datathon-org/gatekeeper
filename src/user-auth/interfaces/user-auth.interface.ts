@@ -5,7 +5,7 @@ export type UserAuthType = "EmailAndPassword" | OAuthProviders;
 
 export interface UserAuth extends Document {
   readonly email: string;
-  readonly isVerified: boolean;
+  isVerified: boolean;
   readonly authType: UserAuthType;
   readonly passwordHash?: string;
   readonly oAuthToken?: string;

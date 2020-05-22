@@ -63,12 +63,25 @@ export class AuthService {
    * Generate a JWT token for the user
    * @param user UserAuth object
    */
-  getJwtForUser(user: UserAuth) {
+  private getJwtForUser(user: UserAuth) {
     const payload = {
       email: user.email
     };
     return this.jwtService.sign(payload, {
       expiresIn: process.env.AUTH_JWT_EXPIRATION
+    });
+  }
+
+  /**
+   * Gets the JWT for the given user and attaches it to the response in a cookie.
+   * @param {UserAuth} user The UserAuth object for the given user
+   * @param {} res The request response object to attach the JWT to
+   */
+  applyJwt(user: UserAuth, res) {
+    const jwt = this.getJwtForUser(user);
+    return res.cookie("accessToken", jwt, {
+      httpOnly: true // Prevent JS access of the cookie on the client
+      // secure: true, // Prevent cookie use for non-https stuff.
     });
   }
 }
