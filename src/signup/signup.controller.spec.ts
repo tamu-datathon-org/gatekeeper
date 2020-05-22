@@ -276,6 +276,6 @@ describe("Signup Controller", () => {
 
     expect(response.code).toEqual(400);
     expect(path).toBe("signup/verification-failure");
-    expect(params.redirectLink).toBe("/app/me")
+    expect(params.redirectLink).toBe("/app/me");
   });
 });

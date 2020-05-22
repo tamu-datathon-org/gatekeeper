@@ -123,7 +123,6 @@ export class SignupController {
     }
   }
 
-
   @Get("verify/resend")
   /**
    * @param  {Request} req
@@ -136,7 +135,10 @@ export class SignupController {
     @Res() res
   ) {
     try {
-      const userEmail = await this.signupService.resendVerificationEmail(req.cookies["accessToken"],redirectLink);
+      const userEmail = await this.signupService.resendVerificationEmail(
+        req.cookies["accessToken"],
+        redirectLink
+      );
       return res.render("signup/verification-email-sent", {
         userEmail
       });
