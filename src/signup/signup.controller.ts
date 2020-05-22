@@ -124,10 +124,10 @@ export class SignupController {
   }
 
   @Get("verify/resend")
+  // Don't user a JWT guard here because we need custom error handling.
   /**
-   * @param  {Request} req
-   * @param  {string} redirectLink
-   * @param  {Response} res
+   * Resends the verification link via email for a user.
+   * NOTE: User is specified by the JWT token that is included in the request.
    */
   async resendVerificationEmail(
     @Req() req,
