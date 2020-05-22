@@ -22,7 +22,9 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
         });
     }
 
-    // TODO: Add better error handling if needed.
-    throw exception;
+    // TODO: maybe we should just redirect to /auth/login if status code is 401
+
+    // Default Exception Case: Just return the error
+    return response.status(exception.getStatus()).json(exception.getResponse());
   }
 }
