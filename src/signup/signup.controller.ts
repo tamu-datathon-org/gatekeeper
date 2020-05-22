@@ -45,6 +45,7 @@ export class SignupController {
     @Query("r") redirect: string | undefined,
     @Res() res
   ) {
+    if (!redirect) redirect = "/auth/me";
     // Validate signupUserDto.
     let validationErrors = undefined;
     if (
@@ -105,6 +106,7 @@ export class SignupController {
     @Query("user") userJwt: string,
     @Res() res
   ) {
+    if (!redirectLink) redirectLink = "/auth/me";
     try {
       const user = await this.signupService.confirmUserSignup(userJwt);
       this.authService.applyJwt(user, res);
@@ -134,6 +136,7 @@ export class SignupController {
     @Query("r") redirectLink: string | undefined,
     @Res() res
   ) {
+    if (!redirectLink) redirectLink = "/auth/me";
     try {
       const userEmail = await this.signupService.resendVerificationEmail(
         req.cookies["accessToken"],

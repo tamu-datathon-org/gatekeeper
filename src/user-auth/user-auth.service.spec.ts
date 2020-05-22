@@ -3,6 +3,7 @@ import { UserAuthService } from "./user-auth.service";
 import { MongooseModule } from "@nestjs/mongoose";
 import { UserAuthSchema } from "./schemas/user-auth.schema";
 import { TestDatabaseModule } from "../test-database/test-database.module";
+import { ConflictException } from "@nestjs/common";
 
 describe("UserAuthService", () => {
   let service: UserAuthService;
@@ -71,6 +72,25 @@ describe("UserAuthService", () => {
         "A user with the same email address already exists"
       );
     }
+  });
+
+  it("should not be able to create a users with the same email regardless of case", async () => {
+    await service.create({
+      email: "gEOrge@ExampLE.com",
+      authType: "EmailAndPassword",
+      password: "SomePassword",
+      isVerified: false
+    });
+    const promise = service.create({
+      email: "GeoRGe@example.COM",
+      authType: "EmailAndPassword",
+      password: "DifferentPassword",
+      isVerified: false
+    });
+
+    await expect(promise).rejects.toThrow(
+      new ConflictException("A user with the same email address already exists")
+    );
   });
 
   it("should only allow creation of a user if the password exists when AuthType is EmailAndPassword", async () => {
@@ -203,6 +223,37 @@ describe("UserAuthService", () => {
     const user = await service.findByEmail("bob@example.com");
     expect(user).toBeDefined();
     expect(user.email).toBe("bob@example.com");
+  });
+
+  it("should be able to find users by email regardless of case", async () => {
+    await service.create({
+      email: "george@example.com",
+      authType: "EmailAndPassword",
+      password: "SomePassword",
+      isVerified: false
+    });
+    await service.create({
+      email: "bob@example.com",
+      authType: "EmailAndPassword",
+      password: "SomePassword",
+      isVerified: true
+    });
+    await service.create({
+      email: "jan@example.com",
+      authType: "EmailAndPassword",
+      password: "SomePassword",
+      isVerified: false
+    });
+
+    const user = await service.findByEmail("BOB@eXAmpLE.cOm");
+    expect(user).toBeDefined();
+    expect(user.email).toBe("bob@example.com");
+
+    const sameUser = await service.findByEmail("boB@exampLE.coM");
+    expect(sameUser).toBeDefined();
+    expect(sameUser.email).toBe("bob@example.com");
+
+    expect(user).toEqual(sameUser);
   });
 
   it("should be able to find users by id", async () => {
