@@ -3,7 +3,7 @@
 <%- include ("../partials/head") %>
 
 <body class="AuthFormPage text-center">
-  <form class="form-signin mx-auto" method="post" action="/auth/login?r=<%= locals.redirectLink %>">
+  <form class="form-signin mx-auto px-3" method="post" action="/auth/login?r=<%= locals.redirectLink %>">
     <!-- csrf token for integrity :) -->
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     <!-- logo/image -->
@@ -58,7 +58,7 @@
     </div>
 
     <!-- copyright TD -->
-    <p class="mt-5 mb-3 text-muted text-center">&copy; TAMU Datathon 2020</p>
+    <p class="mt-5 mb-3 text-muted text-center">&copy; TAMU Datathon <%= new Date().getFullYear() %></p>
   </form>
 
   <%- include ("../partials/scripts") %>

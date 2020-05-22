@@ -6,7 +6,8 @@ import {
   Post,
   Body,
   ConflictException,
-  Res
+  Res,
+  Param
 } from "@nestjs/common";
 import { SignupUserDto } from "./dto/signup-user.dto";
 import { SignupService } from "./signup.service";
@@ -28,8 +29,8 @@ export class SignupController {
 
   @Get()
   @Render("signup/index")
-  root(@Req() req) {
-    return { csrfToken: req.csrfToken() };
+  root(@Req() req, @Param("r") redirect: string | undefined) {
+    return { csrfToken: req.csrfToken(), redirectLink: redirect || "/auth/me" };
   }
 
   @Post("")

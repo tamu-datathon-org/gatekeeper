@@ -3,11 +3,11 @@
 <%- include ("../partials/head") %>
 
 <body class="AuthFormPage text-center">
-  <form class="form-signin mx-auto" method="post">
+  <form class="form-signin mx-auto px-3" method="post">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     <img class="mb-4" src="/auth/static/img/main.png" alt="" width="72" height="72" />
-    <h1 class="h3 mb-3 font-weight-normal">Sign up</h1>
-    <p>Create a new account</p>
+    <h1 class="h3 mb-3 font-weight-normal">Create an account</h1>
+    <p>to continue to your application</p>
 
     <!-- EMAIL -->
     <div id="email-input-div" class="text-left form-input-div <%= locals.emailError ? 'input-invalid' : null%>">
@@ -42,7 +42,7 @@
     </div>
 
     <div id="submit-btn-div"" class="text-center text-left">
-      <button type="submit" class="btn btn-primary btn-block btn-lg mx-auto">Submit</button>
+      <button type="submit" class="btn btn-primary btn-block btn-lg mx-auto">Create Account</button>
     </div>
 
     <div class="text-center mt-3">
@@ -65,7 +65,7 @@
     </div>
 
     <!-- copyright TD -->
-    <p class="mt-5 mb-3 text-muted text-center">&copy; TAMU Datathon 2020</p>
+    <p class="mt-5 mb-3 text-muted text-center">&copy; TAMU Datathon <%= new Date().getFullYear() %></p>
   </form>
 
 <%- include ("../partials/scripts") %>
