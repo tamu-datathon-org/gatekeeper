@@ -7,6 +7,8 @@ import { MailModule } from "./mail/mail.module";
 import { AppController } from "./app.controller";
 import { SignupModule } from "./signup/signup.module";
 import { LoginModule } from "./login/login.module";
+import { APP_FILTER } from "@nestjs/core";
+import { GlobalHttpExceptionFilter } from "./common/filters/global-http-exception.filter";
 
 @Module({
   imports: [
@@ -18,6 +20,12 @@ import { LoginModule } from "./login/login.module";
     SignupModule,
     LoginModule
   ],
-  controllers: [AppController]
+  controllers: [AppController],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: GlobalHttpExceptionFilter
+    }
+  ]
 })
 export class AppModule {}

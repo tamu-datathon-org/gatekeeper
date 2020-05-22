@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include ("../partials/head") %>
+
+  <body>
+    <h1 class="text-center py-5">&#x1F6E1; Gatekeeper &#x1F6E1;</h1>
+
+    <div class="container">
+      <div class="text-center">
+        <h2>You have already been verified.</h2>
+        <div class="my-4">
+          <p>Please login to access your account.</p>
+        </div>
+        <a class="btn btn-primary" href="/auth/login?r=<%= locals.redirectLink %>">Login</a>
+      </div>
+    </div>
+    <%- include ("../partials/scripts") %>
+  </body>
+</html>

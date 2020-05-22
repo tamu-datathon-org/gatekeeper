@@ -6,12 +6,14 @@
     <h1 class="text-center py-5">&#x1F6E1; Gatekeeper &#x1F6E1;</h1>
 
     <div class="container">
-      <div class="row justify-content-center">
-        <h2>Sign-up Successful | Activation Pending</h2>
+      <div class="text-center">
+        <h2>Verification succeeded!</h2>
         <div class="my-4">
-          <p>Thank you for signing up! Please check you email (<a href="#"><%= userEmail %></a>) for an activation email.</p>
+          <p>Thank you for verifying your email.</p>
         </div>
+        <a class="btn btn-primary" href="<%= locals.redirectLink %>">Continue</a>
       </div>
     </div>
+    <%- include ("../partials/scripts") %>
   </body>
 </html>

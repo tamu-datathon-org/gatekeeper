@@ -7,11 +7,12 @@ import {
   Body,
   ConflictException,
   Res,
-  Param
+  Query
 } from "@nestjs/common";
 import { SignupUserDto } from "./dto/signup-user.dto";
 import { SignupService } from "./signup.service";
 import { ValidatorService } from "../validator/validator.service";
+import { AuthService } from "../auth/auth.service";
 
 @Controller("signup")
 export class SignupController {
@@ -23,20 +24,25 @@ export class SignupController {
   };
 
   constructor(
+    private authService: AuthService,
     private signupService: SignupService,
     private validatorService: ValidatorService
   ) {}
 
   @Get()
   @Render("signup/index")
-  root(@Req() req, @Param("r") redirect: string | undefined) {
-    return { csrfToken: req.csrfToken(), redirectLink: redirect || "/auth/me" };
+  root(@Req() req, @Query("r") redirect: string | undefined) {
+    return {
+      csrfToken: req.csrfToken(),
+      redirectLink: redirect || "/auth/me"
+    };
   }
 
   @Post("")
   async signupUserEmailAndPassword(
     @Req() req,
     @Body() signupUserDto: SignupUserDto,
+    @Query("r") redirect: string | undefined,
     @Res() res
   ) {
     // Validate signupUserDto.
@@ -64,15 +70,17 @@ export class SignupController {
     if (validationErrors)
       return res.status(400).render("signup/index", {
         csrfToken: req.csrfToken(),
+        redirectLink: redirect,
         emailPrefill: signupUserDto.email,
         ...validationErrors
       });
 
     try {
       const user = await this.signupService.signupUserEmailAndPassword(
-        signupUserDto
+        signupUserDto,
+        redirect
       );
-      return res.render("signup/email-pwd-signup-success", {
+      return res.render("signup/verification-email-sent", {
         userEmail: user.email
       });
     } catch (e) {
@@ -80,12 +88,69 @@ export class SignupController {
       if (e instanceof ConflictException)
         return res.status(409).render("signup/index", {
           csrfToken: req.csrfToken(),
+          redirectLink: redirect,
           emailPrefill: signupUserDto.email,
           emailError: this.controllerErrors.userExists
         });
 
       // TODO: Change this to a standard way of handling 5XX errors.
       throw e;
+    }
+  }
+
+  @Get("verify")
+  async confirmSignup(
+    @Req() req,
+    @Query("r") redirectLink: string | undefined,
+    @Query("user") userJwt: string,
+    @Res() res
+  ) {
+    try {
+      const user = await this.signupService.confirmUserSignup(userJwt);
+      this.authService.applyJwt(user, res);
+      return res.render("signup/verification-success", {
+        redirectLink
+      });
+    } catch (e) {
+      if (e instanceof ConflictException) {
+        return res.status(409).render("signup/user-already-verified", {
+          redirectLink
+        });
+      }
+      return res.status(400).render("signup/verification-failure", {
+        redirectLink
+      });
+    }
+  }
+
+  @Get("verify/resend")
+  // Don't user a JWT guard here because we need custom error handling.
+  /**
+   * Resends the verification link via email for a user.
+   * NOTE: User is specified by the JWT token that is included in the request.
+   */
+  async resendVerificationEmail(
+    @Req() req,
+    @Query("r") redirectLink: string | undefined,
+    @Res() res
+  ) {
+    try {
+      const userEmail = await this.signupService.resendVerificationEmail(
+        req.cookies["accessToken"],
+        redirectLink
+      );
+      return res.render("signup/verification-email-sent", {
+        userEmail
+      });
+    } catch (e) {
+      if (e instanceof ConflictException) {
+        return res.status(409).render("signup/user-already-verified", {
+          redirectLink
+        });
+      }
+      return res.status(400).render("signup/verification-failure", {
+        redirectLink
+      });
     }
   }
 }
