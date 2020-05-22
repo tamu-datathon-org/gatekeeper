@@ -25,6 +25,14 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
     // TODO: maybe we should just redirect to /auth/login if status code is 401
 
     // Default Exception Case: Just return the error
-    return response.status(exception.getStatus()).json(exception.getResponse());
+    if (exception instanceof HttpException)
+      // turns out normal Errors can come through here
+      return response
+        .status(exception.getStatus())
+        .json(exception.getResponse());
+    else
+      return response
+        .status(500)
+        .json(new HttpException("Internal Server Error", 500).getResponse());
   }
 }
