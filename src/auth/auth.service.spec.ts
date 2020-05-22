@@ -5,12 +5,15 @@ import { UserAuthModule } from "../user-auth/user-auth.module";
 import { PassportModule } from "@nestjs/passport";
 import { TestDatabaseModule } from "../test-database/test-database.module";
 import { UserAuthService } from "../user-auth/user-auth.service";
-import { JwtModule } from "@nestjs/jwt";
+import { JwtModule, JwtService } from "@nestjs/jwt";
+import { NotFoundException } from "@nestjs/common";
+import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 
 describe("AuthService", () => {
   let service: AuthService;
   let userAuthService: UserAuthService;
   let module: TestingModule;
+  let jwtService: JwtService;
 
   beforeEach(async () => {
     module = await Test.createTestingModule({
@@ -25,6 +28,7 @@ describe("AuthService", () => {
 
     service = module.get<AuthService>(AuthService);
     userAuthService = module.get<UserAuthService>(UserAuthService);
+    jwtService = module.get<JwtService>(JwtService);
   });
 
   it("should be defined", () => {
@@ -81,10 +85,65 @@ describe("AuthService", () => {
       );
       expect(userAuthReturned).toBeNull();
     } catch (e) {
-      expect(e.message).toEqual(
-        "User signed up with a different authentication provider"
-      );
+      expect(e.message).toEqual("Google");
     }
+  });
+
+  it("should validate a user with an OAuth account", async () => {
+    const userAuth = await userAuthService.create({
+      authType: "Google",
+      email: "george@example.com",
+      isVerified: true,
+      oAuthToken: "test"
+    });
+
+    const userAuthReturned = await service.validateOAuthUser(
+      "george@example.com",
+      "Google"
+    );
+    expect(userAuthReturned.id).toEqual(userAuth.id);
+  });
+
+  it("should fail oAuth validation when validating a non-existent user", async () => {
+    const validatePromise = service.validateOAuthUser(
+      "george@example.com",
+      "Google"
+    );
+    await expect(validatePromise).rejects.toThrow(NotFoundException);
+  });
+
+  it("should fail oAuth validation when validating an EmailAndPassword user", async () => {
+    await userAuthService.create({
+      authType: "EmailAndPassword",
+      email: "george@example.com",
+      password: "Testing123",
+      isVerified: false
+    });
+
+    const validatePromise = service.validateOAuthUser(
+      "george@example.com",
+      "Google"
+    );
+    await expect(validatePromise).rejects.toThrow("EmailAndPassword");
+  });
+
+  it("should add a valid auth JWT to a response", async () => {
+    const user = {
+      email: "testy@mctest.com",
+      isVerified: false,
+      authType: "EmailAndPassword"
+    };
+    let res = {
+      cookie: (key, val) => {
+        this[key] = val;
+        return this;
+      }
+    };
+    res = service.applyJwt(user as UserAuth, res);
+    expect(res["accessToken"]).toBeDefined();
+    // Check that JWT is valid and has user email.
+    const payload = jwtService.verify(res["accessToken"]);
+    expect(payload.email).toEqual("testy@mctest.com");
   });
 
   afterAll(() => {

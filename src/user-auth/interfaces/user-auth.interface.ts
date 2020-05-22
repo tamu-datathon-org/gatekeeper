@@ -1,10 +1,11 @@
 import { Document } from "mongoose";
 
-export type UserAuthType = "EmailAndPassword" | "Google" | "Facebook";
+export type OAuthProviders = "Google" | "Facebook";
+export type UserAuthType = "EmailAndPassword" | OAuthProviders;
 
 export interface UserAuth extends Document {
   readonly email: string;
-  readonly isVerified: boolean;
+  isVerified: boolean;
   readonly authType: UserAuthType;
   readonly passwordHash?: string;
   readonly oAuthToken?: string;
