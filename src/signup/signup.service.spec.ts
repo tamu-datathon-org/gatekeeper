@@ -157,18 +157,18 @@ describe("SignupService", () => {
     expect(user.email).toEqual("testy@mctestface.com");
   });
 
-  it("should throw an error when given an invalid JWT", async () => {
+  it("should throw an error when confirming an user with an invalid JWT", async () => {
     const userJwt = "Thisis.aninvalid.jwt";
 
     jest.spyOn(userAuthService, "findByEmail").mockImplementation(async () => {
       return { email: "testy@mctestface.com" } as UserAuth;
     });
 
-    const confirmPromise = service.confirmUserSignup(userJwt);
-    await expect(confirmPromise).rejects.toThrow();
+    const promise = service.confirmUserSignup(userJwt);
+    await expect(promise).rejects.toThrow();
   });
 
-  it("should throw an error when given an expired JWT", async () => {
+  it("should throw an error when confirming an user with an expired JWT", async () => {
     const userJwt = jwtService.sign(
       { email: "testy@mctestface.com" },
       { expiresIn: "0s" }
@@ -178,11 +178,11 @@ describe("SignupService", () => {
       return { email: "testy@mctestface.com" } as UserAuth;
     });
 
-    const confirmPromise = service.confirmUserSignup(userJwt);
-    await expect(confirmPromise).rejects.toThrow();
+    const promise = service.confirmUserSignup(userJwt);
+    await expect(promise).rejects.toThrow();
   });
 
-  it("should throw an error when given an non-existent user", async () => {
+  it("should throw an error when confirming an non-existent user", async () => {
     const userJwt = jwtService.sign(
       { email: "testy@mctestface.com" },
       { expiresIn: "1h" }
@@ -192,7 +192,71 @@ describe("SignupService", () => {
       return null; // UserAuthService returns null when user does not exist.
     });
 
-    const confirmPromise = service.confirmUserSignup(userJwt);
-    await expect(confirmPromise).rejects.toThrow("Invalid user");
+    const promise = service.confirmUserSignup(userJwt);
+    await expect(promise).rejects.toThrow("Invalid user");
+  });
+
+  it("should throw an error when confirming a already-verified user", async () => {
+    const userJwt = jwtService.sign(
+      { email: "testy@mctestface.com" },
+      { expiresIn: "1h" }
+    );
+
+    jest.spyOn(userAuthService, "findByEmail").mockImplementation(async () => {
+      return {
+        email: "testy@mctestface.com",
+        isVerified: true
+      } as UserAuth;
+    });
+
+    const promise = service.confirmUserSignup(userJwt);
+    await expect(promise).rejects.toThrow("User is already verified");
+  });
+
+  it("should resend a verification email for a valid user JWT", async () => {
+    const userJwt = jwtService.sign(
+      { email: "testy@mctestface.com" },
+      { expiresIn: "1h" }
+    );
+
+    jest.spyOn(userAuthService, "findByEmail").mockImplementation(async () => {
+      return { email: "testy@mctestface.com" } as UserAuth;
+    });
+    const sendEmailFunc = jest.spyOn(mailService, "sendTemplatedEmail");
+
+    const userEmail = await service.resendVerificationEmail(userJwt, "/app/me");
+    expect(userEmail).toBe("testy@mctestface.com");
+    expect(sendEmailFunc).toHaveBeenCalled();
+  });
+
+  it("should fail sending a verification email for an invalid", async () => {
+    const userJwt = jwtService.sign(
+      { email: "testy@mctestface.com" },
+      { expiresIn: "1h" }
+    );
+
+    jest.spyOn(userAuthService, "findByEmail").mockImplementation(async () => {
+      return null; // UserAuthService returns null when user does not exist.
+    });
+
+    const promise = service.resendVerificationEmail(userJwt, "/app/me");
+    await expect(promise).rejects.toThrow("Invalid user");
+  });
+
+  it("should throw an error when confirming a already-verified user", async () => {
+    const userJwt = jwtService.sign(
+      { email: "testy@mctestface.com" },
+      { expiresIn: "1h" }
+    );
+
+    jest.spyOn(userAuthService, "findByEmail").mockImplementation(async () => {
+      return {
+        email: "testy@mctestface.com",
+        isVerified: true
+      } as UserAuth;
+    });
+
+    const promise = service.resendVerificationEmail(userJwt, "/app/me");
+    await expect(promise).rejects.toThrow("User is already verified");
   });
 });
