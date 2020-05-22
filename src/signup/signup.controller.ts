@@ -80,7 +80,7 @@ export class SignupController {
         signupUserDto,
         redirect
       );
-      return res.render("signup/email-pwd-signup-success", {
+      return res.render("signup/verification-email-sent", {
         userEmail: user.email
       });
     } catch (e) {
@@ -110,6 +110,35 @@ export class SignupController {
       this.authService.applyJwt(user, res);
       return res.render("signup/verification-success", {
         redirectLink
+      });
+    } catch (e) {
+      if (e instanceof ConflictException) {
+        return res.status(409).render("signup/user-already-verified", {
+          redirectLink
+        });
+      }
+      return res.status(400).render("signup/verification-failure", {
+        redirectLink
+      });
+    }
+  }
+
+
+  @Get("verify/resend")
+  /**
+   * @param  {Request} req
+   * @param  {string} redirectLink
+   * @param  {Response} res
+   */
+  async resendVerificationEmail(
+    @Req() req,
+    @Query("r") redirectLink: string | undefined,
+    @Res() res
+  ) {
+    try {
+      const userEmail = await this.signupService.resendVerificationEmail(req.cookies["accessToken"],redirectLink);
+      return res.render("signup/verification-email-sent", {
+        userEmail
       });
     } catch (e) {
       if (e instanceof ConflictException) {

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include ("../partials/head") %>
+
+  <body>
+    <h1 class="text-center py-5">&#x1F6E1; Gatekeeper &#x1F6E1;</h1>
+
+    <div class="container">
+      <div class="text-center">
+        <h2>Verification pending</h2>
+        <div class="my-4">
+          <p>Please check for an email from us with a verification link. You can also click the button below to get another verification link.</p>
+        </div>
+        <a class="btn btn-primary" href="/auth/signup/verify/resend?r=<%= locals.redirectLink %>">Get another link</a>
+      </div>
+    </div>
+    <%- include ("../partials/scripts") %>
+  </body>
+</html>

@@ -26,6 +26,17 @@ export class SignupService {
     return encodeURI(confirmationLink);
   }
 
+  private async sendVerificationEmail(userEmail: string, redirectLink: string): Promise<void> {
+    return this.mailService.sendTemplatedEmail({
+      emailTo: userEmail,
+      subject: "Activate your account!",
+      templateFile: "email-confirmation.ejs",
+      templateParams: {
+        confirmationLink: this.getConfirmationUrl(userEmail, redirectLink)
+      } /* TODO: Update when email-confirmation is implemented */
+    });
+  }
+
   /**
    * Uses UserAuthService to signup a user with the given email and password.
    * @param  {SignupUserDto} signupUserDto
@@ -42,25 +53,32 @@ export class SignupService {
       isVerified: false
     };
     const user = await this.userAuthService.create(createUserPayload);
-
-    await this.mailService.sendTemplatedEmail({
-      emailTo: user.email,
-      subject: "Activate your account!",
-      templateFile: "email-confirmation.ejs",
-      templateParams: {
-        confirmationLink: this.getConfirmationUrl(user.email, redirectLink)
-      } /* TODO: Update when email-confirmation is implemented */
-    });
+    await this.sendVerificationEmail(user.email, redirectLink);
     return user;
   }
 
   async confirmUserSignup(userJwt: string): Promise<UserAuth> {
     const userPayload = this.jwtService.verify(userJwt); // Verify returns jwt payload and fails if JWT is invalid.
+
+    // Make sure email exists and isn't already verified.
     const user = await this.userAuthService.findByEmail(userPayload.email);
     if (!user) throw new Error("Invalid user");
     if (user.isVerified) throw new ConflictException("User is already verified");
+    
     user.isVerified = true;
     user.save();
     return user;
+  }
+
+  async resendVerificationEmail(userJwt: string, redirectLink: string): Promise<string> {
+    const { email } = this.jwtService.verify(userJwt); // Verify returns jwt payload and fails if JWT is invalid.
+
+    // Make sure email exists and isn't already verified.
+    const user = await this.userAuthService.findByEmail(email);
+    if (!user) throw new Error("Invalid user");
+    if (user.isVerified) throw new ConflictException("User is already verified");
+
+    await this.sendVerificationEmail(email, redirectLink);
+    return email;
   }
 }

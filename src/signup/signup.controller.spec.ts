@@ -108,7 +108,7 @@ describe("Signup Controller", () => {
       "/app/me",
       response
     );
-    expect(path).toBe("signup/email-pwd-signup-success");
+    expect(path).toBe("signup/verification-email-sent");
     expect(params.userEmail).toBe(signupUserDto.email);
   });
 
