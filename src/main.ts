@@ -34,6 +34,6 @@ async function bootstrap(): Promise<void> {
   app.setBaseViewsDir(join(__dirname, "..", "views"));
   app.setViewEngine("ejs");
 
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000); // listen on $PORT but default to 3000 (needed for heroku)
 }
 bootstrap();
