@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "nest build && run build:sass",
+    "build": "nest build && npm run build:sass",
     "build:sass": "node-sass scss/custom.scss public/static/css/style.css --output-style compressed",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
