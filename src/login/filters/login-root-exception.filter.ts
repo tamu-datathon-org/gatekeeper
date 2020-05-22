@@ -7,7 +7,7 @@ import {
   NotFoundException
 } from "@nestjs/common";
 import { Response } from "express";
-import { JwtUserNotVerifiedException } from "src/auth/exceptions/jwt-user-not-verified.exception";
+import { JwtUserNotVerifiedException } from "../../auth/exceptions/jwt-user-not-verified.exception";
 
 @Catch(HttpException)
 export class LoginRootExceptionFilter implements ExceptionFilter {
@@ -31,12 +31,12 @@ export class LoginRootExceptionFilter implements ExceptionFilter {
         emailError: "User with the given email does not exist."
       });
     if (exception instanceof JwtUserNotVerifiedException) {
-        return response
-          .status(401)
-          .render("signup/resend-verification-email.ejs", {
-            redirectLink: request.query.r || "/auth/me"
-          });
-      }
+      return response
+        .status(401)
+        .render("signup/resend-verification-email.ejs", {
+          redirectLink: request.query.r || "/auth/me"
+        });
+    }
 
     // TODO: Add better error handling if needed.
     throw exception;

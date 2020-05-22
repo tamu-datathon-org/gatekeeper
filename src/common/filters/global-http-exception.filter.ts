@@ -13,7 +13,7 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest();
- 
+
     if (exception instanceof JwtUserNotVerifiedException) {
       return response
         .status(401)
