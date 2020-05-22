@@ -15,7 +15,7 @@ import { LoginGuard } from "../auth/login.guard";
 import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 import { LoginRootExceptionFilter } from "./filters/login-root-exception.filter";
 import { AuthGuard } from "@nestjs/passport";
-import { LoginProviderExceptionFilter } from "./filters/login-provider-exception-filter";
+import { LoginProviderExceptionFilter } from "./filters/login-provider-exception.filter";
 
 @Controller("login")
 export class LoginController {
