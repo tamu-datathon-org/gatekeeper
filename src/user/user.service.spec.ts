@@ -117,4 +117,38 @@ describe("UserService", () => {
       expect(e.message).toBe("A user with the same authId already exists");
     }
   });
+
+  it("should find all users and find by authId", async () => {
+    const createPayload = {
+      userAuthId: "random",
+      name: "George Blah"
+    } as CreateUserDto;
+
+    const createPayload2 = {
+      userAuthId: "random2",
+      name: "George Blah Bleh"
+    } as CreateUserDto;
+
+    jest
+      .spyOn(userAuthService, "findById")
+      .mockImplementation(async (authId: string) => {
+        return ({
+          email: authId === "random" ? "george@example.com" : "bob@example.com",
+          id: authId,
+          isVerified: true,
+          authType: "EmailAndPassword",
+          passwordHash: "random"
+        } as unknown) as UserAuth;
+      });
+
+    await service.create(createPayload);
+    await service.create(createPayload2);
+
+    const users = await service.findAll();
+    expect(users.length).toBe(2);
+    const user = await service.findByAuthId("random");
+    expect(user).toBeDefined();
+    expect(user.authId).toBe("random");
+    expect(user.name).toBe("George Blah");
+  });
 });
