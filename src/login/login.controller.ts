@@ -26,7 +26,6 @@ export class LoginController {
     @Req() req,
     @QueryWithDefault("r", "/auth/me") redirectLink: string | undefined
   ) {
-    console.log(redirectLink);
     return {
       csrfToken: req.csrfToken(),
       redirectLink
