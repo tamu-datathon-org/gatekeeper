@@ -7,6 +7,7 @@ import { MongooseModule } from "@nestjs/mongoose";
   imports: [
     MongooseModule.forFeature([{ name: "Event", schema: EventSchema }])
   ],
-  providers: [EventService]
+  providers: [EventService],
+  exports: [EventService]
 })
 export class EventModule {}
