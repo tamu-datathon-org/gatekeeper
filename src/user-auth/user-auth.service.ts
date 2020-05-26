@@ -77,7 +77,10 @@ export class UserAuthService {
    */
 
   async findByEmail(email: string): Promise<UserAuth | undefined> {
-    return (await this.userAuthModel.findOne({ email: email.toLowerCase() })) | undefined;
+    return (
+      (await this.userAuthModel.findOne({ email: email.toLowerCase() })) |
+      undefined
+    );
   }
 
   /**

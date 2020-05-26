@@ -10,8 +10,8 @@ import { UserModule } from "./user/user.module";
 import { LoginModule } from "./login/login.module";
 import { APP_FILTER } from "@nestjs/core";
 import { GlobalHttpExceptionFilter } from "./common/filters/global-http-exception.filter";
-import { EventModule } from './event/event.module';
-import { AttendedEventModule } from './attended-event/attended-event.module';
+import { EventModule } from "./event/event.module";
+import { AttendedEventModule } from "./attended-event/attended-event.module";
 
 @Module({
   imports: [
