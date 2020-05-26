@@ -50,13 +50,13 @@ describe("UserService", () => {
     } as CreateUserDto;
 
     jest.spyOn(userAuthService, "findById").mockImplementation(async () => {
-      return ({
+      return {
         email: "george@example.com",
         id: "random",
         isVerified: true,
         authType: "EmailAndPassword",
         passwordHash: "random"
-      } as unknown) as UserAuth;
+      } as UserAuth;
     });
 
     const user = await service.create(createPayload);

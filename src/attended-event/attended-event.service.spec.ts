@@ -7,6 +7,7 @@ import { EventService } from "../event/event.service";
 import { User } from "../user/interfaces/user.interface";
 import { Event } from "../event/interfaces/event.interface";
 import { AttendedEventSchema } from "./schemas/attended-event.schema";
+import { BadRequestException } from "@nestjs/common";
 
 class MockUserService {
   async create() {
@@ -72,7 +73,7 @@ describe("AttendedEventService", () => {
   it("should record an AttendedEvent given a valid userAuthId and eventId", async () => {
     jest.spyOn(userService, "findByAuthId").mockImplementation(
       async (): Promise<User> =>
-        Promise.resolve({
+        ({
           authId: "random",
           email: "example@example.com",
           notificationEmail: "example@example.com"
@@ -80,7 +81,7 @@ describe("AttendedEventService", () => {
     );
     jest.spyOn(eventService, "findById").mockImplementation(
       async (): Promise<Event> =>
-        Promise.resolve({
+        ({
           name: "A Random Event",
           parentId: "root",
           description: "",
@@ -104,7 +105,7 @@ describe("AttendedEventService", () => {
       .mockImplementation(async (): Promise<User | undefined> => undefined);
     jest.spyOn(eventService, "findById").mockImplementation(
       async (): Promise<Event> =>
-        Promise.resolve({
+        ({
           name: "A Random Event",
           parentId: "root",
           description: "",
@@ -112,22 +113,18 @@ describe("AttendedEventService", () => {
         } as Event)
     );
 
-    try {
-      await service.record({
+    expect(
+      service.record({
         eventId: "randomEventId",
         authId: "random"
-      });
-    } catch (e) {
-      expect(e).toBeDefined();
-      expect(e.status).toBe(400);
-      expect(e.message).toBe("User does not exist");
-    }
+      })
+    ).toThrow(new BadRequestException("User does not exist"));
   });
 
   it("should fail to record an AttendedEvent if event doesn't exist", async () => {
     jest.spyOn(userService, "findByAuthId").mockImplementation(
       async (): Promise<User> =>
-        Promise.resolve({
+        ({
           authId: "random",
           email: "example@example.com",
           notificationEmail: "example@example.com"
@@ -137,21 +134,17 @@ describe("AttendedEventService", () => {
       .spyOn(eventService, "findById")
       .mockImplementation(async (): Promise<Event | undefined> => undefined);
 
-    try {
-      await service.record({
+    expect(
+      service.record({
         eventId: "randomEventId",
         authId: "random"
-      });
-    } catch (e) {
-      expect(e).toBeDefined();
-      expect(e.status).toBe(400);
-      expect(e.message).toBe("Event doesn't exist");
-    }
+      })
+    ).toThrow(new BadRequestException("Event doesn't exist"));
   });
   it("should fail to record a duplicate AttendedEvent", async () => {
     jest.spyOn(userService, "findByAuthId").mockImplementation(
       async (): Promise<User> =>
-        Promise.resolve({
+        ({
           authId: "random",
           email: "example@example.com",
           notificationEmail: "example@example.com"
@@ -159,7 +152,7 @@ describe("AttendedEventService", () => {
     );
     jest.spyOn(eventService, "findById").mockImplementation(
       async (): Promise<Event> =>
-        Promise.resolve({
+        ({
           name: "A Random Event",
           parentId: "root",
           description: "",
@@ -167,21 +160,15 @@ describe("AttendedEventService", () => {
         } as Event)
     );
 
-    await service.record({
-      eventId: "randomEventId",
-      authId: "random"
-    });
-    try {
-      await service.record({
+    expect(
+      service.record({
         eventId: "randomEventId",
         authId: "random"
-      });
-    } catch (e) {
-      expect(e);
-      expect(e.status).toBe(400);
-      expect(e.message).toBe(
+      })
+    ).toThrow(
+      new BadRequestException(
         "An AttendedEvent already exists for this user and event"
-      );
-    }
+      )
+    );
   });
 });
