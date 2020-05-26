@@ -151,4 +151,69 @@ describe("UserService", () => {
     expect(user.authId).toBe("random");
     expect(user.name).toBe("George Blah");
   });
+
+  it("should be able to update a user", async () => {
+    const createPayload = {
+      userAuthId: "random",
+      name: "George Blah"
+    } as CreateUserDto;
+
+    jest
+      .spyOn(userAuthService, "findById")
+      .mockImplementation(async (authId: string) => {
+        return ({
+          email: "george@example.com",
+          id: authId,
+          isVerified: true,
+          authType: "EmailAndPassword",
+          passwordHash: "random"
+        } as unknown) as UserAuth;
+      });
+
+    await service.create(createPayload);
+
+    await service.update("random", {
+      resumeLink: "hello.com"
+    });
+
+    const updatedUser = await service.findByAuthId("random");
+
+    expect(updatedUser).toBeDefined();
+    expect(updatedUser.resumeLink).toBe("hello.com");
+  });
+
+  it("should not be able to update a users authId or email", async () => {
+    const createPayload = {
+      userAuthId: "random",
+      name: "George Blah"
+    } as CreateUserDto;
+
+    jest
+      .spyOn(userAuthService, "findById")
+      .mockImplementation(async (authId: string) => {
+        return ({
+          email: "george@example.com",
+          id: authId,
+          isVerified: true,
+          authType: "EmailAndPassword",
+          passwordHash: "random"
+        } as unknown) as UserAuth;
+      });
+
+    await service.create(createPayload);
+
+    await service.update("random", {
+      resumeLink: "hello.com",
+      email: "hello@example.com",
+      authId: "differentAuthId"
+    });
+
+    const updatedUser = await service.findByAuthId("differentAuthId");
+    const actualUpdatedUser = await service.findByAuthId("random");
+
+    expect(updatedUser).toBeUndefined();
+    expect(actualUpdatedUser.resumeLink).toBe("hello.com");
+    expect(actualUpdatedUser.email).toBe("george@example.com");
+    expect(actualUpdatedUser.authId).toBe("random");
+  });
 });

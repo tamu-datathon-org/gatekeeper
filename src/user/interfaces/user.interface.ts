@@ -5,6 +5,7 @@ export interface User extends Document {
   readonly email: string;
   readonly notificationEmail: string;
   readonly name?: string;
+  readonly isAdmin: boolean;
   readonly resumeLink?: string;
   readonly birthYear?: number; // for age calculation
   readonly locationCity?: string;

@@ -5,6 +5,7 @@ export const UserSchema = new mongoose.Schema({
   email: String,
   notificationEmail: String,
   name: String,
+  isAdmin: Boolean,
   resumeLink: String,
   birthYear: Number, // for age calculation
   locationCity: String,

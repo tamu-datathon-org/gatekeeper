@@ -40,7 +40,8 @@ export class UserService {
     const createdUser = new this.userModel({
       authId: userAuth.id,
       email: userAuth.email,
-      name: req.name
+      name: req.name,
+      isAdmin: false
     });
 
     return createdUser.save();
@@ -58,18 +59,18 @@ export class UserService {
    * @param {string} userAuthId authId of the user to update
    * @param {UpdateQuery<User>} fields fields to update (cannot be email or authId)
    */
-  async update(userAuthId: string, fields: UpdateQuery<User>): Promise<User> {
+  async update(userAuthId: string, fields: UpdateQuery<User>): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { authId, email, ...fieldsToUpdate } = fields;
     const user = await this.findByAuthId(userAuthId);
-    return await this.userModel.updateOne(user._id, fieldsToUpdate).exec();
+    await this.userModel.updateOne(user, fieldsToUpdate).exec();
   }
 
   /**
    * Finds a User with the matching AuthId
    * @param {string} authId User Auth Id to find
    */
-  async findByAuthId(authId: string): Promise<User> {
-    return await this.userModel.findOne({ authId });
+  async findByAuthId(authId: string): Promise<User | undefined> {
+    return (await this.userModel.findOne({ authId })) || undefined;
   }
 }
