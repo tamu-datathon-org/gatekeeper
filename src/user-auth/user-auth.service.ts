@@ -26,6 +26,7 @@ export class UserAuthService {
       throw new BadRequestException(
         "Email is required to be a non-empty string"
       );
+    createUserAuth.email = createUserAuth.email.toLowerCase();
     try {
       existingUser = await this.findByEmail(createUserAuth.email);
     } catch (e) {
@@ -74,8 +75,9 @@ export class UserAuthService {
    * Finds one UserAuth with the matching email address.
    * @param email Email Address (UserAuth.email)
    */
+
   async findByEmail(email: string): Promise<UserAuth | undefined> {
-    return (await this.userAuthModel.findOne({ email })) || undefined;
+    return (await this.userAuthModel.findOne({ email: email.toLowerCase() })) | undefined;
   }
 
   /**

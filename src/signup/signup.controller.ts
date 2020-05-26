@@ -13,6 +13,7 @@ import { SignupUserDto } from "./dto/signup-user.dto";
 import { SignupService } from "./signup.service";
 import { ValidatorService } from "../validator/validator.service";
 import { AuthService } from "../auth/auth.service";
+import { QueryWithDefault } from "../common/decorators/query-with-default.decorator";
 
 @Controller("signup")
 export class SignupController {
@@ -31,10 +32,13 @@ export class SignupController {
 
   @Get()
   @Render("signup/index")
-  root(@Req() req, @Query("r") redirect: string | undefined) {
+  root(
+    @Req() req,
+    @QueryWithDefault("r", "/auth/me") redirectLink: string | undefined
+  ) {
     return {
       csrfToken: req.csrfToken(),
-      redirectLink: redirect || "/auth/me"
+      redirectLink
     };
   }
 
@@ -42,7 +46,7 @@ export class SignupController {
   async signupUserEmailAndPassword(
     @Req() req,
     @Body() signupUserDto: SignupUserDto,
-    @Query("r") redirect: string | undefined,
+    @QueryWithDefault("r", "/auth/me") redirectLink: string | undefined,
     @Res() res
   ) {
     // Validate signupUserDto.
@@ -70,7 +74,7 @@ export class SignupController {
     if (validationErrors)
       return res.status(400).render("signup/index", {
         csrfToken: req.csrfToken(),
-        redirectLink: redirect,
+        redirectLink,
         emailPrefill: signupUserDto.email,
         ...validationErrors
       });
@@ -78,7 +82,7 @@ export class SignupController {
     try {
       const user = await this.signupService.signupUserEmailAndPassword(
         signupUserDto,
-        redirect
+        redirectLink
       );
       return res.render("signup/verification-email-sent", {
         userEmail: user.email
@@ -88,7 +92,7 @@ export class SignupController {
       if (e instanceof ConflictException)
         return res.status(409).render("signup/index", {
           csrfToken: req.csrfToken(),
-          redirectLink: redirect,
+          redirectLink,
           emailPrefill: signupUserDto.email,
           emailError: this.controllerErrors.userExists
         });
@@ -101,7 +105,7 @@ export class SignupController {
   @Get("verify")
   async confirmSignup(
     @Req() req,
-    @Query("r") redirectLink: string | undefined,
+    @QueryWithDefault("r", "/auth/me") redirectLink: string | undefined,
     @Query("user") userJwt: string,
     @Res() res
   ) {
@@ -131,7 +135,7 @@ export class SignupController {
    */
   async resendVerificationEmail(
     @Req() req,
-    @Query("r") redirectLink: string | undefined,
+    @QueryWithDefault("r", "/auth/me") redirectLink: string | undefined,
     @Res() res
   ) {
     try {

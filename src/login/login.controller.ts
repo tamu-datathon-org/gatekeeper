@@ -6,8 +6,7 @@ import {
   Req,
   Res,
   UseFilters,
-  UseGuards,
-  Query
+  UseGuards
 } from "@nestjs/common";
 import { GetUserAuth } from "../user-auth/user-auth.decorator";
 import { AuthService } from "../auth/auth.service";
@@ -15,6 +14,7 @@ import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 import { LoginRootExceptionFilter } from "./filters/login-root-exception.filter";
 import { AuthGuard } from "@nestjs/passport";
 import { LoginProviderExceptionFilter } from "./filters/login-provider-exception.filter";
+import { QueryWithDefault } from "../common/decorators/query-with-default.decorator";
 
 @Controller("login")
 export class LoginController {
@@ -22,10 +22,13 @@ export class LoginController {
 
   @Get("/")
   @Render("login/index")
-  root(@Req() req, @Query("r") redirect: string | undefined) {
+  root(
+    @Req() req,
+    @QueryWithDefault("r", "/auth/me") redirectLink: string | undefined
+  ) {
     return {
       csrfToken: req.csrfToken(),
-      redirectLink: redirect || "/auth/me"
+      redirectLink
     };
   }
 
@@ -43,10 +46,10 @@ export class LoginController {
   googleLoginCallback(@Req() req, @GetUserAuth() user: UserAuth, @Res() res) {
     // TODO: Add error handling for when user does not exist. That mostly shouldn't happen due to the Google AuthGuard
     this.authService.applyJwt(user, res);
-    const redirect = req.session.redirect;
+    const redirect = req.session.redirect || "/auth/me";
     req.session.redirect = null;
     // TODO: Based on how redirects are done, implement the propagation of the URL from the original request to the callback
-    return res.redirect(redirect || "/auth/me");
+    return res.redirect(redirect);
   }
 
   @Get("facebook")
@@ -62,10 +65,10 @@ export class LoginController {
   facebookLoginCallback(@Req() req, @GetUserAuth() user: UserAuth, @Res() res) {
     // TODO: Add error handling for when user does not exist. That mostly shouldn't happen due to the Facebook AuthGuard
     this.authService.applyJwt(user, res);
-    const redirect = req.session.redirect;
+    const redirect = req.session.redirect || "/auth/me";
     req.session.redirect = null;
     // TODO: Based on how redirects are done, implement the propagation of the URL from the original request to the callback
-    return res.redirect(redirect || "/auth/me");
+    return res.redirect(redirect);
   }
 
   @UseFilters(LoginRootExceptionFilter, LoginProviderExceptionFilter) // Need exception filter to handle guard fails (maintain order).
@@ -73,11 +76,11 @@ export class LoginController {
   @Post("/")
   loginEmailAndPassword(
     @GetUserAuth() user: UserAuth,
-    @Query("r") redirect: string | undefined,
+    @QueryWithDefault("r", "/auth/me") redirect: string | undefined,
     @Res() res
   ) {
     this.authService.applyJwt(user, res);
     // TODO: make sure the redirect is only a relative url and cannot be a URL outside (like https://google.com)
-    return res.redirect(redirect || "/auth/me");
+    return res.redirect(redirect);
   }
 }
