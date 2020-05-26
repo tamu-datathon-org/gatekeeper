@@ -10,6 +10,7 @@ import { UserModule } from "./user/user.module";
 import { LoginModule } from "./login/login.module";
 import { APP_FILTER } from "@nestjs/core";
 import { GlobalHttpExceptionFilter } from "./common/filters/global-http-exception.filter";
+import { EventModule } from './event/event.module';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { GlobalHttpExceptionFilter } from "./common/filters/global-http-exceptio
     MailModule,
     SignupModule,
     UserModule,
-    LoginModule
+    LoginModule,
+    EventModule
   ],
   controllers: [AppController],
   providers: [
