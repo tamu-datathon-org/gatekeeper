@@ -44,7 +44,8 @@ export class UserService {
     const createdUser = new this.userModel({
       authId: userAuth.id,
       email: userAuth.email,
-      name: req.name,
+      firstName: req.firstName,
+      lastName: req.lastName,
       isAdmin: false
     });
 

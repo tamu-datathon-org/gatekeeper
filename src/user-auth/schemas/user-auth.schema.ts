@@ -4,5 +4,7 @@ export const UserAuthSchema = new mongoose.Schema({
   email: String,
   isVerified: Boolean,
   authType: String, // "EmailAndPassword" | "Google" | "Facebook"
-  passwordHash: String
+  passwordHash: String,
+  firstName: String,
+  lastName: String
 });

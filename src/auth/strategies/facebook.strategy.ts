@@ -19,7 +19,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "Facebook") {
       clientSecret: process.env.FACEBOOK_OAUTH_APP_SECRET,
       callbackURL: process.env.FACEBOOK_OAUTH_CALLBACK_URL,
       passReqToCallback: true,
-      profileFields: ["email"],
+      profileFields: ["email", "name"],
       scope: ["email"]
     });
   }
@@ -41,6 +41,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "Facebook") {
     done: (err: any, id?: any) => void
   ) {
     const userEmail = profile.emails[0].value;
+    console.log(profile);
 
     try {
       const user = await this.authService.validateOAuthUser(
@@ -54,7 +55,9 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "Facebook") {
         const newUser = await this.userAuthService.create({
           email: userEmail,
           isVerified: true,
-          authType: "Facebook"
+          authType: "Facebook",
+          firstName: profile.name?.givenName,
+          lastName: profile.name?.familyName
         });
         return done(null, newUser);
       }

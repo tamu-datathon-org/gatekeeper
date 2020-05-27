@@ -1,4 +1,5 @@
 export class CreateUserDto {
   userAuthId: string;
-  name?: string;
+  firstName?: string;
+  lastName?: string;
 }

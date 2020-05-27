@@ -52,7 +52,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "Google") {
         const newUser = await this.userAuthService.create({
           email: userEmail,
           isVerified: true,
-          authType: "Google"
+          authType: "Google",
+          firstName: profile.name?.givenName,
+          lastName: profile.name?.familyName
         });
         return done(null, newUser);
       }

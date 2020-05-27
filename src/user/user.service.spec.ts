@@ -47,7 +47,8 @@ describe("UserService", () => {
   it("should be able to create a user", async () => {
     const createPayload = {
       userAuthId: "random",
-      name: "George Blah"
+      firstName: "George",
+      lastName: "Blah"
     } as CreateUserDto;
 
     jest.spyOn(userAuthService, "findById").mockImplementation(async () => {
@@ -64,7 +65,8 @@ describe("UserService", () => {
 
     expect(user).toBeDefined();
     expect(user.email).toEqual("george@example.com");
-    expect(user.name).toEqual("George Blah");
+    expect(user.firstName).toEqual("George");
+    expect(user.lastName).toEqual("Blah");
     expect(user.authId).toEqual("random");
   });
 
@@ -86,7 +88,8 @@ describe("UserService", () => {
   it("should be fail to create a user when they are not verified", async () => {
     const createPayload = {
       userAuthId: "random",
-      name: "George Blah"
+      firstName: "George",
+      lastName: "Blah"
     } as CreateUserDto;
 
     jest.spyOn(userAuthService, "findById").mockImplementation(
@@ -108,7 +111,8 @@ describe("UserService", () => {
   it("should fail to create a user that already exists", async () => {
     const createPayload = {
       userAuthId: "random",
-      name: "George Blah"
+      firstName: "George",
+      lastName: "Blah"
     } as CreateUserDto;
 
     jest.spyOn(userAuthService, "findById").mockImplementation(
@@ -131,12 +135,14 @@ describe("UserService", () => {
   it("should find all users and find by authId", async () => {
     const createPayload = {
       userAuthId: "random",
-      name: "George Blah"
+      firstName: "George",
+      lastName: "Blah"
     } as CreateUserDto;
 
     const createPayload2 = {
       userAuthId: "random2",
-      name: "George Blah Bleh"
+      firstName: "George",
+      lastName: "Blah Blah"
     } as CreateUserDto;
 
     jest.spyOn(userAuthService, "findById").mockImplementation(
@@ -158,13 +164,15 @@ describe("UserService", () => {
     const user = await service.findByAuthId("random");
     expect(user).toBeDefined();
     expect(user.authId).toBe("random");
-    expect(user.name).toBe("George Blah");
+    expect(user.firstName).toEqual("George");
+    expect(user.lastName).toEqual("Blah");
   });
 
   it("should be able to update a user", async () => {
     const createPayload = {
       userAuthId: "random",
-      name: "George Blah"
+      firstName: "George",
+      lastName: "Blah"
     } as CreateUserDto;
 
     jest.spyOn(userAuthService, "findById").mockImplementation(
@@ -193,7 +201,8 @@ describe("UserService", () => {
   it("should not be able to update a users authId or email", async () => {
     const createPayload = {
       userAuthId: "random",
-      name: "George Blah"
+      firstName: "George",
+      lastName: "Blah"
     } as CreateUserDto;
 
     jest.spyOn(userAuthService, "findById").mockImplementation(
