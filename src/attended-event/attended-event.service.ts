@@ -32,7 +32,7 @@ export class AttendedEventService {
 
     const existingAttendedEvents = await this.findAll({
       eventId: event.id,
-      userAuthId: user.id
+      userAuthId: user.authId
     });
 
     if (existingAttendedEvents.length > 0) {
