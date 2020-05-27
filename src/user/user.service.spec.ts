@@ -68,6 +68,18 @@ describe("UserService", () => {
     expect(user.authId).toEqual("random");
   });
 
+  it("should be fail to create a user when they haven't registered", async () => {
+    const createPayload = {
+      userAuthId: "random",
+      name: "George Blah"
+    } as CreateUserDto;
+
+    jest.spyOn(userAuthService, "findById").mockImplementation(async () => undefined);
+
+    await expect(service.create(createPayload))
+    .rejects.toThrow(new BadRequestException("User is not registered"));
+  });
+
   it("should be fail to create a user when they are not verified", async () => {
     const createPayload = {
       userAuthId: "random",

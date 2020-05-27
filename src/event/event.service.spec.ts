@@ -4,6 +4,7 @@ import { TestDatabaseModule } from "../test-database/test-database.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { EventSchema } from "./schemas/event.schema";
 import { CreateEventReq } from "./dto/create-event-req.dto";
+import { BadRequestException } from "@nestjs/common";
 
 describe("EventService", () => {
   let service: EventService;
@@ -69,13 +70,8 @@ describe("EventService", () => {
       eventParentId: "5eccad133d48002da14db0b6"
     } as CreateEventReq;
 
-    try {
-      await service.create(createChildEventPayload);
-    } catch (e) {
-      expect(e).toBeDefined();
-      expect(e.status).toBe(400);
-      expect(e.message).toBe("Parent Event does not exist");
-    }
+    await expect(service.create(createChildEventPayload))
+    .rejects.toThrow(new BadRequestException("Parent Event does not exist"));
   });
 
   it("should find all events and find by id", async () => {
@@ -123,15 +119,10 @@ describe("EventService", () => {
     expect(foundEvent.name).toBe("newEventName");
     expect(foundEvent.parentId).toBe(parentEvent.id);
 
-    try {
-      await service.update(event.id, {
+    await expect(service.update(event.id, {
         name: "AnotherNewEventName",
         parentId: "5eccad133d48002da14db0b6"
-      });
-    } catch (e) {
-      expect(e).toBeDefined();
-      expect(e.status).toBe(400);
-      expect(e.message).toBe("Parent Event does not exist");
-    }
+      }))
+      .rejects.toThrow(new BadRequestException("Parent Event does not exist"));
   });
 });

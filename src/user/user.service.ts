@@ -1,7 +1,8 @@
 import {
   Injectable,
   BadRequestException,
-  ConflictException
+  ConflictException,
+  NotFoundException
 } from "@nestjs/common";
 import { Model, UpdateQuery } from "mongoose";
 import { User } from "./interfaces/user.interface";
@@ -22,6 +23,9 @@ export class UserService {
    */
   async create(req: CreateUserDto): Promise<User> {
     const userAuth = await this.userAuthService.findById(req.userAuthId);
+    if (!userAuth) {
+      throw new NotFoundException("User is not registered");
+    }
     if (!userAuth.isVerified) {
       throw new BadRequestException("User must be verified");
     }
