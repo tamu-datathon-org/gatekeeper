@@ -51,13 +51,13 @@ describe("UserService", () => {
     } as CreateUserDto;
 
     jest.spyOn(userAuthService, "findById").mockImplementation(async () => {
-      return ({
+      return {
         email: "george@example.com",
         id: "random",
         isVerified: true,
         authType: "EmailAndPassword",
         passwordHash: "random"
-      } as UserAuth);
+      } as UserAuth;
     });
 
     const user = await service.create(createPayload);
@@ -74,10 +74,13 @@ describe("UserService", () => {
       name: "George Blah"
     } as CreateUserDto;
 
-    jest.spyOn(userAuthService, "findById").mockImplementation(async () => undefined);
+    jest
+      .spyOn(userAuthService, "findById")
+      .mockImplementation(async () => undefined);
 
-    await expect(service.create(createPayload))
-    .rejects.toThrow(new BadRequestException("User is not registered"));
+    await expect(service.create(createPayload)).rejects.toThrow(
+      new BadRequestException("User is not registered")
+    );
   });
 
   it("should be fail to create a user when they are not verified", async () => {
@@ -86,18 +89,20 @@ describe("UserService", () => {
       name: "George Blah"
     } as CreateUserDto;
 
-    jest.spyOn(userAuthService, "findById").mockImplementation(async () => ({
-        email: "george@example.com",
-        id: "random",
-        isVerified: false,
-        authType: "EmailAndPassword",
-        passwordHash: "random"
-      }as UserAuth)
+    jest.spyOn(userAuthService, "findById").mockImplementation(
+      async () =>
+        ({
+          email: "george@example.com",
+          id: "random",
+          isVerified: false,
+          authType: "EmailAndPassword",
+          passwordHash: "random"
+        } as UserAuth)
     );
 
-    
-    await expect(service.create(createPayload))
-    .rejects.toThrow(new BadRequestException("User must be verified"));
+    await expect(service.create(createPayload)).rejects.toThrow(
+      new BadRequestException("User must be verified")
+    );
   });
 
   it("should fail to create a user that already exists", async () => {
@@ -106,18 +111,21 @@ describe("UserService", () => {
       name: "George Blah"
     } as CreateUserDto;
 
-    jest.spyOn(userAuthService, "findById").mockImplementation(async () => ({
-        email: "george@example.com",
-        id: "random",
-        isVerified: true,
-        authType: "EmailAndPassword",
-        passwordHash: "random"
-      } as UserAuth)
+    jest.spyOn(userAuthService, "findById").mockImplementation(
+      async () =>
+        ({
+          email: "george@example.com",
+          id: "random",
+          isVerified: true,
+          authType: "EmailAndPassword",
+          passwordHash: "random"
+        } as UserAuth)
     );
 
     await service.create(createPayload);
-    await expect(service.create(createPayload))
-    .rejects.toThrow(new ConflictException("A user with the same authId already exists"));
+    await expect(service.create(createPayload)).rejects.toThrow(
+      new ConflictException("A user with the same authId already exists")
+    );
   });
 
   it("should find all users and find by authId", async () => {
@@ -131,16 +139,16 @@ describe("UserService", () => {
       name: "George Blah Bleh"
     } as CreateUserDto;
 
-    jest
-      .spyOn(userAuthService, "findById")
-      .mockImplementation(async (authId: string) => ({
+    jest.spyOn(userAuthService, "findById").mockImplementation(
+      async (authId: string) =>
+        ({
           email: authId === "random" ? "george@example.com" : "bob@example.com",
           id: authId,
           isVerified: true,
           authType: "EmailAndPassword",
           passwordHash: "random"
         } as UserAuth)
-      );
+    );
 
     await service.create(createPayload);
     await service.create(createPayload2);
@@ -159,16 +167,16 @@ describe("UserService", () => {
       name: "George Blah"
     } as CreateUserDto;
 
-    jest
-      .spyOn(userAuthService, "findById")
-      .mockImplementation(async (authId: string) => ({
+    jest.spyOn(userAuthService, "findById").mockImplementation(
+      async (authId: string) =>
+        ({
           email: "george@example.com",
           id: authId,
           isVerified: true,
           authType: "EmailAndPassword",
           passwordHash: "random"
         } as UserAuth)
-      );
+    );
 
     await service.create(createPayload);
 
@@ -188,16 +196,16 @@ describe("UserService", () => {
       name: "George Blah"
     } as CreateUserDto;
 
-    jest
-      .spyOn(userAuthService, "findById")
-      .mockImplementation(async (authId: string) => ({
+    jest.spyOn(userAuthService, "findById").mockImplementation(
+      async (authId: string) =>
+        ({
           email: "george@example.com",
           id: authId,
           isVerified: true,
           authType: "EmailAndPassword",
           passwordHash: "random"
         } as UserAuth)
-      );
+    );
 
     await service.create(createPayload);
 

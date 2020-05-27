@@ -70,8 +70,9 @@ describe("EventService", () => {
       eventParentId: "5eccad133d48002da14db0b6"
     } as CreateEventReq;
 
-    await expect(service.create(createChildEventPayload))
-    .rejects.toThrow(new BadRequestException("Parent Event does not exist"));
+    await expect(service.create(createChildEventPayload)).rejects.toThrow(
+      new BadRequestException("Parent Event does not exist")
+    );
   });
 
   it("should find all events and find by id", async () => {
@@ -119,10 +120,11 @@ describe("EventService", () => {
     expect(foundEvent.name).toBe("newEventName");
     expect(foundEvent.parentId).toBe(parentEvent.id);
 
-    await expect(service.update(event.id, {
+    await expect(
+      service.update(event.id, {
         name: "AnotherNewEventName",
         parentId: "5eccad133d48002da14db0b6"
-      }))
-      .rejects.toThrow(new BadRequestException("Parent Event does not exist"));
+      })
+    ).rejects.toThrow(new BadRequestException("Parent Event does not exist"));
   });
 });
