@@ -118,7 +118,7 @@ describe("AttendedEventService", () => {
         eventId: "randomEventId",
         authId: "random"
       })
-    ).toThrow(new BadRequestException("User does not exist"));
+    ).rejects.toThrow(new BadRequestException("User does not exist"));
   });
 
   it("should fail to record an AttendedEvent if event doesn't exist", async () => {
@@ -139,7 +139,7 @@ describe("AttendedEventService", () => {
         eventId: "randomEventId",
         authId: "random"
       })
-    ).toThrow(new BadRequestException("Event doesn't exist"));
+    ).rejects.toThrow(new BadRequestException("Event doesn't exist"));
   });
   it("should fail to record a duplicate AttendedEvent", async () => {
     jest.spyOn(userService, "findByAuthId").mockImplementation(
@@ -165,7 +165,7 @@ describe("AttendedEventService", () => {
         eventId: "randomEventId",
         authId: "random"
       })
-    ).toThrow(
+    ).rejects.toThrow(
       new BadRequestException(
         "An AttendedEvent already exists for this user and event"
       )
