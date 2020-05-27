@@ -54,8 +54,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "Facebook") {
         const newUser = await this.userAuthService.create({
           email: userEmail,
           isVerified: true,
-          authType: "Facebook",
-          oAuthToken: "TEMP_VALUE" // TODO: Discuss this and see if oAuthTokens are needed
+          authType: "Facebook"
         });
         return done(null, newUser);
       }

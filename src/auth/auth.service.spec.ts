@@ -74,7 +74,6 @@ describe("AuthService", () => {
     await userAuthService.create({
       authType: "Google",
       email: "george@example.com",
-      oAuthToken: "Testing123",
       isVerified: false
     });
 
@@ -93,8 +92,7 @@ describe("AuthService", () => {
     const userAuth = await userAuthService.create({
       authType: "Google",
       email: "george@example.com",
-      isVerified: true,
-      oAuthToken: "test"
+      isVerified: true
     });
 
     const userAuthReturned = await service.validateOAuthUser(

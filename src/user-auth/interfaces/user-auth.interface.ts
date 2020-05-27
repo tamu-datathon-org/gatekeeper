@@ -8,5 +8,4 @@ export interface UserAuth extends Document {
   isVerified: boolean;
   readonly authType: UserAuthType;
   readonly passwordHash?: string;
-  readonly oAuthToken?: string;
 }

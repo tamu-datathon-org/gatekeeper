@@ -5,5 +5,4 @@ export class CreateUserAuthDto {
   isVerified: boolean;
   authType: UserAuthType;
   password?: string;
-  oAuthToken?: string;
 }

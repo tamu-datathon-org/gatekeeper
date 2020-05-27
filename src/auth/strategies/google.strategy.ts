@@ -52,8 +52,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "Google") {
         const newUser = await this.userAuthService.create({
           email: userEmail,
           isVerified: true,
-          authType: "Google",
-          oAuthToken: "TEMP_VALUE" // TODO: Discuss this and see if oAuthTokens are needed
+          authType: "Google"
         });
         return done(null, newUser);
       }
