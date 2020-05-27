@@ -75,15 +75,19 @@ export class UserAuthService {
    * Finds one UserAuth with the matching email address.
    * @param email Email Address (UserAuth.email)
    */
-  async findByEmail(email: string): Promise<UserAuth> {
-    return await this.userAuthModel.findOne({ email: email.toLowerCase() });
+
+  async findByEmail(email: string): Promise<UserAuth | undefined> {
+    return (
+      (await this.userAuthModel.findOne({ email: email.toLowerCase() })) ||
+      undefined
+    );
   }
 
   /**
    * Finds one UserAuth with the matching ID.
    * @param id UserAuth ID (UserAuth.id)
    */
-  async findById(id: string): Promise<UserAuth> {
-    return await this.userAuthModel.findById(id);
+  async findById(id: string): Promise<UserAuth | undefined> {
+    return (await this.userAuthModel.findById(id)) || undefined;
   }
 }
