@@ -71,16 +71,14 @@ describe("AttendedEventService", () => {
 
   it("should record an AttendedEvent given a valid userAuthId and eventId", async () => {
     jest.spyOn(userService, "findByAuthId").mockImplementation(
-      async (): Promise<User> =>
-        Promise.resolve({
+      async (): Promise<User> => ({
           authId: "random",
           email: "example@example.com",
           notificationEmail: "example@example.com"
         } as User)
     );
     jest.spyOn(eventService, "findById").mockImplementation(
-      async (): Promise<Event> =>
-        Promise.resolve({
+      async (): Promise<Event> => ({
           name: "A Random Event",
           parentId: "root",
           description: "",
@@ -103,8 +101,7 @@ describe("AttendedEventService", () => {
       .spyOn(userService, "findByAuthId")
       .mockImplementation(async (): Promise<User | undefined> => undefined);
     jest.spyOn(eventService, "findById").mockImplementation(
-      async (): Promise<Event> =>
-        Promise.resolve({
+      async (): Promise<Event> => ({
           name: "A Random Event",
           parentId: "root",
           description: "",
@@ -126,8 +123,7 @@ describe("AttendedEventService", () => {
 
   it("should fail to record an AttendedEvent if event doesn't exist", async () => {
     jest.spyOn(userService, "findByAuthId").mockImplementation(
-      async (): Promise<User> =>
-        Promise.resolve({
+      async (): Promise<User> => ({
           authId: "random",
           email: "example@example.com",
           notificationEmail: "example@example.com"
@@ -150,16 +146,14 @@ describe("AttendedEventService", () => {
   });
   it("should fail to record a duplicate AttendedEvent", async () => {
     jest.spyOn(userService, "findByAuthId").mockImplementation(
-      async (): Promise<User> =>
-        Promise.resolve({
+      async (): Promise<User> => ({
           authId: "random",
           email: "example@example.com",
           notificationEmail: "example@example.com"
         } as User)
     );
     jest.spyOn(eventService, "findById").mockImplementation(
-      async (): Promise<Event> =>
-        Promise.resolve({
+      async (): Promise<Event> => ({
           name: "A Random Event",
           parentId: "root",
           description: "",

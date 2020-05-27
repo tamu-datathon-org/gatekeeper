@@ -56,7 +56,7 @@ describe("UserService", () => {
         isVerified: true,
         authType: "EmailAndPassword",
         passwordHash: "random"
-      } as unknown) as UserAuth;
+      } as UserAuth);
     });
 
     const user = await service.create(createPayload);
