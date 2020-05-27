@@ -8,14 +8,12 @@ import {
   UseFilters,
   UseGuards
 } from "@nestjs/common";
-import { GetUserAuth } from "../user-auth/user-auth.decorator";
 import { AuthService } from "../auth/auth.service";
-import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 import { LoginRootExceptionFilter } from "./filters/login-root-exception.filter";
 import { AuthGuard } from "@nestjs/passport";
 import { LoginProviderExceptionFilter } from "./filters/login-provider-exception.filter";
 import { QueryWithDefault } from "../common/decorators/query-with-default.decorator";
-import { User } from "src/user/interfaces/user.interface";
+import { User } from "../user/interfaces/user.interface";
 import { GetUser } from "../user/user-auth.decorator";
 
 @Controller("login")

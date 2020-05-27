@@ -4,7 +4,6 @@ import { SignupService } from "./signup.service";
 import { SignupUserDto } from "./dto/signup-user.dto";
 import { BadRequestException, ConflictException } from "@nestjs/common";
 import { ValidatorService } from "../validator/validator.service";
-import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 import { AuthService } from "../auth/auth.service";
 import { User } from "../user/interfaces/user.interface";
 

@@ -6,7 +6,7 @@ import { MailModule } from "../mail/mail.module";
 import { ValidatorService } from "../validator/validator.service";
 import { JwtModule, JwtModuleOptions } from "@nestjs/jwt";
 import { AuthModule } from "../auth/auth.module";
-import { UserModule } from "src/user/user.module";
+import { UserModule } from "../user/user.module";
 
 @Module({
   imports: [

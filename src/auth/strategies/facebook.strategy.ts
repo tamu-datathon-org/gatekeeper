@@ -67,7 +67,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "Facebook") {
           firstName: newUserAuth.firstName,
           lastName: newUserAuth.lastName
         });
-        
+
         return done(null, newUser);
       }
 
