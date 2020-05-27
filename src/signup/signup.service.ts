@@ -5,12 +5,15 @@ import { CreateUserAuthDto } from "..//user-auth/dto/create-user-auth.dto";
 import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 import { MailService } from "../mail/mail.service";
 import { JwtService } from "@nestjs/jwt";
+import { UserService } from "../user/user.service";
+import { User } from "../user/interfaces/user.interface";
 
 @Injectable()
 export class SignupService {
   private readonly confirmationPath = "/auth/signup/verify";
   constructor(
     private userAuthService: UserAuthService,
+    private userService: UserService,
     private mailService: MailService,
     private readonly jwtService: JwtService
   ) {}
@@ -60,7 +63,7 @@ export class SignupService {
     return user;
   }
 
-  async confirmUserSignup(userJwt: string): Promise<UserAuth> {
+  async confirmUserSignup(userJwt: string): Promise<User> {
     const userPayload = this.jwtService.verify(userJwt); // Verify returns jwt payload and fails if JWT is invalid.
 
     // Make sure email exists and isn't already verified.
@@ -70,8 +73,13 @@ export class SignupService {
       throw new ConflictException("User is already verified");
 
     user.isVerified = true;
-    user.save();
-    return user;
+    await user.save();
+
+    return this.userService.create({
+      userAuthId: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName
+    });
   }
 
   async resendVerificationEmail(

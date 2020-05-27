@@ -104,7 +104,6 @@ export class SignupController {
 
   @Get("verify")
   async confirmSignup(
-    @Req() req,
     @QueryWithDefault("r", "/auth/me") redirectLink: string | undefined,
     @Query("user") userJwt: string,
     @Res() res

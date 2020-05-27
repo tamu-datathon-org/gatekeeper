@@ -7,6 +7,8 @@ import { MockMailCoreService } from "../mail/mocks/mock-mail-core.service";
 import { MailCoreService } from "../mail/mail-core.service";
 import { JwtService, JwtModule } from "@nestjs/jwt";
 import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
+import { UserService } from "../user/user.service";
+import { User } from "../user/interfaces/user.interface";
 
 class MockUserAuthService {
   async create() {
@@ -20,9 +22,16 @@ class MockUserAuthService {
   }
 }
 
+class MockUserService {
+  async create() {
+    /* Should be overriden using spyOn */
+  }
+}
+
 describe("SignupService", () => {
   let service: SignupService;
   let userAuthService: UserAuthService;
+  let userService: UserService;
   let mailService: MailService;
   let jwtService: JwtService;
 
@@ -39,12 +48,17 @@ describe("SignupService", () => {
         {
           provide: UserAuthService,
           useValue: new MockUserAuthService()
+        },
+        {
+          provide: UserService,
+          useValue: new MockUserService()
         }
       ]
     }).compile();
 
     service = module.get<SignupService>(SignupService);
     userAuthService = module.get<UserAuthService>(UserAuthService);
+    userService = module.get<UserService>(UserService);
     mailService = module.get<MailService>(MailService);
     jwtService = module.get<JwtService>(JwtService);
   });
@@ -153,6 +167,10 @@ describe("SignupService", () => {
       } as UserAuth;
     });
 
+    jest.spyOn(userService, "create").mockImplementation(async () => {
+      return { email: "testy@mctestface.com" } as User;
+    });
+
     const user = await service.confirmUserSignup(userJwt);
     expect(user.email).toEqual("testy@mctestface.com");
   });
@@ -163,6 +181,8 @@ describe("SignupService", () => {
     jest.spyOn(userAuthService, "findByEmail").mockImplementation(async () => {
       return { email: "testy@mctestface.com" } as UserAuth;
     });
+
+    // Don't need an implementation for userService:create.
 
     const promise = service.confirmUserSignup(userJwt);
     await expect(promise).rejects.toThrow();
@@ -178,6 +198,8 @@ describe("SignupService", () => {
       return { email: "testy@mctestface.com" } as UserAuth;
     });
 
+    // Don't need an implementation for userService:create.
+
     const promise = service.confirmUserSignup(userJwt);
     await expect(promise).rejects.toThrow();
   });
@@ -191,6 +213,8 @@ describe("SignupService", () => {
     jest.spyOn(userAuthService, "findByEmail").mockImplementation(async () => {
       return null; // UserAuthService returns null when user does not exist.
     });
+
+    // Don't need an implementation for userService:create.
 
     const promise = service.confirmUserSignup(userJwt);
     await expect(promise).rejects.toThrow("Invalid user");
@@ -208,6 +232,8 @@ describe("SignupService", () => {
         isVerified: true
       } as UserAuth;
     });
+
+    // Don't need an implementation for userService:create.
 
     const promise = service.confirmUserSignup(userJwt);
     await expect(promise).rejects.toThrow("User is already verified");

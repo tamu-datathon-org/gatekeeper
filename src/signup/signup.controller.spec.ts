@@ -6,6 +6,7 @@ import { BadRequestException, ConflictException } from "@nestjs/common";
 import { ValidatorService } from "../validator/validator.service";
 import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 import { AuthService } from "../auth/auth.service";
+import { User } from "../user/interfaces/user.interface";
 
 const existingUserEmails = ["already@exists.com"];
 const mockEmail = "testy@mctestface.com";
@@ -255,11 +256,10 @@ describe("Signup Controller", () => {
     jest
       .spyOn(signupService, "confirmUserSignup")
       .mockImplementation(async () => {
-        return { email: "testy@mctestface.com" } as UserAuth;
+        return { email: "testy@mctestface.com" } as User;
       });
 
     const { path, params } = await controller.confirmSignup(
-      csrfReq,
       "/app/me",
       "test.user.jwt",
       response.new()
@@ -277,7 +277,6 @@ describe("Signup Controller", () => {
       });
 
     const { path, params } = await controller.confirmSignup(
-      csrfReq,
       "/app/me",
       "test.user.jwt",
       response.new()

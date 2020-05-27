@@ -15,6 +15,8 @@ import { LoginRootExceptionFilter } from "./filters/login-root-exception.filter"
 import { AuthGuard } from "@nestjs/passport";
 import { LoginProviderExceptionFilter } from "./filters/login-provider-exception.filter";
 import { QueryWithDefault } from "../common/decorators/query-with-default.decorator";
+import { User } from "src/user/interfaces/user.interface";
+import { GetUser } from "../user/user-auth.decorator";
 
 @Controller("login")
 export class LoginController {
@@ -43,7 +45,7 @@ export class LoginController {
   @UseFilters(new LoginProviderExceptionFilter())
   // The Strategy (GoogleStrategy) does not re-validate for this endpoint
   @UseGuards(AuthGuard("Google"))
-  googleLoginCallback(@Req() req, @GetUserAuth() user: UserAuth, @Res() res) {
+  googleLoginCallback(@Req() req, @GetUser() user: User, @Res() res) {
     // TODO: Add error handling for when user does not exist. That mostly shouldn't happen due to the Google AuthGuard
     this.authService.applyJwt(user, res);
     const redirect = req.session.redirect || "/auth/me";
@@ -62,7 +64,7 @@ export class LoginController {
   @Get("facebook/callback")
   // The Strategy (GoogleStrategy) does not re-validate for this endpoint
   @UseGuards(AuthGuard("Facebook"))
-  facebookLoginCallback(@Req() req, @GetUserAuth() user: UserAuth, @Res() res) {
+  facebookLoginCallback(@Req() req, @GetUser() user: User, @Res() res) {
     // TODO: Add error handling for when user does not exist. That mostly shouldn't happen due to the Facebook AuthGuard
     this.authService.applyJwt(user, res);
     const redirect = req.session.redirect || "/auth/me";
@@ -75,7 +77,7 @@ export class LoginController {
   @UseGuards(AuthGuard("local")) // used to parse out the login credentials and generate a user
   @Post("/")
   loginEmailAndPassword(
-    @GetUserAuth() user: UserAuth,
+    @GetUser() user: User,
     @QueryWithDefault("r", "/auth/me") redirect: string | undefined,
     @Res() res
   ) {

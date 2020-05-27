@@ -6,12 +6,14 @@ import { MailModule } from "../mail/mail.module";
 import { ValidatorService } from "../validator/validator.service";
 import { JwtModule, JwtModuleOptions } from "@nestjs/jwt";
 import { AuthModule } from "../auth/auth.module";
+import { UserModule } from "src/user/user.module";
 
 @Module({
   imports: [
     AuthModule,
     UserAuthModule,
     MailModule,
+    UserModule,
     JwtModule.registerAsync({
       // Needs to be async as it uses env variable that's loaded after module is registered.
       useFactory: (): JwtModuleOptions => ({
