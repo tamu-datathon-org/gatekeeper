@@ -70,7 +70,7 @@ jobs:
           echo "::set-output name=short-commit::$(git rev-parse --short ${{ github.event.after }})"
       - name: Publish Jest Failure Output
         if: failure()
-        uses: phulsechinmay/rewriteable-pr-comment@v0.2
+        uses: phulsechinmay/rewritable-pr-comment@v0.2
         with:
           message: |
             **❌ Jest Unit Test(s) failed for commit [`${{ steps.results.outputs.short-commit }}`](https://github.com/tamu-datathon-org/gatekeeper/commit/${{ github.event.after }})**
@@ -140,7 +140,7 @@ jobs:
           echo "::set-output name=coverage-results::$report_stdout"
           echo "::set-output name=short-commit::$(git rev-parse --short ${{ github.event.after }})"
       - name: Publish URL in comment
-        uses: phulsechinmay/rewriteable-pr-comment@v0.2
+        uses: phulsechinmay/rewritable-pr-comment@v0.2
         with:
           msg: |
             **✅ Jest Unit Test(s) passed for commit [`${{ steps.results.outputs.short-commit }}`](https://github.com/tamu-datathon-org/gatekeeper/commit/${{ github.event.after }})**
