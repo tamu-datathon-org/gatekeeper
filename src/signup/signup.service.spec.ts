@@ -100,14 +100,8 @@ describe("SignupService", () => {
       throw new ConflictException();
     });
 
-    try {
-      await service.signupUserEmailAndPassword(signupPayload, "/auth/me");
-    } catch (e) {
-      // Extract error from NestJS Exception Filter.
-      const err = e.response;
-      expect(err.statusCode).toEqual(409);
-      expect(err.message).toEqual("Conflict");
-    }
+    const promise = service.signupUserEmailAndPassword(signupPayload, "/auth/me");
+    await expect(promise).rejects.toThrow(ConflictException);
   });
 
   it("should propagate the bad request error for an empty email string", async () => {
@@ -121,14 +115,8 @@ describe("SignupService", () => {
       throw new BadRequestException();
     });
 
-    try {
-      await service.signupUserEmailAndPassword(signupPayload, "/auth/me");
-    } catch (e) {
-      // Extract error from NestJS Exception Filter.
-      const err = e.response;
-      expect(err.statusCode).toEqual(400);
-      expect(err.message).toEqual("Bad Request");
-    }
+    const promise = service.signupUserEmailAndPassword(signupPayload, "/auth/me");
+    await expect(promise).rejects.toThrow(BadRequestException);
   });
 
   it("should propagate the bad request error for an empty password", async () => {
@@ -142,14 +130,8 @@ describe("SignupService", () => {
       throw new BadRequestException();
     });
 
-    try {
-      await service.signupUserEmailAndPassword(signupPayload, "/auth/me");
-    } catch (e) {
-      // Extract error from NestJS Exception Filter.
-      const err = e.response;
-      expect(err.statusCode).toEqual(400);
-      expect(err.message).toEqual("Bad Request");
-    }
+    const promise = service.signupUserEmailAndPassword(signupPayload, "/auth/me");
+    await expect(promise).rejects.toThrow(BadRequestException);
   });
 
   it("should return a valid user on a valid signup confirmation", async () => {
@@ -218,6 +200,30 @@ describe("SignupService", () => {
 
     const promise = service.confirmUserSignup(userJwt);
     await expect(promise).rejects.toThrow("Invalid user");
+  });
+
+  it("should create a User object when verifying a user", async () => {
+    const userJwt = jwtService.sign(
+      { email: "testy@mctestface.com" },
+      { expiresIn: "1h" }
+    );
+
+    jest.spyOn(userAuthService, "findByEmail").mockImplementation(async () => {
+      return {
+        email: "testy@mctestface.com",
+        save: () => {
+          /* no implementation needed */
+        }
+      } as UserAuth;
+    });
+
+    const userServiceCreateFunc = jest.spyOn(userService, "create").mockImplementation(async () => {
+      return { email: "testy@mctestface.com" } as User;
+    });
+
+    const user = await service.confirmUserSignup(userJwt);
+    expect(user.email).toBe("testy@mctestface.com");
+    expect(userServiceCreateFunc).toHaveBeenCalled();
   });
 
   it("should throw an error when confirming a already-verified user", async () => {
