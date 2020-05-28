@@ -142,7 +142,7 @@ jobs:
       - name: Publish URL in comment
         uses: phulsechinmay/rewritable-pr-comment@v0.2
         with:
-          msg: |
+          message: |
             **✅ Jest Unit Test(s) passed for commit [`${{ steps.results.outputs.short-commit }}`](https://github.com/tamu-datathon-org/gatekeeper/commit/${{ github.event.after }})**
             Link to code coverage report: ${{ steps.publisher.outputs.preview-url }}
             
