@@ -31,7 +31,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## :white_check_mark: Test
+## :white_check_mark: Testing
 ```bash
 # unit tests
 $ npm run test
