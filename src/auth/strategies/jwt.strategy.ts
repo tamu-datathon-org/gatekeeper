@@ -26,10 +26,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
     if (!userAuth) throw new UnauthorizedException("Invalid user auth");
     if (!userAuth.isVerified)
       throw new JwtUserNotVerifiedException("User not verified", 401);
-    
+
     const user = await this.userService.findByAuthId(userAuth.id);
     if (!user) throw new UnauthorizedException("Invalid user");
-    
+
     done(null, user);
   }
 }

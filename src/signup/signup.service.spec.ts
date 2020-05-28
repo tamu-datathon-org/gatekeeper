@@ -100,7 +100,10 @@ describe("SignupService", () => {
       throw new ConflictException();
     });
 
-    const promise = service.signupUserEmailAndPassword(signupPayload, "/auth/me");
+    const promise = service.signupUserEmailAndPassword(
+      signupPayload,
+      "/auth/me"
+    );
     await expect(promise).rejects.toThrow(ConflictException);
   });
 
@@ -115,7 +118,10 @@ describe("SignupService", () => {
       throw new BadRequestException();
     });
 
-    const promise = service.signupUserEmailAndPassword(signupPayload, "/auth/me");
+    const promise = service.signupUserEmailAndPassword(
+      signupPayload,
+      "/auth/me"
+    );
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
@@ -130,7 +136,10 @@ describe("SignupService", () => {
       throw new BadRequestException();
     });
 
-    const promise = service.signupUserEmailAndPassword(signupPayload, "/auth/me");
+    const promise = service.signupUserEmailAndPassword(
+      signupPayload,
+      "/auth/me"
+    );
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
@@ -217,9 +226,11 @@ describe("SignupService", () => {
       } as UserAuth;
     });
 
-    const userServiceCreateFunc = jest.spyOn(userService, "create").mockImplementation(async () => {
-      return { email: "testy@mctestface.com" } as User;
-    });
+    const userServiceCreateFunc = jest
+      .spyOn(userService, "create")
+      .mockImplementation(async () => {
+        return { email: "testy@mctestface.com" } as User;
+      });
 
     const user = await service.confirmUserSignup(userJwt);
     expect(user.email).toBe("testy@mctestface.com");
