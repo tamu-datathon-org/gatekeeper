@@ -8,10 +8,12 @@ import { JwtModule, JwtModuleOptions } from "@nestjs/jwt";
 import { GoogleStrategy } from "./strategies/google.strategy";
 import { FacebookStrategy } from "./strategies/facebook.strategy";
 import { JwtStrategy } from "./strategies/jwt.strategy";
+import { UserModule } from "../user/user.module";
 
 @Module({
   imports: [
     UserAuthModule,
+    UserModule,
     PassportModule.register({ session: true, defaultStrategy: "local" }),
     JwtModule.registerAsync({
       // Needs to be async as it uses env variable that's loaded after module is registered.

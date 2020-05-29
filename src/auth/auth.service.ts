@@ -11,6 +11,7 @@ import {
 import { UserAuthService } from "../user-auth/user-auth.service";
 import { JwtService } from "@nestjs/jwt";
 import { AuthProviderException } from "./exceptions/auth-provider.exception";
+import { User } from "../user/interfaces/user.interface";
 
 @Injectable()
 export class AuthService {
@@ -63,7 +64,7 @@ export class AuthService {
    * Generate a JWT token for the user
    * @param user UserAuth object
    */
-  private getJwtForUser(user: UserAuth) {
+  private getJwtForUser(user: User) {
     const payload = {
       email: user.email
     };
@@ -77,7 +78,7 @@ export class AuthService {
    * @param {UserAuth} user The UserAuth object for the given user
    * @param {} res The request response object to attach the JWT to
    */
-  applyJwt(user: UserAuth, res) {
+  applyJwt(user: User, res) {
     const jwt = this.getJwtForUser(user);
     return res.cookie("accessToken", jwt, {
       httpOnly: true // Prevent JS access of the cookie on the client

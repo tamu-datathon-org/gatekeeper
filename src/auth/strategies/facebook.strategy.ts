@@ -3,6 +3,7 @@ import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-facebook";
 import { AuthService } from "../auth.service";
 import { UserAuthService } from "../../user-auth/user-auth.service";
+import { UserService } from "../../user/user.service";
 
 // Nest.js does not have good docs on OAuth2 authentication.
 // For reference: https://medium.com/@nielsmeima/auth-in-nest-js-and-angular-463525b6e071
@@ -11,7 +12,8 @@ import { UserAuthService } from "../../user-auth/user-auth.service";
 export class FacebookStrategy extends PassportStrategy(Strategy, "Facebook") {
   constructor(
     private authService: AuthService,
-    private userAuthService: UserAuthService
+    private userAuthService: UserAuthService,
+    private userService: UserService
   ) {
     // http://www.passportjs.org/docs/google/
     super({
@@ -19,7 +21,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "Facebook") {
       clientSecret: process.env.FACEBOOK_OAUTH_APP_SECRET,
       callbackURL: process.env.FACEBOOK_OAUTH_CALLBACK_URL,
       passReqToCallback: true,
-      profileFields: ["email"],
+      profileFields: ["email", "name"],
       scope: ["email"]
     });
   }
@@ -41,6 +43,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "Facebook") {
     done: (err: any, id?: any) => void
   ) {
     const userEmail = profile.emails[0].value;
+    console.log(profile);
 
     try {
       const user = await this.authService.validateOAuthUser(
@@ -51,12 +54,20 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "Facebook") {
     } catch (e) {
       // Automatically create user if it doesn't exist
       if (e instanceof NotFoundException) {
-        const newUser = await this.userAuthService.create({
+        const newUserAuth = await this.userAuthService.create({
           email: userEmail,
           isVerified: true,
           authType: "Facebook",
-          oAuthToken: "TEMP_VALUE" // TODO: Discuss this and see if oAuthTokens are needed
+          firstName: profile.name?.givenName,
+          lastName: profile.name?.familyName
         });
+
+        const newUser = await this.userService.create({
+          userAuthId: newUserAuth.id,
+          firstName: newUserAuth.firstName,
+          lastName: newUserAuth.lastName
+        });
+
         return done(null, newUser);
       }
 

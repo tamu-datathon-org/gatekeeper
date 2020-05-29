@@ -7,6 +7,8 @@ import { MockMailCoreService } from "../mail/mocks/mock-mail-core.service";
 import { MailCoreService } from "../mail/mail-core.service";
 import { JwtService, JwtModule } from "@nestjs/jwt";
 import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
+import { UserService } from "../user/user.service";
+import { User } from "../user/interfaces/user.interface";
 
 class MockUserAuthService {
   async create() {
@@ -20,9 +22,16 @@ class MockUserAuthService {
   }
 }
 
+class MockUserService {
+  async create() {
+    /* Should be overriden using spyOn */
+  }
+}
+
 describe("SignupService", () => {
   let service: SignupService;
   let userAuthService: UserAuthService;
+  let userService: UserService;
   let mailService: MailService;
   let jwtService: JwtService;
 
@@ -39,12 +48,17 @@ describe("SignupService", () => {
         {
           provide: UserAuthService,
           useValue: new MockUserAuthService()
+        },
+        {
+          provide: UserService,
+          useValue: new MockUserService()
         }
       ]
     }).compile();
 
     service = module.get<SignupService>(SignupService);
     userAuthService = module.get<UserAuthService>(UserAuthService);
+    userService = module.get<UserService>(UserService);
     mailService = module.get<MailService>(MailService);
     jwtService = module.get<JwtService>(JwtService);
   });
@@ -86,14 +100,11 @@ describe("SignupService", () => {
       throw new ConflictException();
     });
 
-    try {
-      await service.signupUserEmailAndPassword(signupPayload, "/auth/me");
-    } catch (e) {
-      // Extract error from NestJS Exception Filter.
-      const err = e.response;
-      expect(err.statusCode).toEqual(409);
-      expect(err.message).toEqual("Conflict");
-    }
+    const promise = service.signupUserEmailAndPassword(
+      signupPayload,
+      "/auth/me"
+    );
+    await expect(promise).rejects.toThrow(ConflictException);
   });
 
   it("should propagate the bad request error for an empty email string", async () => {
@@ -107,14 +118,11 @@ describe("SignupService", () => {
       throw new BadRequestException();
     });
 
-    try {
-      await service.signupUserEmailAndPassword(signupPayload, "/auth/me");
-    } catch (e) {
-      // Extract error from NestJS Exception Filter.
-      const err = e.response;
-      expect(err.statusCode).toEqual(400);
-      expect(err.message).toEqual("Bad Request");
-    }
+    const promise = service.signupUserEmailAndPassword(
+      signupPayload,
+      "/auth/me"
+    );
+    await expect(promise).rejects.toThrow(BadRequestException);
   });
 
   it("should propagate the bad request error for an empty password", async () => {
@@ -128,14 +136,11 @@ describe("SignupService", () => {
       throw new BadRequestException();
     });
 
-    try {
-      await service.signupUserEmailAndPassword(signupPayload, "/auth/me");
-    } catch (e) {
-      // Extract error from NestJS Exception Filter.
-      const err = e.response;
-      expect(err.statusCode).toEqual(400);
-      expect(err.message).toEqual("Bad Request");
-    }
+    const promise = service.signupUserEmailAndPassword(
+      signupPayload,
+      "/auth/me"
+    );
+    await expect(promise).rejects.toThrow(BadRequestException);
   });
 
   it("should return a valid user on a valid signup confirmation", async () => {
@@ -153,6 +158,10 @@ describe("SignupService", () => {
       } as UserAuth;
     });
 
+    jest.spyOn(userService, "create").mockImplementation(async () => {
+      return { email: "testy@mctestface.com" } as User;
+    });
+
     const user = await service.confirmUserSignup(userJwt);
     expect(user.email).toEqual("testy@mctestface.com");
   });
@@ -163,6 +172,8 @@ describe("SignupService", () => {
     jest.spyOn(userAuthService, "findByEmail").mockImplementation(async () => {
       return { email: "testy@mctestface.com" } as UserAuth;
     });
+
+    // Don't need an implementation for userService:create.
 
     const promise = service.confirmUserSignup(userJwt);
     await expect(promise).rejects.toThrow();
@@ -178,6 +189,8 @@ describe("SignupService", () => {
       return { email: "testy@mctestface.com" } as UserAuth;
     });
 
+    // Don't need an implementation for userService:create.
+
     const promise = service.confirmUserSignup(userJwt);
     await expect(promise).rejects.toThrow();
   });
@@ -192,8 +205,36 @@ describe("SignupService", () => {
       return null; // UserAuthService returns null when user does not exist.
     });
 
+    // Don't need an implementation for userService:create.
+
     const promise = service.confirmUserSignup(userJwt);
     await expect(promise).rejects.toThrow("Invalid user");
+  });
+
+  it("should create a User object when verifying a user", async () => {
+    const userJwt = jwtService.sign(
+      { email: "testy@mctestface.com" },
+      { expiresIn: "1h" }
+    );
+
+    jest.spyOn(userAuthService, "findByEmail").mockImplementation(async () => {
+      return {
+        email: "testy@mctestface.com",
+        save: () => {
+          /* no implementation needed */
+        }
+      } as UserAuth;
+    });
+
+    const userServiceCreateFunc = jest
+      .spyOn(userService, "create")
+      .mockImplementation(async () => {
+        return { email: "testy@mctestface.com" } as User;
+      });
+
+    const user = await service.confirmUserSignup(userJwt);
+    expect(user.email).toBe("testy@mctestface.com");
+    expect(userServiceCreateFunc).toHaveBeenCalled();
   });
 
   it("should throw an error when confirming a already-verified user", async () => {
@@ -208,6 +249,8 @@ describe("SignupService", () => {
         isVerified: true
       } as UserAuth;
     });
+
+    // Don't need an implementation for userService:create.
 
     const promise = service.confirmUserSignup(userJwt);
     await expect(promise).rejects.toThrow("User is already verified");

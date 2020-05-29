@@ -38,11 +38,10 @@ describe("UserAuthService", () => {
     expect(userAuth.id).toBeDefined();
   });
 
-  it("should be able to create a user with oAuthToken", async () => {
+  it("should be able to create a user with an oAuth provider", async () => {
     const userAuth = await service.create({
       email: "george@example.com",
       authType: "Google",
-      oAuthToken: "SomeAuthToken",
       isVerified: true
     });
     expect(userAuth).toBeDefined();
@@ -108,31 +107,6 @@ describe("UserAuthService", () => {
     await expect(promise2).rejects.toThrow(
       new BadRequestException(
         "Password is required if the authType is EmailAndPassword"
-      )
-    );
-  });
-
-  it("should only allow creation of a user if the oAuthToken exists when AuthType is not EmailAndPassword", async () => {
-    const promise1 = service.create({
-      email: "george@example.com",
-      authType: "Google",
-      isVerified: false
-    });
-    await expect(promise1).rejects.toThrow(
-      new BadRequestException(
-        "oAuthToken is required if the authType is not EmailAndPassword"
-      )
-    );
-
-    const promise2 = service.create({
-      email: "george@example.com",
-      authType: "Facebook",
-      oAuthToken: "",
-      isVerified: false
-    });
-    await expect(promise2).rejects.toThrow(
-      new BadRequestException(
-        "oAuthToken is required if the authType is not EmailAndPassword"
       )
     );
   });

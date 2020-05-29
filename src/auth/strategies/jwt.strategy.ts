@@ -3,10 +3,14 @@ import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-jwt";
 import { UserAuthService } from "../../user-auth/user-auth.service";
 import { JwtUserNotVerifiedException } from "../exceptions/jwt-user-not-verified.exception";
+import { UserService } from "../../user/user.service";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
-  constructor(private userAuthService: UserAuthService) {
+  constructor(
+    private userAuthService: UserAuthService,
+    private userService: UserService
+  ) {
     super({
       secretOrKey: process.env.AUTH_JWT_SECRET,
       jwtFromRequest: req => {
@@ -18,12 +22,14 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
   }
 
   async validate(payload, done: (err: any, id?: any) => void) {
-    const user = await this.userAuthService.findByEmail(payload.email);
-    if (!user) throw new UnauthorizedException("Invalid user");
-    if (!user.isVerified)
+    const userAuth = await this.userAuthService.findByEmail(payload.email);
+    if (!userAuth) throw new UnauthorizedException("Invalid user auth");
+    if (!userAuth.isVerified)
       throw new JwtUserNotVerifiedException("User not verified", 401);
-    // PassportJS automatically checks JWT validity.
-    // Make any other validation checks here.
-    done(null, payload);
+
+    const user = await this.userService.findByAuthId(userAuth.id);
+    if (!user) throw new UnauthorizedException("Invalid user");
+
+    done(null, user);
   }
 }

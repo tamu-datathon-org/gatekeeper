@@ -47,15 +47,10 @@ export class UserAuthService {
       const createdUserAuth = new this.userAuthModel({
         ...userAuth,
         passwordHash,
-        oAuthToken: "",
         isVerified: userAuth.isVerified || false
       });
       return createdUserAuth.save();
     } else {
-      if (!createUserAuth.oAuthToken)
-        throw new BadRequestException(
-          "oAuthToken is required if the authType is not EmailAndPassword"
-        );
       const createdUserAuth = new this.userAuthModel({
         ...createUserAuth,
         isVerified: true
