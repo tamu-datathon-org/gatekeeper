@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { LoginController } from "./login.controller";
 import { AuthModule } from "../auth/auth.module";
 import { TestDatabaseModule } from "../test-database/test-database.module";
-import { GalaxyIntegrationConfig } from "src/galaxy-integrations/interfaces/galaxy-intergration";
+import { GalaxyIntegrationConfig } from "../galaxy-integrations/interfaces/galaxy-intergration";
 
 const mockCsrfToken = "test-csrf";
 const mockCsrfGenerator = (): string => mockCsrfToken;
@@ -27,7 +27,11 @@ describe("Login Controller", () => {
   });
 
   it("should return a login form with a CSRF token", () => {
-    const res = controller.root(csrfReq, "/auth/me", {} as GalaxyIntegrationConfig);
+    const res = controller.root(
+      csrfReq,
+      "/auth/me",
+      {} as GalaxyIntegrationConfig
+    );
     expect(res.csrfToken).toBe(mockCsrfToken);
   });
 });
