@@ -1,12 +1,12 @@
 export interface GalaxyIntegrationConfig {
   // Config with longest matching path prefix will be used
   // as template variables for viewz.
-  pathPrefix: string; 
+  pathPrefix: string;
 
   // To be shown / rendered to user-facing views.
-  appName?:  string; 
+  appName?: string;
   // To be used internally;
-  appId?: string; 
+  appId?: string;
 
   /* Login Page Variables */
   loginPageSubtext?: string;
@@ -15,8 +15,9 @@ export interface GalaxyIntegrationConfig {
   signupPageSubtext?: string;
 }
 
-export const newGalaxyIntegrationConfig = (config: GalaxyIntegrationConfig): GalaxyIntegrationConfig => {
-
+export const newGalaxyIntegrationConfig = (
+  config: GalaxyIntegrationConfig
+): GalaxyIntegrationConfig => {
   // Defining variables to be used in constant config values.
   const appName = config.appName || "TAMU Datathon";
 
@@ -26,9 +27,9 @@ export const newGalaxyIntegrationConfig = (config: GalaxyIntegrationConfig): Gal
 
     appName,
     appId: config.appId || "gatekeeper",
-    
+
     loginPageSubtext: config.loginPageSubtext || `to continue to ${appName}`,
 
-    signupPageSubtext: config.signupPageSubtext || `to continue to ${appName}`,
-  }
+    signupPageSubtext: config.signupPageSubtext || `to continue to ${appName}`
+  };
 };

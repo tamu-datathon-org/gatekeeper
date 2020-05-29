@@ -27,7 +27,7 @@ export class LoginController {
   root(
     @Req() req,
     @QueryWithDefault("r", "/auth/me") redirectLink: string | undefined,
-    @RedirectGalaxyIntegration() integrationConfig: GalaxyIntegrationConfig,
+    @RedirectGalaxyIntegration() integrationConfig: GalaxyIntegrationConfig
   ) {
     return {
       ...integrationConfig,

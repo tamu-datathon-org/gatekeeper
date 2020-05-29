@@ -3,7 +3,7 @@ import { newGalaxyIntegrationConfig } from "../interfaces/galaxy-intergration";
 export const GatekeeperGalaxyIntegration = newGalaxyIntegrationConfig({
   pathPrefix: "/auth",
   appName: "TAMU Datathon 2020"
-})
+});
 
 export const DefaultGalaxyIntegrations = {
   "/auth": GatekeeperGalaxyIntegration,
@@ -14,5 +14,5 @@ export const DefaultGalaxyIntegrations = {
   "/workshops": newGalaxyIntegrationConfig({
     pathPrefix: "/workshops",
     appName: "TAMU Datathon 2020 Workshops"
-  }),
-}
+  })
+};
