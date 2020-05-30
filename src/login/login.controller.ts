@@ -16,7 +16,7 @@ import { QueryWithDefault } from "../common/decorators/query-with-default.decora
 import { User } from "../user/interfaces/user.interface";
 import { GetUser } from "../user/user-auth.decorator";
 import { RedirectGalaxyIntegration } from "../galaxy-integrations/decorators/redirect-galaxy-integration.decorator";
-import { GalaxyIntegrationConfig } from "../galaxy-integrations/interfaces/galaxy-intergration";
+import { GalaxyIntegrationConfig } from "../galaxy-integrations/interfaces/galaxy-integration";
 
 @Controller("login")
 export class LoginController {

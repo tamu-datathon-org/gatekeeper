@@ -15,6 +15,12 @@ export interface GalaxyIntegrationConfig {
   signupPageSubtext?: string;
 }
 
+/**
+ * Creates a new GalaxyIntegrationConfig with default values and
+ * copies over defined values from the input config.
+ *
+ * @param  {GalaxyIntegrationConfig} config The input config which will be used instead of default values.
+ */
 export const newGalaxyIntegrationConfig = (
   config: GalaxyIntegrationConfig
 ): GalaxyIntegrationConfig => {

@@ -2,7 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { LoginController } from "./login.controller";
 import { AuthModule } from "../auth/auth.module";
 import { TestDatabaseModule } from "../test-database/test-database.module";
-import { GalaxyIntegrationConfig } from "../galaxy-integrations/interfaces/galaxy-intergration";
+import { GalaxyIntegrationConfig } from "../galaxy-integrations/interfaces/galaxy-integration";
 
 const mockCsrfToken = "test-csrf";
 const mockCsrfGenerator = (): string => mockCsrfToken;

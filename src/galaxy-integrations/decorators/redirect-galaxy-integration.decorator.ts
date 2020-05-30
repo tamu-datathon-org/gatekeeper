@@ -4,7 +4,13 @@ import {
   GatekeeperGalaxyIntegration
 } from "../constants/default-integrations";
 
-const getLongestMatchingPrefix = (key, prefixes) => {
+/**
+ * Returns the the longest string in the given list that is a prefix of the given key.
+ *
+ * @param  {string} key The string that will be searched for prefixes
+ * @param  {string[]} prefixes List of strings that will be checked with the key
+ */
+const getLongestMatchingPrefix = (key: string, prefixes: string[]) => {
   let longestPathPrefix = "";
 
   prefixes.forEach(prefix => {

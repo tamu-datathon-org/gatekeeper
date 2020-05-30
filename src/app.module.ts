@@ -12,6 +12,7 @@ import { APP_FILTER } from "@nestjs/core";
 import { GlobalHttpExceptionFilter } from "./common/filters/global-http-exception.filter";
 import { EventModule } from "./event/event.module";
 import { AttendedEventModule } from "./attended-event/attended-event.module";
+import { GalaxyIntegrationsService } from "./galaxy-integrations/galaxy-integrations.service";
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { AttendedEventModule } from "./attended-event/attended-event.module";
     {
       provide: APP_FILTER,
       useClass: GlobalHttpExceptionFilter
-    }
+    },
+    GalaxyIntegrationsService
   ]
 })
 export class AppModule {}
