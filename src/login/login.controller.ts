@@ -15,6 +15,8 @@ import { LoginProviderExceptionFilter } from "./filters/login-provider-exception
 import { QueryWithDefault } from "../common/decorators/query-with-default.decorator";
 import { User } from "../user/interfaces/user.interface";
 import { GetUser } from "../user/user-auth.decorator";
+import { RedirectGalaxyIntegration } from "../galaxy-integrations/decorators/redirect-galaxy-integration.decorator";
+import { GalaxyIntegrationConfig } from "../galaxy-integrations/interfaces/galaxy-integration";
 
 @Controller("login")
 export class LoginController {
@@ -24,9 +26,11 @@ export class LoginController {
   @Render("login/index")
   root(
     @Req() req,
-    @QueryWithDefault("r", "/auth/me") redirectLink: string | undefined
+    @QueryWithDefault("r", "/auth/me") redirectLink: string | undefined,
+    @RedirectGalaxyIntegration() integrationConfig: GalaxyIntegrationConfig
   ) {
     return {
+      ...integrationConfig,
       csrfToken: req.csrfToken(),
       redirectLink
     };

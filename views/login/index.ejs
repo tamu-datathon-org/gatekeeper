@@ -11,7 +11,7 @@
     <img class="mb-4" src="/auth/static/img/main.png" alt="" width="72" height="72" />
     <h1 class="h3 mb-3 font-weight-normal">Log in</h1>
 
-    <p>to continue to your application</p>
+    <p><%= locals.loginPageSubtext %></p>
 
     <!-- EMAIL -->
     <div id="email-input-div" class="text-left form-input-div <%= locals.emailError ? 'input-invalid' : null%>">
