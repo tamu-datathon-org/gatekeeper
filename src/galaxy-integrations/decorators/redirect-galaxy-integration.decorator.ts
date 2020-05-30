@@ -2,7 +2,7 @@ import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 import {
   DefaultGalaxyIntegrations,
   GatekeeperGalaxyIntegration
-} from "../constants/default-integrations";
+} from "../galaxy-integrations";
 
 /**
  * Returns the the longest string in the given list that is a prefix of the given key.

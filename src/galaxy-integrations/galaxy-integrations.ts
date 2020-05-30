@@ -1,4 +1,4 @@
-import { newGalaxyIntegrationConfig } from "../interfaces/galaxy-integration";
+import { newGalaxyIntegrationConfig } from "./interfaces/galaxy-integration";
 
 export const GatekeeperGalaxyIntegration = newGalaxyIntegrationConfig({
   pathPrefix: "/auth",
