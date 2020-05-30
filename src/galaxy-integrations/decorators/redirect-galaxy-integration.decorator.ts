@@ -10,12 +10,27 @@ import {
  * @param  {string} key The string that will be searched for prefixes
  * @param  {string[]} prefixes List of strings that will be checked with the key
  */
-const getLongestMatchingPrefix = (key: string, prefixes: string[]) => {
+export const getLongestMatchingPrefix = (key: string, prefixes: string[]) => {
   let longestPathPrefix = "";
+  let maxNumMatchingTokens = 0;
+  key = key.toLowerCase(); //
+  const keyPathTokens: string[] = key.split("/").filter(String); // Filter undefined values.
 
   prefixes.forEach(prefix => {
-    if (key.startsWith(prefix)) {
-      if (prefix.length > longestPathPrefix.length) longestPathPrefix = prefix;
+    const prefixTokens: string[] = prefix
+      .toLowerCase()
+      .split("/")
+      .filter(String); // Filter undefined values.
+    let numMatches = 0;
+    // Check how many path tokens match as a prefix.
+    for (let i = 0; i < prefixTokens.length && i < keyPathTokens.length; i++) {
+      if (keyPathTokens[i] === prefixTokens[i]) numMatches++;
+      else break;
+    }
+
+    if (numMatches > maxNumMatchingTokens) {
+      longestPathPrefix = prefix;
+      maxNumMatchingTokens = numMatches;
     }
   });
 
