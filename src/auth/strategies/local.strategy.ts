@@ -11,8 +11,7 @@ import { User } from "../../user/interfaces/user.interface";
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy, "local") {
   constructor(
-    private authService: AuthService,
-    private userService: UserService
+    private authService: AuthService
   ) {
     // change the expected request fields to be email and password
     // instead of username and password
