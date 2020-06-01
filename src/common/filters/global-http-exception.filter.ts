@@ -2,10 +2,12 @@ import {
   ExceptionFilter,
   Catch,
   ArgumentsHost,
-  HttpException
+  HttpException,
+  UnauthorizedException
 } from "@nestjs/common";
 import { Response } from "express";
-import { JwtUserNotVerifiedException } from "../../auth/exceptions/jwt-user-not-verified.exception";
+import { UserNotVerifiedException } from "../../auth/exceptions/user-not-verified.exception";
+import { GatekeeperGalaxyIntegration } from "../../galaxy-integrations/galaxy-integrations";
 
 @Catch()
 export class GlobalHttpExceptionFilter implements ExceptionFilter {
@@ -14,12 +16,18 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest();
 
-    if (exception instanceof JwtUserNotVerifiedException) {
+    if (exception instanceof UserNotVerifiedException) {
       return response
         .status(401)
         .render("signup/resend-verification-email.ejs", {
           redirectLink: request.query.r || "/auth/me"
         });
+    } else if (exception instanceof UnauthorizedException) {
+      return response.status(401).render("login/index", {
+        ...GatekeeperGalaxyIntegration,
+        csrfToken: request.csrfToken(),
+        redirectLink: "/auth/me"
+      });
     }
 
     // TODO: maybe we should just redirect to /auth/login if status code is 401
