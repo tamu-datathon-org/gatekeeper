@@ -46,17 +46,14 @@ describe("AuthService", () => {
       authType: "EmailAndPassword",
       email: "george@example.com",
       password: "Testing123",
-      isVerified: true,
+      isVerified: true
     });
 
     await userService.create({
-      userAuthId: userAuth.id,
-    })
+      userAuthId: userAuth.id
+    });
 
-    const user = await service.validateUser(
-      "george@example.com",
-      "Testing123"
-    );
+    const user = await service.validateUser("george@example.com", "Testing123");
     expect(user.authId).toEqual(userAuth.id);
     expect(user.email).toEqual("george@example.com");
   });
@@ -106,8 +103,8 @@ describe("AuthService", () => {
     });
 
     await userService.create({
-      userAuthId: userAuth.id,
-    })
+      userAuthId: userAuth.id
+    });
 
     const user = await service.validateOAuthUser(
       "george@example.com",
@@ -149,7 +146,7 @@ describe("AuthService", () => {
 
     const user = {
       email: "george@example.com",
-      authId: userAuth.id,
+      authId: userAuth.id
     };
     let res = {
       cookie: (key, val) => {
@@ -169,9 +166,9 @@ describe("AuthService", () => {
 
   it("should fail to authorize a user without a UserAuth", async () => {
     const user = {
-      email: "george@example.com",
+      email: "george@example.com"
     };
-    let res = {
+    const res = {
       cookie: (key, val) => {
         this[key] = val;
         return this;
@@ -185,12 +182,12 @@ describe("AuthService", () => {
     const userAuth = await userAuthService.create({
       authType: "Google",
       email: "george@example.com",
-      isVerified: true,
+      isVerified: true
     });
 
     const user = {
       email: "george@example.com",
-      authId: userAuth.id,
+      authId: userAuth.id
     };
     let res = {
       cookie: (key, val) => {
@@ -230,12 +227,12 @@ describe("AuthService", () => {
 
     const user = {
       email: "george@example.com",
-      authId: userAuth.id,
+      authId: userAuth.id
     };
     let res = {
       accessToken: "random-access-token",
-      clearCookie: (key) => {
-        delete this[key]
+      clearCookie: key => {
+        delete this[key];
         return this;
       }
     };
@@ -243,18 +240,18 @@ describe("AuthService", () => {
     expect(res["accessToken"]).toBeUndefined();
 
     const newUserAuth = await userAuthService.findById(userAuth.id);
-    expect(newUserAuth.accessId).toBeUndefined();    
+    expect(newUserAuth.accessId).toBeUndefined();
   });
 
   it("should successfully deauthorize a user without a valid UserAuth object", async () => {
     const user = {
-      email: "george@example.com",
+      email: "george@example.com"
       /* Non existent authId */
     };
     let res = {
       accessToken: "random-access-token",
-      clearCookie: (key) => {
-        delete this[key]
+      clearCookie: key => {
+        delete this[key];
         return this;
       }
     };

@@ -118,8 +118,7 @@ export class AuthService {
    */
   async deauthorizeUser(user: User, res) {
     const userAuth = await this.userAuthService.findById(user.authId);
-    if (!userAuth)
-      return res.clearCookie("accessToken");
+    if (!userAuth) return res.clearCookie("accessToken");
 
     userAuth.accessId = undefined;
     await userAuth.save();
