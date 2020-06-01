@@ -39,7 +39,7 @@ export class AuthService {
       if (!userAuth.isVerified)
         throw new UserNotVerifiedException("User not verified", 401);
 
-      const user = await this.userService.findByAuthId(userAuth.id);
+      const user = this.userService.findByAuthId(userAuth.id);
       if (!user) throw new UnauthorizedException("Invalid Credentials");
       return user;
     } else if (userAuth && userAuth.authType !== "EmailAndPassword") {
@@ -69,7 +69,7 @@ export class AuthService {
       throw new AuthProviderException(userAuth.authType, 401);
     }
 
-    const user = await this.userService.findByAuthId(userAuth.id);
+    const user = this.userService.findByAuthId(userAuth.id);
     if (!user) throw new UnauthorizedException("Invalid Credentials");
     return user;
   }
@@ -112,14 +112,14 @@ export class AuthService {
 
   /**
    * Clears the accessId in the UserAuth object of the given user
-   * and clears the accessToken cookie.
+   * and removes the accessToken cookie.
    * @param  {User} user The UserAuth object for the given user
    * @param  {} res The request response object to attach the JWT to
    */
   async deauthorizeUser(user: User, res) {
     const userAuth = await this.userAuthService.findById(user.authId);
     if (!userAuth)
-      return res.clearCookie("accessToken");
+      throw new UnauthorizedException("UserAuth does not exist for user");
 
     userAuth.accessId = undefined;
     await userAuth.save();
