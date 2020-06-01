@@ -47,9 +47,9 @@ export class LoginController {
   @UseFilters(new LoginProviderExceptionFilter())
   // The Strategy (GoogleStrategy) does not re-validate for this endpoint
   @UseGuards(AuthGuard("Google"))
-  async googleLoginCallback(@Req() req, @GetUser() user: User, @Res() res) {
+  googleLoginCallback(@Req() req, @GetUser() user: User, @Res() res) {
     // TODO: Add error handling for when user does not exist. That mostly shouldn't happen due to the Google AuthGuard
-    await this.authService.authorizeUser(user, res);
+    this.authService.applyJwt(user, res);
     const redirect = req.session.redirect || "/auth/me";
     req.session.redirect = null;
     // TODO: Based on how redirects are done, implement the propagation of the URL from the original request to the callback
@@ -66,9 +66,9 @@ export class LoginController {
   @Get("facebook/callback")
   // The Strategy (GoogleStrategy) does not re-validate for this endpoint
   @UseGuards(AuthGuard("Facebook"))
-  async facebookLoginCallback(@Req() req, @GetUser() user: User, @Res() res) {
+  facebookLoginCallback(@Req() req, @GetUser() user: User, @Res() res) {
     // TODO: Add error handling for when user does not exist. That mostly shouldn't happen due to the Facebook AuthGuard
-    await this.authService.authorizeUser(user, res);
+    this.authService.applyJwt(user, res);
     const redirect = req.session.redirect || "/auth/me";
     req.session.redirect = null;
     // TODO: Based on how redirects are done, implement the propagation of the URL from the original request to the callback
@@ -78,12 +78,12 @@ export class LoginController {
   @UseFilters(LoginRootExceptionFilter, LoginProviderExceptionFilter) // Need exception filter to handle guard fails (maintain order).
   @UseGuards(AuthGuard("local")) // used to parse out the login credentials and generate a user
   @Post("/")
-  async loginEmailAndPassword(
+  loginEmailAndPassword(
     @GetUser() user: User,
     @QueryWithDefault("r", "/auth/me") redirect: string | undefined,
     @Res() res
   ) {
-    await this.authService.authorizeUser(user, res);
+    this.authService.applyJwt(user, res);
     // TODO: make sure the redirect is only a relative url and cannot be a URL outside (like https://google.com)
     return res.redirect(redirect);
   }

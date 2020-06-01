@@ -6,6 +6,5 @@ export const UserAuthSchema = new mongoose.Schema({
   authType: String, // "EmailAndPassword" | "Google" | "Facebook"
   passwordHash: String,
   firstName: String,
-  lastName: String,
-  accessId: String
+  lastName: String
 });
