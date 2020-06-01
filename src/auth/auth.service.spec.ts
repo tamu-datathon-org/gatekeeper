@@ -8,10 +8,13 @@ import { UserAuthService } from "../user-auth/user-auth.service";
 import { JwtModule, JwtService } from "@nestjs/jwt";
 import { NotFoundException } from "@nestjs/common";
 import { User } from "../user/interfaces/user.interface";
+import { UserModule } from "../user/user.module";
+import { UserService } from "../user/user.service";
 
 describe("AuthService", () => {
   let service: AuthService;
   let userAuthService: UserAuthService;
+  let userService: UserService;
   let module: TestingModule;
   let jwtService: JwtService;
 
@@ -21,6 +24,7 @@ describe("AuthService", () => {
         TestDatabaseModule,
         UserAuthModule,
         PassportModule,
+        UserModule,
         JwtModule.register({ secret: "TEST_SECRET" })
       ],
       providers: [AuthService, LocalStrategy]
@@ -28,6 +32,7 @@ describe("AuthService", () => {
 
     service = module.get<AuthService>(AuthService);
     userAuthService = module.get<UserAuthService>(UserAuthService);
+    userService = module.get<UserService>(UserService);
     jwtService = module.get<JwtService>(JwtService);
   });
 
@@ -41,14 +46,19 @@ describe("AuthService", () => {
       authType: "EmailAndPassword",
       email: "george@example.com",
       password: "Testing123",
-      isVerified: false
+      isVerified: true,
     });
 
-    const userAuthReturned = await service.validateUser(
+    await userService.create({
+      userAuthId: userAuth.id,
+    })
+
+    const user = await service.validateUser(
       "george@example.com",
       "Testing123"
     );
-    expect(userAuthReturned.id).toEqual(userAuth.id);
+    expect(user.authId).toEqual(userAuth.id);
+    expect(user.email).toEqual("george@example.com");
   });
 
   it("should fail validate a user with email and password when the password is incorrect", async () => {
@@ -135,7 +145,7 @@ describe("AuthService", () => {
         return this;
       }
     };
-    res = service.applyJwt(user as User, res);
+    res = await service.authorizeUser(user as User, res);
     expect(res["accessToken"]).toBeDefined();
     // Check that JWT is valid and has user email.
     const payload = jwtService.verify(res["accessToken"]);

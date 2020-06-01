@@ -78,7 +78,7 @@ describe("Signup Controller", () => {
         {
           provide: AuthService,
           useValue: {
-            applyJwt: () => {
+            authorizeUser: () => {
               // Should be overriden using spyOn
             }
           }

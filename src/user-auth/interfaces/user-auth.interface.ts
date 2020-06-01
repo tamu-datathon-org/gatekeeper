@@ -10,4 +10,5 @@ export interface UserAuth extends Document {
   readonly passwordHash?: string;
   readonly firstName?: string;
   readonly lastName?: string;
+  accessId?: string;
 }
