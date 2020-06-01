@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include ("../partials/head") %>
+<%- include ("../partials/head") %>
 
-  <body>
-    <h1 class="text-center py-5">&#x1F6E1; Gatekeeper &#x1F6E1;</h1>
+<body class="MessagePage">
+  <div class="container">
+    <div class="row" style="min-height:500px; height:100vh">
+      <div class="col-sm-10 my-auto">
 
-    <div class="container">
-      <div class="text-center">
-        <h2>Verification succeeded!</h2>
-        <div class="my-4">
+        <div class="row logo">
+          <img src="/auth/static/img/main.png" width="80" height="80" />
+        </div>
+
+        <div class="row title">
+          <h1 class="h3 font-weight-normal">Verification succeeded!</h1>
+        </div>
+
+        <div class="row">
           <p>Thank you for verifying your email.</p>
         </div>
-        <a class="btn btn-primary" href="<%= locals.redirectLink %>">Continue</a>
+
+        <div class="row button">
+          <a class="btn btn-outline-primary" href="<%= locals.redirectLink %>">Continue</a>
+        </div>
       </div>
     </div>
-    <%- include ("../partials/scripts") %>
-  </body>
+  </div>
+  <%- include ("../partials/scripts") %>
+</body>
 </html>
