@@ -1,23 +1,18 @@
 body.MessagePage {
   background-color: #f5f5f5;
-  padding-left: 4em;
-  padding-right: 4em;
-  text-align: center;
 }
 
 .MessagePage {
-  .row {
-    justify-content: center;
+  .message-box {
+    margin-top: 30vh;
   }
   .logo {
-    padding-top: 2em;
-    padding-bottom: 7em;
+    padding-bottom: 2em;
   }
   .title {
     padding-bottom: 1em;
   }
   .button {
-    padding-top: 5em;
-    padding-bottom: 2em;
+    padding-top: 1em;
   }
 }

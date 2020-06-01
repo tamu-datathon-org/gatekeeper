@@ -4,23 +4,26 @@
 
 <body class="MessagePage">
   <div class="container">
-    <div class="row" style="min-height:500px; height:100vh">
-      <div class="col-sm-10 my-auto">
+    <div class="row justify-content-center message-box" style="height: 100vh;">
+      <div class="col-sm-10 text-center">
 
-        <div class="row logo">
+        <div class="logo">
           <img src="/auth/static/img/main.png" width="80" height="80" />
         </div>
 
-        <div class="row title">
+        <div class="title">
           <h1 class="h3 font-weight-normal">Verify your account</h1>
         </div>
 
-        <div class="row">
-          <p>Please check for an email from us with a verification link. You can also click the button below to get
-            another verification link.</p>
+        <div>
+          <p>
+            Please check for an email from us with a verification link. 
+            <br/>
+            You can also click the button below to get another verification link.
+          </p>
         </div>
 
-        <div class="row button">
+        <div class="button">
           <a class="btn btn-outline-primary" href="/auth/signup/verify/resend?r=<%= locals.redirectLink %>">Get another
             link</a>
         </div>
