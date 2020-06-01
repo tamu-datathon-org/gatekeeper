@@ -90,8 +90,10 @@ export class AuthService {
   }
 
   /**
-   * Gets the JWT for the given user and attaches it to the response in a cookie.
-   * @param {UserAuth} user The UserAuth object for the given user
+   * Authorizes user creating a JWT with email, authId & accessId
+   * from their UserAuth object & attaches it in the "accessToken" cookie.
+   * NOTE: The accessId is a UUID, which is automatically created if undefined.
+   * @param {User} user The UserAuth object for the given user
    * @param {} res The request response object to attach the JWT to
    */
   async authorizeUser(user: User, res) {
