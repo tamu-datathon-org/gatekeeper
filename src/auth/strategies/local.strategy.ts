@@ -1,9 +1,8 @@
 import { Strategy } from "passport-local";
 import { PassportStrategy } from "@nestjs/passport";
 import { Injectable } from "@nestjs/common";
-import { UserAuth } from "../../user-auth/interfaces/user-auth.interface";
 import { AuthService } from "../auth.service";
-import { JwtUserNotVerifiedException } from "../exceptions/jwt-user-not-verified.exception";
+import { User } from "../../user/interfaces/user.interface";
 
 /**
  * Strategy to allow requests to authenticate with a username and password in the request body.
@@ -24,11 +23,8 @@ export class LocalStrategy extends PassportStrategy(Strategy, "local") {
    * @param username Username of the user (the email address of the user)
    * @param password Password
    */
-  async validate(username: string, password: string): Promise<UserAuth> {
+  async validate(username: string, password: string): Promise<User> {
     const user = await this.authService.validateUser(username, password);
-
-    if (!user.isVerified)
-      throw new JwtUserNotVerifiedException("User not verified", 401);
 
     return user;
   }
