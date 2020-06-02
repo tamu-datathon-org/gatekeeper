@@ -4,21 +4,21 @@
 
 <body class="MessagePage">
   <div class="container">
-    <div class="row justify-content-center message-box" style="height: 100vh;">
+    <div class="row justify-content-center message-box" style="height: 70vh;">
       <div class="col-sm-10 text-center">
         <div class="logo">
           <img src="/auth/static/img/main.png" width="80" height="80" />
         </div>
   
         <div class="title">
-          <h1 class="h3 font-weight-normal">Account verification pending</h1>
+          <h1 class="h3 font-weight-normal">Check your email for a link</h1>
         </div>
 
         <div>
           <p>
-            We've sent you a verification email! 
+            Please check your email (<a href="#"><%= userEmail %></a>) for an email from TAMU Datathon. 
             <br/>
-            Please check your email (<a href="#"><%= userEmail %></a>) and click on the verification link provided in it.
+            Inside that email is a link that will verify your email and allow you to complete your application.
           </p>
         </div>
       </div>
