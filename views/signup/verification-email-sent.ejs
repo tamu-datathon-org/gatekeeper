@@ -1,18 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include ("../partials/head") %>
+<%- include ("../partials/head") %>
 
-  <body>
-    <h1 class="text-center py-5">&#x1F6E1; Gatekeeper &#x1F6E1;</h1>
+<body class="MessagePage">
+  <div class="container">
+    <div class="row justify-content-center message-box" style="height: 70vh;">
+      <div class="col-sm-10 text-center">
+        <div class="logo">
+          <img src="/auth/static/img/main.png" width="80" height="80" />
+        </div>
+  
+        <div class="title">
+          <h1 class="h3 font-weight-normal">Check your email for a link</h1>
+        </div>
 
-    <div class="container">
-      <div class="row justify-content-center">
-        <h2>Account verification pending</h2>
-        <div class="my-4">
-          <p>We've sent you a verification email! Please check your email (<a href="#"><%= userEmail %></a>) and click on the verification link provided in it.</p>
+        <div>
+          <p>
+            Please check your email (<a href="#"><%= userEmail %></a>) for an email from TAMU Datathon. 
+            <br/>
+            Inside that email is a link that will verify your email and allow you to complete your application.
+          </p>
         </div>
       </div>
     </div>
-    <%- include ("../partials/scripts") %>
-  </body>
+  </div>
+  <%- include ("../partials/scripts") %>
+</body>
 </html>
