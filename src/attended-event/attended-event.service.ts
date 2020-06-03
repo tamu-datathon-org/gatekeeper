@@ -25,7 +25,7 @@ export class AttendedEventService {
       throw new BadRequestException("Event doesn't exist");
     }
 
-    const user = await this.userService.findByAuthId(req.authId);
+    const user = await this.userService.findByAuthId(req.userAuthId);
     if (!user) {
       throw new BadRequestException("User does not exist");
     }
@@ -43,7 +43,8 @@ export class AttendedEventService {
 
     const createdAttendedEvent = new this.attendedEventModel({
       userAuthId: user.authId,
-      eventId: event.id
+      eventId: event.id,
+      timestamp: Date.now()
     });
 
     return createdAttendedEvent.save();

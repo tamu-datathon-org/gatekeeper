@@ -4,6 +4,7 @@ import { AttendedEventSchema } from "./schemas/attended-event.schema";
 import { MongooseModule } from "@nestjs/mongoose";
 import { UserModule } from "../user/user.module";
 import { EventModule } from "../event/event.module";
+import { AttendedEventController } from './attended-event.controller';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { EventModule } from "../event/event.module";
     EventModule
   ],
   providers: [AttendedEventService],
-  exports: [AttendedEventService]
+  exports: [AttendedEventService],
+  controllers: [AttendedEventController]
 })
 export class AttendedEventModule {}
