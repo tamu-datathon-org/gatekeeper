@@ -43,7 +43,6 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "Facebook") {
     done: (err: any, id?: any) => void
   ) {
     const userEmail = profile.emails[0].value;
-    console.log(profile);
 
     try {
       const user = await this.authService.validateOAuthUser(
