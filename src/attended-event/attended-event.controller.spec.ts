@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AttendedEventController } from './attended-event.controller';
-import { AttendedEventService } from './attended-event.service';
-import { AttendedEvent } from './interfaces/attended-event.interface';
-import { User } from 'src/user/interfaces/user.interface';
-import { UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { Test, TestingModule } from "@nestjs/testing";
+import { AttendedEventController } from "./attended-event.controller";
+import { AttendedEventService } from "./attended-event.service";
+import { AttendedEvent } from "./interfaces/attended-event.interface";
+import { User } from "../user/interfaces/user.interface";
+import { UnauthorizedException, BadRequestException } from "@nestjs/common";
 
 class MockAttendedEventService {
   async record() {
@@ -14,38 +14,48 @@ class MockAttendedEventService {
   }
 }
 
-describe('AttendedEvent Controller', () => {
+describe("AttendedEvent Controller", () => {
   let controller: AttendedEventController;
   let attendedEventService: AttendedEventService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AttendedEventController],
-      providers: [{
-        provide: AttendedEventService,
-        useValue: new MockAttendedEventService()
-      }]
+      providers: [
+        {
+          provide: AttendedEventService,
+          useValue: new MockAttendedEventService()
+        }
+      ]
     }).compile();
 
     controller = module.get<AttendedEventController>(AttendedEventController);
-    attendedEventService = module.get<AttendedEventService>(AttendedEventService);
+    attendedEventService = module.get<AttendedEventService>(
+      AttendedEventService
+    );
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 
   it("should return the list of AttendedEvent objects for a given event", async () => {
     const eventId = "test-id";
     const res = {
-      json: (val) => val
+      json: val => val
     };
-    const attendedEvents = [({eventId, userAuthId: "user-auth-id", timestamp: new Date()} as AttendedEvent)];
+    const attendedEvents = [
+      {
+        eventId,
+        userAuthId: "user-auth-id",
+        timestamp: new Date()
+      } as AttendedEvent
+    ];
 
-    jest.spyOn(attendedEventService, "findAll").mockImplementation(
-      async (): Promise<AttendedEvent[]> => attendedEvents
-    );
-    
+    jest
+      .spyOn(attendedEventService, "findAll")
+      .mockImplementation(async (): Promise<AttendedEvent[]> => attendedEvents);
+
     const result = await controller.getAttendees(eventId, res);
     expect(result["data"]).toEqual(attendedEvents);
   });
@@ -53,14 +63,16 @@ describe('AttendedEvent Controller', () => {
   it("should return the list of AttendedEvent objects for a given user", async () => {
     const userAuthId = "user-auth-id";
     const res = {
-      json: (val) => val
+      json: val => val
     };
-    const attendedEvents = [({eventId: "test-id", userAuthId, timestamp: new Date()} as AttendedEvent)];
+    const attendedEvents = [
+      { eventId: "test-id", userAuthId, timestamp: new Date() } as AttendedEvent
+    ];
 
-    jest.spyOn(attendedEventService, "findAll").mockImplementation(
-      async (): Promise<AttendedEvent[]> => attendedEvents
-    );
-    
+    jest
+      .spyOn(attendedEventService, "findAll")
+      .mockImplementation(async (): Promise<AttendedEvent[]> => attendedEvents);
+
     const result = await controller.getAttendees(userAuthId, res);
     expect(result["data"]).toEqual(attendedEvents);
   });
@@ -72,18 +84,25 @@ describe('AttendedEvent Controller', () => {
       authId: userAuthId
     } as User;
     const res = {
-      json: (val) => val
+      json: val => val
     };
-    const attendedEvent = ({
-      eventId, userAuthId, timestamp: new Date(),
+    const attendedEvent = {
+      eventId,
+      userAuthId,
+      timestamp: new Date(),
       toObject: () => attendedEvent
-    } as AttendedEvent);
+    } as AttendedEvent;
 
-    jest.spyOn(attendedEventService, "record").mockImplementation(
-      async (): Promise<AttendedEvent> => attendedEvent
+    jest
+      .spyOn(attendedEventService, "record")
+      .mockImplementation(async (): Promise<AttendedEvent> => attendedEvent);
+
+    const result = await controller.addAttendedEvent(
+      user,
+      eventId,
+      userAuthId,
+      res
     );
-    
-    const result = await controller.addAttendedEvent(user, eventId, userAuthId, res);
     expect(result["data"]).toEqual(attendedEvent);
   });
 
@@ -95,18 +114,25 @@ describe('AttendedEvent Controller', () => {
       isAdmin: true
     } as User;
     const res = {
-      json: (val) => val
+      json: val => val
     };
-    const attendedEvent = ({
-      eventId, userAuthId, timestamp: new Date(),
+    const attendedEvent = {
+      eventId,
+      userAuthId,
+      timestamp: new Date(),
       toObject: () => attendedEvent
-    } as AttendedEvent);
+    } as AttendedEvent;
 
-    jest.spyOn(attendedEventService, "record").mockImplementation(
-      async (): Promise<AttendedEvent> => attendedEvent
+    jest
+      .spyOn(attendedEventService, "record")
+      .mockImplementation(async (): Promise<AttendedEvent> => attendedEvent);
+
+    const result = await controller.addAttendedEvent(
+      user,
+      eventId,
+      userAuthId,
+      res
     );
-    
-    const result = await controller.addAttendedEvent(user, eventId, userAuthId, res);
     expect(result["data"]).toEqual(attendedEvent);
   });
 
@@ -117,17 +143,19 @@ describe('AttendedEvent Controller', () => {
       authId: "non-admin-user-auth-id"
     } as User;
     const res = {
-      json: (val) => val
+      json: val => val
     };
-    const attendedEvent = ({
-      eventId, userAuthId, timestamp: new Date(),
+    const attendedEvent = {
+      eventId,
+      userAuthId,
+      timestamp: new Date(),
       toObject: () => attendedEvent
-    } as AttendedEvent);
+    } as AttendedEvent;
 
-    jest.spyOn(attendedEventService, "record").mockImplementation(
-      async (): Promise<AttendedEvent> => attendedEvent
-    );
-    
+    jest
+      .spyOn(attendedEventService, "record")
+      .mockImplementation(async (): Promise<AttendedEvent> => attendedEvent);
+
     const promise = controller.addAttendedEvent(user, eventId, userAuthId, res);
     await expect(promise).rejects.toThrow(UnauthorizedException);
   });
@@ -139,17 +167,21 @@ describe('AttendedEvent Controller', () => {
       authId: userAuthId
     } as User;
     const res = {
-      json: (val) => val
+      json: val => val
     };
-    const attendedEvent = ({
-      eventId, userAuthId, timestamp: new Date(),
+    const attendedEvent = {
+      eventId,
+      userAuthId,
+      timestamp: new Date(),
       toObject: () => attendedEvent
-    } as AttendedEvent);
+    } as AttendedEvent;
 
     jest.spyOn(attendedEventService, "record").mockImplementation(
-      async (): Promise<AttendedEvent> => { throw new BadRequestException(); }
+      async (): Promise<AttendedEvent> => {
+        throw new BadRequestException();
+      }
     );
-    
+
     const promise = controller.addAttendedEvent(user, eventId, userAuthId, res);
     await expect(promise).rejects.toThrow(BadRequestException);
   });
