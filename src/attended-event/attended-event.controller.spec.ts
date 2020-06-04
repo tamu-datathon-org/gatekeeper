@@ -42,9 +42,6 @@ describe("AttendedEvent Controller", () => {
   it("should return the list of AttendedEvent objects for a given event", async () => {
     const userAuthId = "user-auth-id";
     const eventId = "test-id";
-    const res = {
-      send: val => val
-    };
     const attendedEvents = [
       {
         eventId,
@@ -61,16 +58,13 @@ describe("AttendedEvent Controller", () => {
       }
     );
 
-    const result = await controller.getAttendedEvents(eventId, undefined, res);
+    const result = await controller.getAttendedEvents(eventId, undefined);
     expect(result).toEqual(attendedEvents);
   });
 
   it("should return the list of AttendedEvent objects for a given user", async () => {
     const userAuthId = "user-auth-id";
     const eventId = "test-event-id";
-    const res = {
-      send: val => val
-    };
     const attendedEvents = [
       { eventId, userAuthId, timestamp: new Date() } as AttendedEvent
     ];
@@ -83,20 +77,13 @@ describe("AttendedEvent Controller", () => {
       }
     );
 
-    const result = await controller.getAttendedEvents(
-      undefined,
-      userAuthId,
-      res
-    );
+    const result = await controller.getAttendedEvents(undefined, userAuthId);
     expect(result).toEqual(attendedEvents);
   });
 
   it("should return the list of AttendedEvent objects when given both event and user IDs", async () => {
     const userAuthId = "user-auth-id";
     const eventId = "test-event-id";
-    const res = {
-      send: val => val
-    };
     const attendedEvents = [
       { eventId, userAuthId, timestamp: new Date() } as AttendedEvent
     ];
@@ -109,7 +96,7 @@ describe("AttendedEvent Controller", () => {
       }
     );
 
-    const result = await controller.getAttendedEvents(eventId, userAuthId, res);
+    const result = await controller.getAttendedEvents(eventId, userAuthId);
     expect(result).toEqual(attendedEvents);
   });
 
@@ -119,9 +106,6 @@ describe("AttendedEvent Controller", () => {
     const user: User = {
       authId: userAuthId
     } as User;
-    const res = {
-      send: val => val
-    };
     const attendedEvent = {
       eventId,
       userAuthId,
@@ -133,12 +117,7 @@ describe("AttendedEvent Controller", () => {
       .spyOn(attendedEventService, "record")
       .mockImplementation(async (): Promise<AttendedEvent> => attendedEvent);
 
-    const result = await controller.addAttendedEvent(
-      user,
-      eventId,
-      userAuthId,
-      res
-    );
+    const result = await controller.addAttendedEvent(user, eventId, userAuthId);
     expect(result).toEqual(attendedEvent);
   });
 
@@ -149,9 +128,6 @@ describe("AttendedEvent Controller", () => {
       authId: "admin-auth-id",
       isAdmin: true
     } as User;
-    const res = {
-      send: val => val
-    };
     const attendedEvent = {
       eventId,
       userAuthId,
@@ -163,12 +139,7 @@ describe("AttendedEvent Controller", () => {
       .spyOn(attendedEventService, "record")
       .mockImplementation(async (): Promise<AttendedEvent> => attendedEvent);
 
-    const result = await controller.addAttendedEvent(
-      user,
-      eventId,
-      userAuthId,
-      res
-    );
+    const result = await controller.addAttendedEvent(user, eventId, userAuthId);
     expect(result).toEqual(attendedEvent);
   });
 
@@ -178,9 +149,6 @@ describe("AttendedEvent Controller", () => {
     const user: User = {
       authId: "non-admin-user-auth-id"
     } as User;
-    const res = {
-      send: val => val
-    };
     const attendedEvent = {
       eventId,
       userAuthId,
@@ -192,7 +160,7 @@ describe("AttendedEvent Controller", () => {
       .spyOn(attendedEventService, "record")
       .mockImplementation(async (): Promise<AttendedEvent> => attendedEvent);
 
-    const promise = controller.addAttendedEvent(user, eventId, userAuthId, res);
+    const promise = controller.addAttendedEvent(user, eventId, userAuthId);
     await expect(promise).rejects.toThrow(UnauthorizedException);
   });
 
@@ -202,9 +170,6 @@ describe("AttendedEvent Controller", () => {
     const user: User = {
       authId: userAuthId
     } as User;
-    const res = {
-      send: val => val
-    };
     const attendedEvent = {
       eventId,
       userAuthId,
@@ -218,7 +183,7 @@ describe("AttendedEvent Controller", () => {
       }
     );
 
-    const promise = controller.addAttendedEvent(user, eventId, userAuthId, res);
+    const promise = controller.addAttendedEvent(user, eventId, userAuthId);
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 });

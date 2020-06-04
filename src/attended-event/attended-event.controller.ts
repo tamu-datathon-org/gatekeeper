@@ -23,8 +23,7 @@ export class AttendedEventController {
   @Get("/")
   async getAttendedEvents(
     @Query("eventId") eventId,
-    @Query("userAuthId") userAuthId,
-    @Res() res
+    @Query("userAuthId") userAuthId
   ) {
     let filter = {};
     if (eventId) filter = { eventId };
@@ -36,7 +35,7 @@ export class AttendedEventController {
       );
 
     const attendedObjects = await this.attendedEventService.findAll(filter);
-    return res.send(attendedObjects);
+    return attendedObjects;
   }
 
   @UseGuards(GalaxyIntegrationGuard)
@@ -45,8 +44,7 @@ export class AttendedEventController {
   async addAttendedEvent(
     @GetUser() user: User,
     @Body("eventId") eventId: string,
-    @Body("userAuthId") userAuthId: string,
-    @Res() res
+    @Body("userAuthId") userAuthId: string
   ) {
     if (!userAuthId || !eventId) {
       throw new BadRequestException(
@@ -64,6 +62,6 @@ export class AttendedEventController {
     ).toObject();
     delete attendedEvent["_id"];
     delete attendedEvent["__v"];
-    return res.send(attendedEvent);
+    return attendedEvent;
   }
 }
