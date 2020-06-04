@@ -20,21 +20,23 @@ export class AttendedEventController {
   constructor(private attendedEventService: AttendedEventService) {}
 
   @UseGuards(GalaxyIntegrationGuard)
-  @Get("/event")
-  async getAttendees(@Query("eventId") eventId, @Res() res) {
-    const attendedObjects = await this.attendedEventService.findAll({
-      eventId
-    });
-    return res.json({ data: attendedObjects });
-  }
+  @Get("/")
+  async getAttendedEvents(
+    @Query("eventId") eventId,
+    @Query("userAuthId") userAuthId,
+    @Res() res
+  ) {
+    let filter = {};
+    if (eventId) filter = { eventId };
+    if (userAuthId) filter = { userAuthId, ...filter };
 
-  @UseGuards(GalaxyIntegrationGuard)
-  @Get("/user")
-  async getAttendedEvents(@Query("userAuthId") userAuthId, @Res() res) {
-    const attendedObjects = await this.attendedEventService.findAll({
-      userAuthId
-    });
-    return res.json({ data: attendedObjects });
+    if (!filter)
+      throw new BadRequestException(
+        "Request must container eventId or userAuthId"
+      );
+
+    const attendedObjects = await this.attendedEventService.findAll(filter);
+    return res.send(attendedObjects);
   }
 
   @UseGuards(GalaxyIntegrationGuard)
@@ -62,6 +64,6 @@ export class AttendedEventController {
     ).toObject();
     delete attendedEvent["_id"];
     delete attendedEvent["__v"];
-    return res.json({ data: attendedEvent });
+    return res.send(attendedEvent);
   }
 }

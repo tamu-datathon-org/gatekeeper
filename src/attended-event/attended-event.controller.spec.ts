@@ -40,41 +40,77 @@ describe("AttendedEvent Controller", () => {
   });
 
   it("should return the list of AttendedEvent objects for a given event", async () => {
+    const userAuthId = "user-auth-id";
     const eventId = "test-id";
     const res = {
-      json: val => val
+      send: val => val
     };
     const attendedEvents = [
       {
         eventId,
-        userAuthId: "user-auth-id",
+        userAuthId,
         timestamp: new Date()
       } as AttendedEvent
     ];
 
-    jest
-      .spyOn(attendedEventService, "findAll")
-      .mockImplementation(async (): Promise<AttendedEvent[]> => attendedEvents);
+    jest.spyOn(attendedEventService, "findAll").mockImplementation(
+      async (filter): Promise<AttendedEvent[]> => {
+        // Check that filter only container eventId as userAuthId should be undefined.
+        if ("userAuthId" in filter || !("eventId" in filter)) throw new Error();
+        return attendedEvents;
+      }
+    );
 
-    const result = await controller.getAttendees(eventId, res);
-    expect(result["data"]).toEqual(attendedEvents);
+    const result = await controller.getAttendedEvents(eventId, undefined, res);
+    expect(result).toEqual(attendedEvents);
   });
 
   it("should return the list of AttendedEvent objects for a given user", async () => {
     const userAuthId = "user-auth-id";
+    const eventId = "test-event-id";
     const res = {
-      json: val => val
+      send: val => val
     };
     const attendedEvents = [
-      { eventId: "test-id", userAuthId, timestamp: new Date() } as AttendedEvent
+      { eventId, userAuthId, timestamp: new Date() } as AttendedEvent
     ];
 
-    jest
-      .spyOn(attendedEventService, "findAll")
-      .mockImplementation(async (): Promise<AttendedEvent[]> => attendedEvents);
+    jest.spyOn(attendedEventService, "findAll").mockImplementation(
+      async (filter): Promise<AttendedEvent[]> => {
+        // Check that filter only container userAuthId as eventId should be undefined.
+        if ("eventId" in filter || !("userAuthId" in filter)) throw new Error();
+        return attendedEvents;
+      }
+    );
 
-    const result = await controller.getAttendees(userAuthId, res);
-    expect(result["data"]).toEqual(attendedEvents);
+    const result = await controller.getAttendedEvents(
+      undefined,
+      userAuthId,
+      res
+    );
+    expect(result).toEqual(attendedEvents);
+  });
+
+  it("should return the list of AttendedEvent objects when given both event and user IDs", async () => {
+    const userAuthId = "user-auth-id";
+    const eventId = "test-event-id";
+    const res = {
+      send: val => val
+    };
+    const attendedEvents = [
+      { eventId, userAuthId, timestamp: new Date() } as AttendedEvent
+    ];
+
+    jest.spyOn(attendedEventService, "findAll").mockImplementation(
+      async (filter): Promise<AttendedEvent[]> => {
+        // Check that filter contains both event and userAuth IDs.
+        if (!("eventId" in filter && "userAuthId" in filter)) throw new Error();
+        return attendedEvents;
+      }
+    );
+
+    const result = await controller.getAttendedEvents(eventId, userAuthId, res);
+    expect(result).toEqual(attendedEvents);
   });
 
   it("should record a new AttendedEvent entry.", async () => {
@@ -84,7 +120,7 @@ describe("AttendedEvent Controller", () => {
       authId: userAuthId
     } as User;
     const res = {
-      json: val => val
+      send: val => val
     };
     const attendedEvent = {
       eventId,
@@ -103,7 +139,7 @@ describe("AttendedEvent Controller", () => {
       userAuthId,
       res
     );
-    expect(result["data"]).toEqual(attendedEvent);
+    expect(result).toEqual(attendedEvent);
   });
 
   it("should allow an admin to record an entry for another user", async () => {
@@ -114,7 +150,7 @@ describe("AttendedEvent Controller", () => {
       isAdmin: true
     } as User;
     const res = {
-      json: val => val
+      send: val => val
     };
     const attendedEvent = {
       eventId,
@@ -133,7 +169,7 @@ describe("AttendedEvent Controller", () => {
       userAuthId,
       res
     );
-    expect(result["data"]).toEqual(attendedEvent);
+    expect(result).toEqual(attendedEvent);
   });
 
   it("should throw an error when a non-admin user tries to record an entry for another user", async () => {
@@ -143,7 +179,7 @@ describe("AttendedEvent Controller", () => {
       authId: "non-admin-user-auth-id"
     } as User;
     const res = {
-      json: val => val
+      send: val => val
     };
     const attendedEvent = {
       eventId,
@@ -167,7 +203,7 @@ describe("AttendedEvent Controller", () => {
       authId: userAuthId
     } as User;
     const res = {
-      json: val => val
+      send: val => val
     };
     const attendedEvent = {
       eventId,
