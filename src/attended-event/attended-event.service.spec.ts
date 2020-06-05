@@ -91,7 +91,7 @@ describe("AttendedEventService", () => {
 
     const attendedEvent = await service.record({
       eventId: "randomEventId",
-      authId: "random"
+      userAuthId: "random"
     });
 
     expect(attendedEvent).toBeDefined();
@@ -116,7 +116,7 @@ describe("AttendedEventService", () => {
     await expect(
       service.record({
         eventId: "randomEventId",
-        authId: "random"
+        userAuthId: "random"
       })
     ).rejects.toThrow(new BadRequestException("User does not exist"));
   });
@@ -137,7 +137,7 @@ describe("AttendedEventService", () => {
     await expect(
       service.record({
         eventId: "randomEventId",
-        authId: "random"
+        userAuthId: "random"
       })
     ).rejects.toThrow(new BadRequestException("Event doesn't exist"));
   });
@@ -163,13 +163,13 @@ describe("AttendedEventService", () => {
 
     await service.record({
       eventId: "randomEventId",
-      authId: "random"
+      userAuthId: "random"
     });
 
     await expect(
       service.record({
         eventId: "randomEventId",
-        authId: "random"
+        userAuthId: "random"
       })
     ).rejects.toThrow(
       new BadRequestException(

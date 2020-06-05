@@ -27,8 +27,9 @@ async function bootstrap(): Promise<void> {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  // Use session level CRSF for better protection.
-  app.use(csrf());
+  // Use session level CRSF for better protection. (only on login and signup endpoints)
+  app.use("/login", csrf());
+  app.use("/signup", csrf());
 
   app.useStaticAssets(join(__dirname, "..", "public"));
   app.setBaseViewsDir(join(__dirname, "..", "views"));
