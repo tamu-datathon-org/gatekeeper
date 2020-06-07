@@ -3,7 +3,6 @@ import {
   Get,
   UseGuards,
   Query,
-  Res,
   Post,
   Body,
   BadRequestException,
