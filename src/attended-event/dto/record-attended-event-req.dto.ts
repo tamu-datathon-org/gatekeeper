@@ -1,4 +1,4 @@
 export interface RecordAttendedEventRequest {
   eventId: string;
-  authId: string;
+  userAuthId: string;
 }
