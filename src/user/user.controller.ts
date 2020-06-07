@@ -39,7 +39,6 @@ export class UserController {
     modifiedUser: ModifyUserDto,
     @GetUser() user: User | undefined
   ) {
-    console.log(modifiedUser);
     await this.userService.update(user.authId, modifiedUser);
     return {
       success: true
