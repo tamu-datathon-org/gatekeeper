@@ -7,7 +7,7 @@
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     <img class="mb-4" src="/auth/static/img/main.png" alt="" width="72" height="72" />
     <h1 class="h3 mb-3 font-weight-normal">Create an account</h1>
-    <p>to continue to your application</p>
+    <p><%= locals.signupPageSubtext %></p>
 
     <!-- EMAIL -->
     <div id="email-input-div" class="form-input-div <%= locals.emailError ? 'input-invalid' : null%>">
