@@ -100,7 +100,7 @@ describe("Signup Controller", () => {
   });
 
   it("should return a signup form with a CSRF token", () => {
-    const res = controller.root(csrfReq, "/auth/me");
+    const res = controller.root(csrfReq, "/");
     expect(res.csrfToken).toBe(mockCsrfToken);
   });
 
