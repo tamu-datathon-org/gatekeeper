@@ -80,10 +80,7 @@ describe("SignupService", () => {
 
     const sendEmailFunc = jest.spyOn(mailService, "sendTemplatedEmail");
 
-    const user = await service.signupUserEmailAndPassword(
-      signupPayload,
-      "/auth/me"
-    );
+    const user = await service.signupUserEmailAndPassword(signupPayload, "/");
     expect(user).toBeDefined();
     expect(user.email).toBe(signupPayload.email);
     expect(sendEmailFunc).toHaveBeenCalled();
@@ -100,10 +97,7 @@ describe("SignupService", () => {
       throw new ConflictException();
     });
 
-    const promise = service.signupUserEmailAndPassword(
-      signupPayload,
-      "/auth/me"
-    );
+    const promise = service.signupUserEmailAndPassword(signupPayload, "/");
     await expect(promise).rejects.toThrow(ConflictException);
   });
 
@@ -118,10 +112,7 @@ describe("SignupService", () => {
       throw new BadRequestException();
     });
 
-    const promise = service.signupUserEmailAndPassword(
-      signupPayload,
-      "/auth/me"
-    );
+    const promise = service.signupUserEmailAndPassword(signupPayload, "/");
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
@@ -136,10 +127,7 @@ describe("SignupService", () => {
       throw new BadRequestException();
     });
 
-    const promise = service.signupUserEmailAndPassword(
-      signupPayload,
-      "/auth/me"
-    );
+    const promise = service.signupUserEmailAndPassword(signupPayload, "/");
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 

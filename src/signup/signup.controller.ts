@@ -36,7 +36,7 @@ export class SignupController {
   @Render("signup/index")
   root(
     @Req() req,
-    @QueryWithDefault("r", "/auth/me") redirectLink: string | undefined,
+    @QueryWithDefault("r") redirectLink: string | undefined,
     @RedirectGalaxyIntegration() integrationConfig: GalaxyIntegrationConfig
   ) {
     return {
@@ -50,7 +50,7 @@ export class SignupController {
   async signupUserEmailAndPassword(
     @Req() req,
     @Body() signupUserDto: SignupUserDto,
-    @QueryWithDefault("r", "/auth/me") redirectLink: string | undefined,
+    @QueryWithDefault("r", "/") redirectLink: string | undefined,
     @RedirectGalaxyIntegration() integrationConfig: GalaxyIntegrationConfig,
     @Res() res
   ) {
@@ -110,7 +110,7 @@ export class SignupController {
 
   @Get("verify")
   async confirmSignup(
-    @QueryWithDefault("r", "/auth/me") redirectLink: string | undefined,
+    @QueryWithDefault("r") redirectLink: string | undefined,
     @Query("user") userJwt: string,
     @Res() res
   ) {
@@ -140,7 +140,7 @@ export class SignupController {
    */
   async resendVerificationEmail(
     @Req() req,
-    @QueryWithDefault("r", "/auth/me") redirectLink: string | undefined,
+    @QueryWithDefault("r") redirectLink: string | undefined,
     @Res() res
   ) {
     try {

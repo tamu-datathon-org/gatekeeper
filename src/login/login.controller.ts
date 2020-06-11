@@ -17,6 +17,7 @@ import { User } from "../user/interfaces/user.interface";
 import { GetUser } from "../user/user-auth.decorator";
 import { RedirectGalaxyIntegration } from "../galaxy-integrations/decorators/redirect-galaxy-integration.decorator";
 import { GalaxyIntegrationConfig } from "../galaxy-integrations/interfaces/galaxy-integration";
+import { Defaults } from "../common/defaults";
 
 @Controller("login")
 export class LoginController {
@@ -26,7 +27,7 @@ export class LoginController {
   @Render("login/index")
   root(
     @Req() req,
-    @QueryWithDefault("r", "/auth/me") redirectLink: string | undefined,
+    @QueryWithDefault("r") redirectLink: string | undefined,
     @RedirectGalaxyIntegration() integrationConfig: GalaxyIntegrationConfig
   ) {
     return {
@@ -50,7 +51,7 @@ export class LoginController {
   async googleLoginCallback(@Req() req, @GetUser() user: User, @Res() res) {
     // TODO: Add error handling for when user does not exist. That mostly shouldn't happen due to the Google AuthGuard
     await this.authService.authorizeUser(user, res);
-    const redirect = req.session.redirect || "/auth/me";
+    const redirect = req.session.redirect || Defaults.redirect;
     req.session.redirect = null;
     // TODO: Based on how redirects are done, implement the propagation of the URL from the original request to the callback
     return res.redirect(redirect);
@@ -69,7 +70,7 @@ export class LoginController {
   async facebookLoginCallback(@Req() req, @GetUser() user: User, @Res() res) {
     // TODO: Add error handling for when user does not exist. That mostly shouldn't happen due to the Facebook AuthGuard
     await this.authService.authorizeUser(user, res);
-    const redirect = req.session.redirect || "/auth/me";
+    const redirect = req.session.redirect || Defaults.redirect;
     req.session.redirect = null;
     // TODO: Based on how redirects are done, implement the propagation of the URL from the original request to the callback
     return res.redirect(redirect);
@@ -80,7 +81,7 @@ export class LoginController {
   @Post("/")
   async loginEmailAndPassword(
     @GetUser() user: User,
-    @QueryWithDefault("r", "/auth/me") redirect: string | undefined,
+    @QueryWithDefault("r") redirect: string | undefined,
     @Res() res
   ) {
     await this.authService.authorizeUser(user, res);

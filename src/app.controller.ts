@@ -13,6 +13,11 @@ export class AppController {
     private readonly authService: AuthService
   ) {}
 
+  @Get("/")
+  async root(@Res() res) {
+    return res.redirect("/auth/login");
+  }
+
   @UseGuards(AuthGuard("jwt"))
   @Get("/logout")
   async logout(@GetUser() user: User, @Res() res) {
@@ -28,25 +33,5 @@ export class AppController {
       yourEmail: user.email,
       status: ResponseStatus.Success
     };
-  }
-
-  @Get("/create")
-  async create(): Promise<ResponseBase> {
-    try {
-      await this.userAuthService.create({
-        email: "admin@example.com",
-        authType: "EmailAndPassword",
-        password: "ThisIsATest",
-        isVerified: true
-      });
-      return {
-        status: ResponseStatus.Success
-      };
-    } catch (e) {
-      return {
-        status: ResponseStatus.Failure,
-        message: e.message
-      };
-    }
   }
 }
