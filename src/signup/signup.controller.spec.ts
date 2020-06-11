@@ -102,11 +102,7 @@ describe("Signup Controller", () => {
   });
 
   it("should return a signup form with a CSRF token", () => {
-    const res = controller.root(
-      csrfReq,
-      "/",
-      {} as GalaxyIntegrationConfig
-    );
+    const res = controller.root(csrfReq, "/", {} as GalaxyIntegrationConfig);
     expect(res.csrfToken).toBe(mockCsrfToken);
   });
 
