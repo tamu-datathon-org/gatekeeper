@@ -27,11 +27,7 @@ describe("Login Controller", () => {
   });
 
   it("should return a login form with a CSRF token", () => {
-    const res = controller.root(
-      csrfReq,
-      "/auth/me",
-      {} as GalaxyIntegrationConfig
-    );
+    const res = controller.root(csrfReq, "/", {} as GalaxyIntegrationConfig);
     expect(res.csrfToken).toBe(mockCsrfToken);
   });
 });
