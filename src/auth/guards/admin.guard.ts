@@ -1,4 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, ForbiddenException } from "@nestjs/common";
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+  ForbiddenException
+} from "@nestjs/common";
 import { Observable } from "rxjs";
 
 // NOTE: This MUST be used in conjuction (and after) an AuthGuard.
