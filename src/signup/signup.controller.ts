@@ -14,6 +14,8 @@ import { SignupService } from "./signup.service";
 import { ValidatorService } from "../validator/validator.service";
 import { AuthService } from "../auth/auth.service";
 import { QueryWithDefault } from "../common/decorators/query-with-default.decorator";
+import { RedirectGalaxyIntegration } from "../galaxy-integrations/decorators/redirect-galaxy-integration.decorator";
+import { GalaxyIntegrationConfig } from "../galaxy-integrations/interfaces/galaxy-integration";
 
 @Controller("signup")
 export class SignupController {
@@ -32,8 +34,13 @@ export class SignupController {
 
   @Get()
   @Render("signup/index")
-  root(@Req() req, @QueryWithDefault("r") redirectLink: string | undefined) {
+  root(
+    @Req() req,
+    @QueryWithDefault("r") redirectLink: string | undefined,
+    @RedirectGalaxyIntegration() integrationConfig: GalaxyIntegrationConfig
+  ) {
     return {
+      ...integrationConfig,
       csrfToken: req.csrfToken(),
       redirectLink
     };
@@ -43,7 +50,8 @@ export class SignupController {
   async signupUserEmailAndPassword(
     @Req() req,
     @Body() signupUserDto: SignupUserDto,
-    @QueryWithDefault("r") redirectLink: string | undefined,
+    @QueryWithDefault("r", "/") redirectLink: string | undefined,
+    @RedirectGalaxyIntegration() integrationConfig: GalaxyIntegrationConfig,
     @Res() res
   ) {
     // Validate signupUserDto.
@@ -82,6 +90,7 @@ export class SignupController {
         redirectLink
       );
       return res.render("signup/verification-email-sent", {
+        ...integrationConfig,
         userEmail: user.email
       });
     } catch (e) {

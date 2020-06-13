@@ -1,5 +1,6 @@
 <html>
-<div style="max-width:800px; background-color: #18125b; z-index: -1; position: absolute; top: 0; left: 0; padding: 20px">
+<div
+    style="max-width:800px; background-color: #18125b; z-index: -1; position: absolute; top: 0; left: 0; padding: 20px">
 
     <div style="font-family: Questrial, sans-serif;
 				background: #fff;
@@ -15,22 +16,25 @@
 				  font-weight: normal;
 				  color: black;
 				  margin-bottom: 20px;">
-            Thank you for creating an account with TAMU Datathon! 
+            Thank you for creating an account with TAMU Datathon!
             To proceed, please confirm your email by clicking the activate button.
-
-            <div style="margin: 3em 0em;">
-                <a style="padding: 1em 2em 1em 2em;
-                          margin-left: 175px;
-                          background-color: #4740af; 
-                          border-radius: 5px;
-                          text-decoration: none;
-                          font-weight: bold;
-                          color: white;"
-                          target="_blank" 
-                          href="<%= locals.confirmationLink %>">
-                    Activate Account
-                </a>
-            </div>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td align="center">
+                    <div style="margin: 3em 0em;">
+                        <a style="padding: 1em 2em;
+                                    background-color: #4740af; 
+                                    border-radius: 5px;
+                                    text-decoration: none;
+                                    font-weight: bold;
+                                    color: white;" target="_blank" href="<%= locals.confirmationLink %>">
+                            Activate Account
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        
         </p>
 
         <h3 style=" margin-bottom: 5px;
@@ -48,4 +52,5 @@
 
     </div>
 </div>
+
 </html>

@@ -6,6 +6,8 @@ import { BadRequestException, ConflictException } from "@nestjs/common";
 import { ValidatorService } from "../validator/validator.service";
 import { AuthService } from "../auth/auth.service";
 import { User } from "../user/interfaces/user.interface";
+import { GalaxyIntegrationConfig } from "../galaxy-integrations/interfaces/galaxy-integration";
+import { GatekeeperGalaxyIntegration } from "../galaxy-integrations/galaxy-integrations";
 
 const existingUserEmails = ["already@exists.com"];
 const mockEmail = "testy@mctestface.com";
@@ -100,7 +102,7 @@ describe("Signup Controller", () => {
   });
 
   it("should return a signup form with a CSRF token", () => {
-    const res = controller.root(csrfReq, "/");
+    const res = controller.root(csrfReq, "/", {} as GalaxyIntegrationConfig);
     expect(res.csrfToken).toBe(mockCsrfToken);
   });
 
@@ -115,7 +117,11 @@ describe("Signup Controller", () => {
       csrfReq,
       signupUserDto,
       "/app/me",
+      GatekeeperGalaxyIntegration,
       response.new()
+    );
+    expect(params.verificationPageSubtext).toBe(
+      GatekeeperGalaxyIntegration.verificationPageSubtext
     );
     expect(path).toBe("signup/verification-email-sent");
     expect(params.userEmail).toBe(signupUserDto.email);
@@ -132,6 +138,7 @@ describe("Signup Controller", () => {
       csrfReq,
       signupUserDto,
       "/app/me",
+      GatekeeperGalaxyIntegration,
       response.new()
     );
     expect(response.code).toBe(409);
@@ -153,6 +160,7 @@ describe("Signup Controller", () => {
       csrfReq,
       signupUserDto,
       "/app/me",
+      GatekeeperGalaxyIntegration,
       response.new()
     );
     expect(response.code).toBe(400);
@@ -173,6 +181,7 @@ describe("Signup Controller", () => {
       csrfReq,
       signupUserDto,
       "/app/me",
+      GatekeeperGalaxyIntegration,
       response.new()
     );
     expect(response.code).toBe(400);
@@ -193,6 +202,7 @@ describe("Signup Controller", () => {
       csrfReq,
       signupUserDto,
       "/app/me",
+      GatekeeperGalaxyIntegration,
       response.new()
     );
     expect(response.code).toBe(400);
@@ -216,6 +226,7 @@ describe("Signup Controller", () => {
       csrfReq,
       signupUserDto,
       "/app/me",
+      GatekeeperGalaxyIntegration,
       response.new()
     );
     expect(response.code).toBe(400);
@@ -239,6 +250,7 @@ describe("Signup Controller", () => {
       csrfReq,
       signupUserDto,
       "/app/me",
+      GatekeeperGalaxyIntegration,
       response.new()
     );
     expect(response.code).toBe(400);

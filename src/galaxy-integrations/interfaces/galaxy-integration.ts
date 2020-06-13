@@ -13,6 +13,9 @@ export interface GalaxyIntegrationConfig {
 
   /* Signup Page Variables */
   signupPageSubtext?: string;
+
+  /* Verification Page Variables */
+  verificationPageSubtext?: string;
 }
 
 /**
@@ -36,6 +39,10 @@ export const newGalaxyIntegrationConfig = (
 
     loginPageSubtext: config.loginPageSubtext || `to continue to ${appName}`,
 
-    signupPageSubtext: config.signupPageSubtext || `to continue to ${appName}`
+    signupPageSubtext: config.signupPageSubtext || `to continue to ${appName}`,
+
+    verificationPageSubtext:
+      config.verificationPageSubtext ||
+      `to complete your application for ${appName}`
   };
 };
