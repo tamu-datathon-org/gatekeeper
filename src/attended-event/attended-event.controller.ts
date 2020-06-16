@@ -37,8 +37,7 @@ export class AttendedEventController {
     return attendedObjects;
   }
 
-  @UseGuards(GalaxyIntegrationGuard)
-  @UseGuards(AuthGuard("jwt"))
+  @UseGuards(GalaxyIntegrationGuard, AuthGuard("jwt"))
   @Post("/")
   async addAttendedEvent(
     @GetUser() user: User,

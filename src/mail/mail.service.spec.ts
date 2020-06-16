@@ -61,7 +61,7 @@ describe("MailService", () => {
       const mailParams = {
         emailTo: testRecipientEmail,
         subject: "Gatekeeper Test: sendTemplatedEmail",
-        templateFile: "test.ejs",
+        templateFile: "email-confirmation.ejs",
         templateParams: {
           name: "JarJarBinks",
           listStuff: ["The Force", "Lightsabers", "C3P0", "Seagulls"],
