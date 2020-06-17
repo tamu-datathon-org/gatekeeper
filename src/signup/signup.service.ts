@@ -18,13 +18,12 @@ export class SignupService {
     private readonly jwtService: JwtService
   ) {}
 
-
   private createOriginFromHost(host: string) {
     let scheme = "https";
     if (host.startsWith("localhost")) {
       scheme = "http";
     }
-    return `${scheme}://${host}`
+    return `${scheme}://${host}`;
   }
 
   private getConfirmationUrl(
@@ -55,11 +54,7 @@ export class SignupService {
       subject: "Activate your account!",
       templateFile: "email-confirmation.ejs",
       templateParams: {
-        confirmationLink: this.getConfirmationUrl(
-          userEmail,
-          host,
-          redirectLink
-        )
+        confirmationLink: this.getConfirmationUrl(userEmail, host, redirectLink)
       } /* TODO: Update when email-confirmation is implemented */
     });
   }

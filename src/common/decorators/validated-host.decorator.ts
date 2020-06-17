@@ -6,6 +6,7 @@ export const isHostValid = (
   validHosts: string[] = Constants.validHosts,
   validSubdomainHosts: string[] = Constants.validSubdomainHosts
 ): boolean => {
+  if (host.split(":")[0] === "localhost") return true;
   if (!validDomainRegex.test(host)) return false;
   if (validHosts.some(val => host === val)) return true;
 
