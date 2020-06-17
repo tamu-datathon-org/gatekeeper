@@ -7,8 +7,7 @@ import {
   Body,
   ConflictException,
   Res,
-  Query,
-  Headers
+  Query
 } from "@nestjs/common";
 import { SignupUserDto } from "./dto/signup-user.dto";
 import { SignupService } from "./signup.service";
@@ -17,6 +16,7 @@ import { AuthService } from "../auth/auth.service";
 import { QueryWithDefault } from "../common/decorators/query-with-default.decorator";
 import { RedirectGalaxyIntegration } from "../galaxy-integrations/decorators/redirect-galaxy-integration.decorator";
 import { GalaxyIntegrationConfig } from "../galaxy-integrations/interfaces/galaxy-integration";
+import { ValidatedHost } from "../common/decorators/validated-host.decorator";
 
 @Controller("signup")
 export class SignupController {
@@ -53,7 +53,7 @@ export class SignupController {
     @Body() signupUserDto: SignupUserDto,
     @QueryWithDefault("r", "/") redirectLink: string | undefined,
     @RedirectGalaxyIntegration() integrationConfig: GalaxyIntegrationConfig,
-    @Headers("origin") origin,
+    @ValidatedHost() origin,
     @Res() res
   ) {
     // Validate signupUserDto.
@@ -144,7 +144,7 @@ export class SignupController {
   async resendVerificationEmail(
     @Req() req,
     @QueryWithDefault("r") redirectLink: string | undefined,
-    @Headers("origin") origin,
+    @ValidatedHost() origin,
     @Res() res
   ) {
     try {

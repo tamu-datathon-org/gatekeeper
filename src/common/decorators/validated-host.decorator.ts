@@ -1,19 +1,17 @@
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { Constants } from "../constants";
+import { Constants, validDomainRegex } from "../constants";
 
 export const isHostValid = (
   host: string,
   validHosts: string[] = Constants.validHosts,
   validSubdomainHosts: string[] = Constants.validSubdomainHosts
 ): boolean => {
+  if (!validDomainRegex.test(host)) return false;
   if (validHosts.some(val => host === val)) return true;
 
   // Check if host is a subdomain of any validSubdomainHosts.
-  const hostTokens = host.split(".");
   return validSubdomainHosts.some((subdomainHost: string) => {
-    const subdomainHostTokens = subdomainHost.split(".");
-    if (hostTokens.length < subdomainHostTokens.length) return false;
-    return hostTokens.slice(hostTokens.length - subdomainHostTokens.length).join(".") === subdomainHost;
+    return host.endsWith("." + subdomainHost);
   });
 };
 
