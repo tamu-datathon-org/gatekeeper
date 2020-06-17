@@ -18,19 +18,20 @@ export class SignupService {
     private readonly jwtService: JwtService
   ) {}
 
-  private getConfirmationUrl(email: string, redirectLink: string) {
+  private getConfirmationUrl(email: string, origin: string, redirectLink: string) {
     const userJwt = this.jwtService.sign(
       { email },
       {
         expiresIn: process.env.CONFIRMATION_JWT_EXPIRATION
       }
     );
-    const confirmationLink = `${process.env.GATEKEEPER_DOMAIN}${this.confirmationPath}?user=${userJwt}&r=${redirectLink}`;
+    const confirmationLink = `${origin || process.env.DEFAULT_GATEKEEPER_ORIGIN}${this.confirmationPath}?user=${userJwt}&r=${redirectLink}`;
     return encodeURI(confirmationLink);
   }
 
   private async sendVerificationEmail(
     userEmail: string,
+    origin: string,
     redirectLink: string
   ): Promise<void> {
     return this.mailService.sendTemplatedEmail({
@@ -38,7 +39,7 @@ export class SignupService {
       subject: "Activate your account!",
       templateFile: "email-confirmation.ejs",
       templateParams: {
-        confirmationLink: this.getConfirmationUrl(userEmail, redirectLink)
+        confirmationLink: this.getConfirmationUrl(userEmail, origin, redirectLink)
       } /* TODO: Update when email-confirmation is implemented */
     });
   }
@@ -50,6 +51,7 @@ export class SignupService {
    */
   async signupUserEmailAndPassword(
     signupUserDto: SignupUserDto,
+    origin: string,
     redirectLink: string
   ): Promise<UserAuth> {
     const createUserPayload: CreateUserAuthDto = {
@@ -59,7 +61,7 @@ export class SignupService {
       isVerified: false
     };
     const user = await this.userAuthService.create(createUserPayload);
-    await this.sendVerificationEmail(user.email, redirectLink);
+    await this.sendVerificationEmail(user.email, origin, redirectLink);
     return user;
   }
 
@@ -84,6 +86,7 @@ export class SignupService {
 
   async resendVerificationEmail(
     userJwt: string,
+    origin: string,
     redirectLink: string
   ): Promise<string> {
     const { email } = this.jwtService.verify(userJwt); // Verify returns jwt payload and fails if JWT is invalid.
@@ -94,7 +97,7 @@ export class SignupService {
     if (user.isVerified)
       throw new ConflictException("User is already verified");
 
-    await this.sendVerificationEmail(email, redirectLink);
+    await this.sendVerificationEmail(email, origin, redirectLink);
     return email;
   }
 }

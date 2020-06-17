@@ -7,7 +7,8 @@ import {
   Body,
   ConflictException,
   Res,
-  Query
+  Query,
+  Headers
 } from "@nestjs/common";
 import { SignupUserDto } from "./dto/signup-user.dto";
 import { SignupService } from "./signup.service";
@@ -52,6 +53,7 @@ export class SignupController {
     @Body() signupUserDto: SignupUserDto,
     @QueryWithDefault("r", "/") redirectLink: string | undefined,
     @RedirectGalaxyIntegration() integrationConfig: GalaxyIntegrationConfig,
+    @Headers("origin") origin,
     @Res() res
   ) {
     // Validate signupUserDto.
@@ -87,6 +89,7 @@ export class SignupController {
     try {
       const user = await this.signupService.signupUserEmailAndPassword(
         signupUserDto,
+        origin,
         redirectLink
       );
       return res.render("signup/verification-email-sent", {
@@ -141,11 +144,13 @@ export class SignupController {
   async resendVerificationEmail(
     @Req() req,
     @QueryWithDefault("r") redirectLink: string | undefined,
+    @Headers("origin") origin,
     @Res() res
   ) {
     try {
       const userEmail = await this.signupService.resendVerificationEmail(
         req.cookies["accessToken"],
+        origin,
         redirectLink
       );
       return res.render("signup/verification-email-sent", {
