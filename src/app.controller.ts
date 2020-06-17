@@ -21,7 +21,11 @@ export class AppController {
 
   @UseGuards(AuthGuard("jwt"))
   @Get("/logout")
-  async logout(@GetUser() user: User, @QueryWithDefault("r", "/auth/login") redirect, @Res() res) {
+  async logout(
+    @GetUser() user: User,
+    @QueryWithDefault("r", "/auth/login") redirect,
+    @Res() res
+  ) {
     await this.authService.deauthorizeUser(user, res);
     return res.redirect(redirect);
   }
