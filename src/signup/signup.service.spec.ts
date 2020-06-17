@@ -80,7 +80,11 @@ describe("SignupService", () => {
 
     const sendEmailFunc = jest.spyOn(mailService, "sendTemplatedEmail");
 
-    const user = await service.signupUserEmailAndPassword(signupPayload, "/");
+    const user = await service.signupUserEmailAndPassword(
+      signupPayload,
+      "https://tamudatathon.com",
+      "/"
+    );
     expect(user).toBeDefined();
     expect(user.email).toBe(signupPayload.email);
     expect(sendEmailFunc).toHaveBeenCalled();
@@ -97,7 +101,11 @@ describe("SignupService", () => {
       throw new ConflictException();
     });
 
-    const promise = service.signupUserEmailAndPassword(signupPayload, "/");
+    const promise = service.signupUserEmailAndPassword(
+      signupPayload,
+      "https://tamudatathon.com",
+      "/"
+    );
     await expect(promise).rejects.toThrow(ConflictException);
   });
 
@@ -112,7 +120,11 @@ describe("SignupService", () => {
       throw new BadRequestException();
     });
 
-    const promise = service.signupUserEmailAndPassword(signupPayload, "/");
+    const promise = service.signupUserEmailAndPassword(
+      signupPayload,
+      "https://tamudatathon.com",
+      "/"
+    );
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
@@ -127,7 +139,11 @@ describe("SignupService", () => {
       throw new BadRequestException();
     });
 
-    const promise = service.signupUserEmailAndPassword(signupPayload, "/");
+    const promise = service.signupUserEmailAndPassword(
+      signupPayload,
+      "https://tamudatathon.com",
+      "/"
+    );
     await expect(promise).rejects.toThrow(BadRequestException);
   });
 
@@ -255,7 +271,11 @@ describe("SignupService", () => {
     });
     const sendEmailFunc = jest.spyOn(mailService, "sendTemplatedEmail");
 
-    const userEmail = await service.resendVerificationEmail(userJwt, "/app/me");
+    const userEmail = await service.resendVerificationEmail(
+      userJwt,
+      "https://tamudatathon.com",
+      "/app/me"
+    );
     expect(userEmail).toBe("testy@mctestface.com");
     expect(sendEmailFunc).toHaveBeenCalled();
   });
@@ -270,7 +290,11 @@ describe("SignupService", () => {
       return null; // UserAuthService returns null when user does not exist.
     });
 
-    const promise = service.resendVerificationEmail(userJwt, "/app/me");
+    const promise = service.resendVerificationEmail(
+      userJwt,
+      "https://tamudatathon.com",
+      "/app/me"
+    );
     await expect(promise).rejects.toThrow("Invalid user");
   });
 
@@ -287,7 +311,11 @@ describe("SignupService", () => {
       } as UserAuth;
     });
 
-    const promise = service.resendVerificationEmail(userJwt, "/app/me");
+    const promise = service.resendVerificationEmail(
+      userJwt,
+      "https://tamudatathon.com",
+      "/app/me"
+    );
     await expect(promise).rejects.toThrow("User is already verified");
   });
 });

@@ -18,14 +18,21 @@ export class SignupService {
     private readonly jwtService: JwtService
   ) {}
 
-  private getConfirmationUrl(email: string, origin: string, redirectLink: string) {
+  private getConfirmationUrl(
+    email: string,
+    origin: string,
+    redirectLink: string
+  ) {
     const userJwt = this.jwtService.sign(
       { email },
       {
         expiresIn: process.env.CONFIRMATION_JWT_EXPIRATION
       }
     );
-    const confirmationLink = `${origin || process.env.DEFAULT_GATEKEEPER_ORIGIN}${this.confirmationPath}?user=${userJwt}&r=${redirectLink}`;
+    const confirmationLink = `${origin ||
+      process.env.DEFAULT_GATEKEEPER_ORIGIN}${
+      this.confirmationPath
+    }?user=${userJwt}&r=${redirectLink}`;
     return encodeURI(confirmationLink);
   }
 
@@ -39,7 +46,11 @@ export class SignupService {
       subject: "Activate your account!",
       templateFile: "email-confirmation.ejs",
       templateParams: {
-        confirmationLink: this.getConfirmationUrl(userEmail, origin, redirectLink)
+        confirmationLink: this.getConfirmationUrl(
+          userEmail,
+          origin,
+          redirectLink
+        )
       } /* TODO: Update when email-confirmation is implemented */
     });
   }

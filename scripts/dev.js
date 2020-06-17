@@ -18,7 +18,7 @@ const proxyToLocalhost = (req, res, next) => {
       url = path.slice(1).length >= 1 ? path.slice(1).join("/") : "";
     }
     req.originalUrl = url;
-    req.headers["host"] = "tamudatathon.com";
+    //req.headers["host"] = "tamudatathon.com"; // Hosts need to be preserved for oauth strategies
     const target = `http://localhost:3000/${url || ""}`;
     const config = {
       target,
