@@ -19,8 +19,7 @@ export class SignupService {
   ) {}
 
   private createOriginFromHost(host: string) {
-    if (host.startsWith("https://") || host.startsWith("http://"))
-      return host;
+    if (host.startsWith("https://") || host.startsWith("http://")) return host;
     let scheme = "https";
     if (host.startsWith("localhost")) {
       scheme = "http";
@@ -28,11 +27,7 @@ export class SignupService {
     return `${scheme}://${host}`;
   }
 
-  getVerificationUrl(
-    email: string,
-    host: string,
-    redirectLink: string
-  ) {
+  getVerificationUrl(email: string, host: string, redirectLink: string) {
     const userJwt = this.jwtService.sign(
       { email },
       {
