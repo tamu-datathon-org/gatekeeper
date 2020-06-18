@@ -10,7 +10,7 @@ import { User } from "../user/interfaces/user.interface";
 
 @Injectable()
 export class SignupService {
-  private readonly confirmationPath = "/auth/signup/verify";
+  private readonly verificationPath = "/auth/signup/verify";
   constructor(
     private userAuthService: UserAuthService,
     private userService: UserService,
@@ -19,6 +19,7 @@ export class SignupService {
   ) {}
 
   private createOriginFromHost(host: string) {
+    if (host.startsWith("https://") || host.startsWith("http://")) return host;
     let scheme = "https";
     if (host.startsWith("localhost")) {
       scheme = "http";
@@ -26,11 +27,7 @@ export class SignupService {
     return `${scheme}://${host}`;
   }
 
-  private getConfirmationUrl(
-    email: string,
-    host: string,
-    redirectLink: string
-  ) {
+  getVerificationUrl(email: string, host: string, redirectLink: string) {
     const userJwt = this.jwtService.sign(
       { email },
       {
@@ -39,8 +36,8 @@ export class SignupService {
     );
     const confirmationLink = `${this.createOriginFromHost(host) ||
       process.env.DEFAULT_GATEKEEPER_ORIGIN}${
-      this.confirmationPath
-    }?user=${userJwt}&r=${redirectLink}`;
+      this.verificationPath
+    }/?user=${userJwt}&r=${redirectLink}`;
     return encodeURI(confirmationLink);
   }
 
@@ -54,7 +51,7 @@ export class SignupService {
       subject: "Activate your account!",
       templateFile: "email-confirmation.ejs",
       templateParams: {
-        confirmationLink: this.getConfirmationUrl(userEmail, host, redirectLink)
+        confirmationLink: this.getVerificationUrl(userEmail, host, redirectLink)
       } /* TODO: Update when email-confirmation is implemented */
     });
   }
