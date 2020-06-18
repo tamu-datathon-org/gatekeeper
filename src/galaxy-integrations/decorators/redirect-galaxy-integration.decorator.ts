@@ -3,7 +3,7 @@ import {
   DefaultGalaxyIntegrations,
   GatekeeperGalaxyIntegration
 } from "../galaxy-integrations";
-import { Defaults } from "../../common/defaults";
+import { Constants } from "../../common/constants";
 
 /**
  * Returns the the longest string in the given list that is a prefix of the given key.
@@ -46,7 +46,7 @@ export const getLongestMatchingPrefix = (key: string, prefixes: string[]) => {
 export const RedirectGalaxyIntegration = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
-    const redirectPath = request.query?.r || Defaults.redirect;
+    const redirectPath = request.query?.r || Constants.defaultRedirect;
 
     // Use default gatekeeper pathPrefix if no matching prefix.
     const longestPathPrefix =

@@ -118,6 +118,7 @@ describe("Signup Controller", () => {
       signupUserDto,
       "/app/me",
       GatekeeperGalaxyIntegration,
+      "https://tamudatathon.com",
       response.new()
     );
     expect(params.verificationPageSubtext).toBe(
@@ -139,6 +140,7 @@ describe("Signup Controller", () => {
       signupUserDto,
       "/app/me",
       GatekeeperGalaxyIntegration,
+      "https://tamudatathon.com",
       response.new()
     );
     expect(response.code).toBe(409);
@@ -161,6 +163,7 @@ describe("Signup Controller", () => {
       signupUserDto,
       "/app/me",
       GatekeeperGalaxyIntegration,
+      "https://tamudatathon.com",
       response.new()
     );
     expect(response.code).toBe(400);
@@ -182,6 +185,7 @@ describe("Signup Controller", () => {
       signupUserDto,
       "/app/me",
       GatekeeperGalaxyIntegration,
+      "https://tamudatathon.com",
       response.new()
     );
     expect(response.code).toBe(400);
@@ -203,6 +207,7 @@ describe("Signup Controller", () => {
       signupUserDto,
       "/app/me",
       GatekeeperGalaxyIntegration,
+      "https://tamudatathon.com",
       response.new()
     );
     expect(response.code).toBe(400);
@@ -227,6 +232,7 @@ describe("Signup Controller", () => {
       signupUserDto,
       "/app/me",
       GatekeeperGalaxyIntegration,
+      "https://tamudatathon.com",
       response.new()
     );
     expect(response.code).toBe(400);
@@ -251,6 +257,7 @@ describe("Signup Controller", () => {
       signupUserDto,
       "/app/me",
       GatekeeperGalaxyIntegration,
+      "https://tamudatathon.com",
       response.new()
     );
     expect(response.code).toBe(400);
@@ -310,6 +317,7 @@ describe("Signup Controller", () => {
         cookies: { accessToken: "test.user.jwt" }
       },
       "/app/me",
+      "https://tamudatathon.com",
       response.new()
     );
 
@@ -330,6 +338,7 @@ describe("Signup Controller", () => {
         cookies: { accessToken: "test.user.jwt" }
       },
       "/app/me",
+      "https://tamudatathon.com",
       response.new()
     );
 
@@ -350,6 +359,7 @@ describe("Signup Controller", () => {
         cookies: { accessToken: "test.user.jwt" }
       },
       "/app/me",
+      "https://tamudatathon.com",
       response.new()
     );
 

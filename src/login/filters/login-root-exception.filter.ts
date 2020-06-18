@@ -8,7 +8,7 @@ import {
 } from "@nestjs/common";
 import { Response } from "express";
 import { UserNotVerifiedException } from "../../auth/exceptions/user-not-verified.exception";
-import { Defaults } from "../../common/defaults";
+import { Constants } from "../../common/constants";
 
 @Catch(HttpException)
 export class LoginRootExceptionFilter implements ExceptionFilter {
@@ -35,7 +35,7 @@ export class LoginRootExceptionFilter implements ExceptionFilter {
       return response
         .status(401)
         .render("signup/resend-verification-email.ejs", {
-          redirectLink: request.query.r || Defaults.redirect
+          redirectLink: request.query.r || Constants.defaultRedirect
         });
     }
 

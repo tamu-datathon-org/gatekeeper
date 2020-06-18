@@ -5,6 +5,7 @@ import { UserAuthService } from "./user-auth/user-auth.service";
 import { GetUser } from "./user/user-auth.decorator";
 import { User } from "./user/interfaces/user.interface";
 import { AuthService } from "./auth/auth.service";
+import { QueryWithDefault } from "./common/decorators/query-with-default.decorator";
 
 @Controller()
 export class AppController {
@@ -20,9 +21,13 @@ export class AppController {
 
   @UseGuards(AuthGuard("jwt"))
   @Get("/logout")
-  async logout(@GetUser() user: User, @Res() res) {
+  async logout(
+    @GetUser() user: User,
+    @QueryWithDefault("r", "/auth/login") redirect,
+    @Res() res
+  ) {
     await this.authService.deauthorizeUser(user, res);
-    return res.redirect("/auth/login");
+    return res.redirect(redirect);
   }
 
   // THESE ENDPOINTS BELOW ARE TEMPORARY, REMOVE LATER

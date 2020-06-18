@@ -1,7 +1,7 @@
 import { Injectable, ConflictException } from "@nestjs/common";
 import { UserAuthService } from "../user-auth/user-auth.service";
 import { SignupUserDto } from "./dto/signup-user.dto";
-import { CreateUserAuthDto } from "..//user-auth/dto/create-user-auth.dto";
+import { CreateUserAuthDto } from "../user-auth/dto/create-user-auth.dto";
 import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 import { MailService } from "../mail/mail.service";
 import { JwtService } from "@nestjs/jwt";
@@ -18,19 +18,35 @@ export class SignupService {
     private readonly jwtService: JwtService
   ) {}
 
-  private getConfirmationUrl(email: string, redirectLink: string) {
+  private createOriginFromHost(host: string) {
+    let scheme = "https";
+    if (host.startsWith("localhost")) {
+      scheme = "http";
+    }
+    return `${scheme}://${host}`;
+  }
+
+  private getConfirmationUrl(
+    email: string,
+    host: string,
+    redirectLink: string
+  ) {
     const userJwt = this.jwtService.sign(
       { email },
       {
         expiresIn: process.env.CONFIRMATION_JWT_EXPIRATION
       }
     );
-    const confirmationLink = `${process.env.GATEKEEPER_DOMAIN}${this.confirmationPath}?user=${userJwt}&r=${redirectLink}`;
+    const confirmationLink = `${this.createOriginFromHost(host) ||
+      process.env.DEFAULT_GATEKEEPER_ORIGIN}${
+      this.confirmationPath
+    }?user=${userJwt}&r=${redirectLink}`;
     return encodeURI(confirmationLink);
   }
 
   private async sendVerificationEmail(
     userEmail: string,
+    host: string,
     redirectLink: string
   ): Promise<void> {
     return this.mailService.sendTemplatedEmail({
@@ -38,7 +54,7 @@ export class SignupService {
       subject: "Activate your account!",
       templateFile: "email-confirmation.ejs",
       templateParams: {
-        confirmationLink: this.getConfirmationUrl(userEmail, redirectLink)
+        confirmationLink: this.getConfirmationUrl(userEmail, host, redirectLink)
       } /* TODO: Update when email-confirmation is implemented */
     });
   }
@@ -50,6 +66,7 @@ export class SignupService {
    */
   async signupUserEmailAndPassword(
     signupUserDto: SignupUserDto,
+    host: string,
     redirectLink: string
   ): Promise<UserAuth> {
     const createUserPayload: CreateUserAuthDto = {
@@ -59,7 +76,7 @@ export class SignupService {
       isVerified: false
     };
     const user = await this.userAuthService.create(createUserPayload);
-    await this.sendVerificationEmail(user.email, redirectLink);
+    await this.sendVerificationEmail(user.email, host, redirectLink);
     return user;
   }
 
@@ -84,6 +101,7 @@ export class SignupService {
 
   async resendVerificationEmail(
     userJwt: string,
+    host: string,
     redirectLink: string
   ): Promise<string> {
     const { email } = this.jwtService.verify(userJwt); // Verify returns jwt payload and fails if JWT is invalid.
@@ -94,7 +112,7 @@ export class SignupService {
     if (user.isVerified)
       throw new ConflictException("User is already verified");
 
-    await this.sendVerificationEmail(email, redirectLink);
+    await this.sendVerificationEmail(email, host, redirectLink);
     return email;
   }
 }

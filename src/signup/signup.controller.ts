@@ -16,6 +16,7 @@ import { AuthService } from "../auth/auth.service";
 import { QueryWithDefault } from "../common/decorators/query-with-default.decorator";
 import { RedirectGalaxyIntegration } from "../galaxy-integrations/decorators/redirect-galaxy-integration.decorator";
 import { GalaxyIntegrationConfig } from "../galaxy-integrations/interfaces/galaxy-integration";
+import { ValidatedHost } from "../common/decorators/validated-host.decorator";
 
 @Controller("signup")
 export class SignupController {
@@ -52,6 +53,7 @@ export class SignupController {
     @Body() signupUserDto: SignupUserDto,
     @QueryWithDefault("r", "/") redirectLink: string | undefined,
     @RedirectGalaxyIntegration() integrationConfig: GalaxyIntegrationConfig,
+    @ValidatedHost() host,
     @Res() res
   ) {
     // Validate signupUserDto.
@@ -87,6 +89,7 @@ export class SignupController {
     try {
       const user = await this.signupService.signupUserEmailAndPassword(
         signupUserDto,
+        host,
         redirectLink
       );
       return res.render("signup/verification-email-sent", {
@@ -141,11 +144,13 @@ export class SignupController {
   async resendVerificationEmail(
     @Req() req,
     @QueryWithDefault("r") redirectLink: string | undefined,
+    @ValidatedHost() host,
     @Res() res
   ) {
     try {
       const userEmail = await this.signupService.resendVerificationEmail(
         req.cookies["accessToken"],
+        host,
         redirectLink
       );
       return res.render("signup/verification-email-sent", {

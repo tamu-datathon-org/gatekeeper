@@ -1,9 +1,9 @@
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { Defaults } from "../defaults";
+import { Constants } from "../constants";
 
 export const QueryWithDefault = (
   key: string,
-  defaultVal: string = Defaults.redirect
+  defaultVal: string = Constants.defaultRedirect
 ): ParameterDecorator => {
   return createParamDecorator((data, ctx: ExecutionContext) => {
     const { key, defaultVal } = data;
