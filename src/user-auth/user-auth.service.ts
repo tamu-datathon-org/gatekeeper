@@ -90,13 +90,16 @@ export class UserAuthService {
   /**
    * Updates the password of the user with the given email
    */
-  async updatePasswordForUser(email: string, password: string): Promise<UserAuth> {
+  async updatePasswordForUser(
+    email: string,
+    password: string
+  ): Promise<UserAuth> {
     const user = await this.findByEmail(email);
     if (!user)
       throw new NotFoundException(
         "A user with the given email does not exist."
       );
     user.passwordHash = await bcrypt.hash(password, 10);
-    return user.save();;
+    return user.save();
   }
 }

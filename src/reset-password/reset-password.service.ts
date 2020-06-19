@@ -50,17 +50,12 @@ export class ResetPasswordService {
     return this.sendResetPasswordEmail(email, host, redirectLink);
   }
 
-  async validateResetPasswordRequest(
-    userJwt: string
-  ) {
+  async validateResetPasswordRequest(userJwt: string) {
     const { email } = this.jwtService.verify(userJwt); // Verify returns jwt payload and fails if JWT is invalid.
     return email;
   }
 
-  async resetPassword(
-    email: string,
-    password: string
-  ) {
+  async resetPassword(email: string, password: string) {
     return this.userAuthService.updatePasswordForUser(email, password);
   }
 }

@@ -5,7 +5,7 @@ import { ResetPasswordController } from "./reset-password.controller";
 import { ResetPasswordService } from "./reset-password.service";
 import { UserAuthModule } from "../user-auth/user-auth.module";
 import { MailModule } from "../mail/mail.module";
-import { ValidatorService } from "src/validator/validator.service";
+import { ValidatorService } from "../validator/validator.service";
 
 @Module({
   imports: [
