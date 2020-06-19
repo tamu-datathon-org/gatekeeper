@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { AuthLinkGeneratorService } from 'src/auth/auth-link-generator.service';
-import { MailService } from 'src/mail/mail.service';
-import { UserAuthService } from 'src/user-auth/user-auth.service';
-import { AuthProviderException } from 'src/auth/exceptions/auth-provider.exception';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { AuthLinkGeneratorService } from "../auth/auth-link-generator.service";
+import { MailService } from "../mail/mail.service";
+import { UserAuthService } from "../user-auth/user-auth.service";
+import { AuthProviderException } from "../auth/exceptions/auth-provider.exception";
 
 @Injectable()
 export class ResetPasswordService {
@@ -14,7 +14,7 @@ export class ResetPasswordService {
     private readonly jwtService: JwtService,
     private authLinkGeneratorService: AuthLinkGeneratorService
   ) {}
-   
+
   private async sendResetPasswordEmail(
     userEmail: string,
     host: string,
@@ -25,7 +25,12 @@ export class ResetPasswordService {
       subject: "Reset your password",
       templateFile: "reset-password.ejs",
       templateParams: {
-        resetPasswordLink: this.authLinkGeneratorService.getLinkWithUserJwt(userEmail, host, this.resetPasswordPath, redirectLink)
+        resetPasswordLink: this.authLinkGeneratorService.getLinkWithUserJwt(
+          userEmail,
+          host,
+          this.resetPasswordPath,
+          redirectLink
+        )
       }
     });
   }
@@ -37,7 +42,9 @@ export class ResetPasswordService {
   ) {
     const user = await this.userAuthService.findByEmail(email);
     if (!user)
-      throw new NotFoundException("A user with the given email does not exist.");
+      throw new NotFoundException(
+        "A user with the given email does not exist."
+      );
     if (user.authType !== "EmailAndPassword")
       throw new AuthProviderException(user.authType, 401);
     return this.sendResetPasswordEmail(email, host, redirectLink);

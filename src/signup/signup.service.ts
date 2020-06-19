@@ -6,7 +6,7 @@ import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 import { MailService } from "../mail/mail.service";
 import { UserService } from "../user/user.service";
 import { User } from "../user/interfaces/user.interface";
-import { AuthLinkGeneratorService } from "src/auth/auth-link-generator.service";
+import { AuthLinkGeneratorService } from "../auth/auth-link-generator.service";
 import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
@@ -30,7 +30,12 @@ export class SignupService {
       subject: "Verify your account!",
       templateFile: "email-confirmation.ejs",
       templateParams: {
-        confirmationLink: this.authLinkGeneratorService.getLinkWithUserJwt(userEmail, host, this.verificationPath, redirectLink)
+        confirmationLink: this.authLinkGeneratorService.getLinkWithUserJwt(
+          userEmail,
+          host,
+          this.verificationPath,
+          redirectLink
+        )
       }
     });
   }

@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
-import { AuthModule } from 'src/auth/auth.module';
-import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
-import { ResetPasswordController } from './reset-password.controller';
-import { ResetPasswordService } from './reset-password.service';
-import { UserAuthModule } from 'src/user-auth/user-auth.module';
-import { MailModule } from 'src/mail/mail.module';
+import { Module } from "@nestjs/common";
+import { AuthModule } from "../auth/auth.module";
+import { JwtModule, JwtModuleOptions } from "@nestjs/jwt";
+import { ResetPasswordController } from "./reset-password.controller";
+import { ResetPasswordService } from "./reset-password.service";
+import { UserAuthModule } from "../user-auth/user-auth.module";
+import { MailModule } from "../mail/mail.module";
 
 @Module({
   imports: [
