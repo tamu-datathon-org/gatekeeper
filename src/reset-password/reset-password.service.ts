@@ -58,8 +58,9 @@ export class ResetPasswordService {
   }
 
   async resetPassword(
-    userEmailL: string,
-    newPassword: string
+    email: string,
+    password: string
   ) {
+    return this.userAuthService.updatePasswordForUser(email, password);
   }
 }

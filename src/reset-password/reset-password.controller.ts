@@ -140,9 +140,11 @@ export class ResetPasswordController {
           ...validationErrors
         });
 
-      
+      await this.resetPaswordService.resetPassword(userEmail, password);
+      return res.status(400).render("reset-password/reset-success", {
+        redirectLink,
+      });
     } catch (e) {
-      console.log(e);
       return res.status(400).render("reset-password/reset-failure", {
         redirectLink
       });
