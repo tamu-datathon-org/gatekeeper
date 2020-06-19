@@ -69,11 +69,9 @@ describe("ResetPasswordService", () => {
   });
 
   it("should fail when trying to reset password for a non-existent user", async () => {
-    jest
-      .spyOn(userAuthService, "findByEmail")
-      .mockImplementation(async () => {
-        return null;
-      });
+    jest.spyOn(userAuthService, "findByEmail").mockImplementation(async () => {
+      return null;
+    });
 
     const promise = service.handleResetPasswordRequest(
       "test@mctestface.com",
