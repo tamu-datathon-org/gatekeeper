@@ -89,6 +89,8 @@ export class UserAuthService {
 
   /**
    * Updates the password of the user with the given email
+   * @param  {string} email Email of the user whose password is being changed
+   * @param  {string} password The new password
    */
   async updatePasswordForUser(
     email: string,

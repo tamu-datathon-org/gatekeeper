@@ -3,7 +3,11 @@ import { UserAuthService } from "./user-auth.service";
 import { MongooseModule } from "@nestjs/mongoose";
 import { UserAuthSchema } from "./schemas/user-auth.schema";
 import { TestDatabaseModule } from "../test-database/test-database.module";
-import { ConflictException, BadRequestException } from "@nestjs/common";
+import {
+  ConflictException,
+  BadRequestException,
+  NotFoundException
+} from "@nestjs/common";
 
 describe("UserAuthService", () => {
   let service: UserAuthService;
@@ -224,6 +228,37 @@ describe("UserAuthService", () => {
     expect(user).toBeDefined();
     expect(user.email).toBe("bob@example.com");
   });
+
+  it("should be able to update user passwords", async () => {
+    await service.create({
+      email: "george@example.com",
+      authType: "EmailAndPassword",
+      password: "SomePassword",
+      isVerified: false
+    });
+    const { passwordHash: originalPasswordHash } = await service.findByEmail(
+      "george@example.com"
+    );
+
+    const {
+      passwordHash: newPasswordHash,
+      email
+    } = await service.updatePasswordForUser(
+      "george@example.com",
+      "NewPassword"
+    );
+    expect(email).toBe("george@example.com");
+    expect(newPasswordHash !== originalPasswordHash).toBe(true);
+  });
+
+  it("should fail when updating passwords for non-existent users", async () => {
+    const promise = service.updatePasswordForUser(
+      "doesnotexist@example.com",
+      "NewPassword"
+    );
+    await expect(promise).rejects.toThrow(NotFoundException);
+  });
+
   afterAll(() => {
     return module.close();
   }, 10000);
