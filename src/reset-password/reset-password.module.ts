@@ -5,6 +5,7 @@ import { ResetPasswordController } from "./reset-password.controller";
 import { ResetPasswordService } from "./reset-password.service";
 import { UserAuthModule } from "../user-auth/user-auth.module";
 import { MailModule } from "../mail/mail.module";
+import { ValidatorService } from "src/validator/validator.service";
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { MailModule } from "../mail/mail.module";
     })
   ],
   controllers: [ResetPasswordController],
-  providers: [ResetPasswordService]
+  providers: [ResetPasswordService, ValidatorService]
 })
 export class ResetPasswordModule {}

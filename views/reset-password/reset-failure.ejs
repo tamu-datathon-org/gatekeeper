@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include ("../partials/head") %>
+
+<body class="MessagePage">
+  <div class="container">
+    <div class="row justify-content-center message-box" style="height: 70vh;">
+      <div class="col-sm-10 text-center">
+        <div class="logo">
+          <img src="/auth/static/img/main.png" width="80" height="80" />
+        </div>
+
+        <div class="title">
+          <h1 class="h3 font-weight-normal">Reset Password Failure</h1>
+        </div>
+
+        <div>
+          <p>
+            There was an error in trying to reset your password. 
+            <br/>
+            Please request a new reset link.
+          </p>
+        </div>
+
+        <div class="button">
+          <a class="btn btn-outline-primary" href="/auth/reset-password?r=<%= locals.redirectLink %>">Go to the Reset Password Page</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%- include ("../partials/scripts") %>
+</body>
+</html>

@@ -49,4 +49,17 @@ export class ResetPasswordService {
       throw new AuthProviderException(user.authType, 401);
     return this.sendResetPasswordEmail(email, host, redirectLink);
   }
+
+  async validateResetPasswordRequest(
+    userJwt: string
+  ) {
+    const { email } = this.jwtService.verify(userJwt); // Verify returns jwt payload and fails if JWT is invalid.
+    return email;
+  }
+
+  async resetPassword(
+    userEmailL: string,
+    newPassword: string
+  ) {
+  }
 }

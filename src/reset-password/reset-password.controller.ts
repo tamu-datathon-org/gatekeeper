@@ -6,7 +6,8 @@ import {
   Post,
   Body,
   NotFoundException,
-  Res
+  Res,
+  Query
 } from "@nestjs/common";
 import { QueryWithDefault } from "../common/decorators/query-with-default.decorator";
 import { RedirectGalaxyIntegration } from "../galaxy-integrations/decorators/redirect-galaxy-integration.decorator";
@@ -14,10 +15,14 @@ import { GalaxyIntegrationConfig } from "../galaxy-integrations/interfaces/galax
 import { ValidatedHost } from "../common/decorators/validated-host.decorator";
 import { ResetPasswordService } from "./reset-password.service";
 import { AuthProviderException } from "../auth/exceptions/auth-provider.exception";
+import { ValidatorService } from "src/validator/validator.service";
 
 @Controller("reset-password")
 export class ResetPasswordController {
-  constructor(private resetPaswordService: ResetPasswordService) {}
+  constructor(
+    private resetPaswordService: ResetPasswordService,
+    private validatorService: ValidatorService
+  ) {}
 
   @Get("/")
   @Render("reset-password/index")
@@ -69,6 +74,78 @@ export class ResetPasswordController {
         });
 
       throw e;
+    }
+  }
+
+  @Get("reset")
+  async getResetPage(
+    @Req() req,
+    @Query("user") userJwt: string,
+    @QueryWithDefault("r") redirectLink: string | undefined,
+    @Res() res
+  ) {
+    try {
+      const userEmail = await this.resetPaswordService.validateResetPasswordRequest(
+        userJwt
+      );
+      return res.render("reset-password/reset-page", {
+        csrfToken: req.csrfToken(),
+        userEmail,
+        userJwt,
+        redirectLink
+      });
+    } catch (e) {
+      return res.status(400).render("reset-password/reset-failure", {
+        redirectLink
+      });
+    }
+  }
+
+  @Post("reset")
+  async resetPassword(
+    @Req() req,
+    @Body("password") password: string,
+    @Body("confirmPassword") confirmPassword: string,
+    @Query("user") userJwt: string,
+    @QueryWithDefault("r") redirectLink: string | undefined,
+    @Res() res
+  ) {
+    try {
+      const userEmail = await this.resetPaswordService.validateResetPasswordRequest(
+        userJwt
+      );
+      // Validate new password.
+      let validationErrors = undefined;
+      if (
+        !password ||
+        !this.validatorService.validatePassword(password)
+      )
+        validationErrors = {
+          passwordError: "A password must contain at least 6 characters.",
+        };
+      else if (
+        !confirmPassword ||
+        confirmPassword !== password
+      )
+        validationErrors = {
+          confirmPasswordError: "Value must match the given password.",
+        };
+  
+      if (validationErrors)
+        return res.status(400).render("reset-password/reset-page", {
+          csrfToken: req.csrfToken(),
+          redirectLink,
+          userJwt,
+          userEmail,
+          ...validationErrors
+        });
+
+      
+    } catch (e) {
+      console.log(e);
+      return res.status(400).render("reset-password/reset-failure", {
+        redirectLink
+      });
     }
   }
 }
