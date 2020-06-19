@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html class="AuthFormPage" lang="en">
+<%- include ("../partials/head") %>
+
+<body class="AuthFormPage text-center">
+  <form class="form-signin mx-auto px-3" method="post" action="/auth/reset-password?r=<%= locals.redirectLink %>">
+    <!-- csrf token for integrity :) -->
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    <!-- logo/image -->
+    <!-- TODO: change the image link to static image -->
+    <img class="mb-4" src="/auth/static/img/main.png" alt="" width="72" height="72" />
+    <h1 class="h3 mb-3 font-weight-normal">Reset Password</h1>
+
+    <p>Enter your email below and we'll send you a link to reset your password.</p>
+
+    <!-- EMAIL -->
+    <div id="email-input-div" class="text-left form-input-div <%= locals.emailError ? 'input-invalid' : null%>">
+      <label for="loginEmail" class="text-muted">Email</label>
+      <input autofocus id="loginEmail" name="email" value="<%= locals.emailPrefill ? locals.emailPrefill : null %>" />
+      <% if (locals.emailError) { %>
+        <div class="form-invalid-feedback">
+          <i class="fas fa-exclamation-circle"></i>
+          <%= locals.emailError %>
+        </div>
+      <% } %>
+    </div>
+
+    <div id="submit-btn-div"" class="text-center text-left">
+      <button type="submit" class="btn btn-primary btn-block btn-lg mx-auto">Get Reset Password Link</button>
+    </div>
+
+    <div class="text-center mt-3">
+      <a href="/auth/login?r=<%= locals.redirectLink %>">Never mind</a>
+    </div>
+
+    <!-- copyright TD -->
+    <p class="mt-5 mb-3 text-muted text-center">&copy; TAMU Datathon <%= new Date().getFullYear() %></p>
+  </form>
+
+  <%- include ("../partials/scripts") %>
+</body>
+
+</html>
