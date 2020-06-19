@@ -97,6 +97,7 @@ export class AuthService {
    * @param {} res The request response object to attach the JWT to
    */
   async authorizeUser(user: User, res) {
+    console.log(user);
     const userAuth = await this.userAuthService.findById(user.authId);
     if (!userAuth)
       throw new UnauthorizedException("UserAuth does not exist for user");

@@ -7,7 +7,7 @@ export interface UserAuth extends Document {
   readonly email: string;
   isVerified: boolean;
   readonly authType: UserAuthType;
-  readonly passwordHash?: string;
+  passwordHash?: string;
   readonly firstName?: string;
   readonly lastName?: string;
   accessId?: string;
