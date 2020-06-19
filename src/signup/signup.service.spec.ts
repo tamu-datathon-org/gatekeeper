@@ -9,6 +9,7 @@ import { JwtService, JwtModule } from "@nestjs/jwt";
 import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 import { UserService } from "../user/user.service";
 import { User } from "../user/interfaces/user.interface";
+import { AuthLinkGeneratorService } from "../auth/auth-link-generator.service";
 
 class MockUserAuthService {
   async create() {
@@ -52,6 +53,12 @@ describe("SignupService", () => {
         {
           provide: UserService,
           useValue: new MockUserService()
+        },
+        {
+          provide: AuthLinkGeneratorService,
+          useValue: { 
+            async getLinkWithUserJwt() { return ""; }
+          }
         }
       ]
     }).compile();
