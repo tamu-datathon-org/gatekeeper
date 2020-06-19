@@ -4,6 +4,7 @@ import { AuthLinkGeneratorService } from "../auth/auth-link-generator.service";
 import { MailService } from "../mail/mail.service";
 import { UserAuthService } from "../user-auth/user-auth.service";
 import { AuthProviderException } from "../auth/exceptions/auth-provider.exception";
+import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 
 @Injectable()
 export class ResetPasswordService {
@@ -35,11 +36,11 @@ export class ResetPasswordService {
     });
   }
 
-  async sendResetPasswordEmailForUser(
+  async handleResetPasswordRequest(
     email: string,
     host: string,
     redirectLink: string
-  ) {
+  ): Promise<void> {
     const user = await this.userAuthService.findByEmail(email);
     if (!user)
       throw new NotFoundException(
@@ -50,12 +51,13 @@ export class ResetPasswordService {
     return this.sendResetPasswordEmail(email, host, redirectLink);
   }
 
-  async validateResetPasswordRequest(userJwt: string) {
+  validateResetPasswordRequest(userJwt: string): string {
     const { email } = this.jwtService.verify(userJwt); // Verify returns jwt payload and fails if JWT is invalid.
     return email;
   }
 
-  async resetPassword(email: string, password: string) {
+  async resetPassword(userJwt: string, password: string): Promise<UserAuth> {
+    const email = this.validateResetPasswordRequest(userJwt);
     return this.userAuthService.updatePasswordForUser(email, password);
   }
 }

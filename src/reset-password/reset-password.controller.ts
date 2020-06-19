@@ -48,7 +48,7 @@ export class ResetPasswordController {
     @Res() res
   ) {
     try {
-      await this.resetPaswordService.sendResetPasswordEmailForUser(
+      await this.resetPaswordService.handleResetPasswordRequest(
         userEmail,
         host,
         redirectLink
@@ -85,12 +85,9 @@ export class ResetPasswordController {
     @Res() res
   ) {
     try {
-      const userEmail = await this.resetPaswordService.validateResetPasswordRequest(
-        userJwt
-      );
+      this.resetPaswordService.validateResetPasswordRequest(userJwt);
       return res.render("reset-password/reset-page", {
         csrfToken: req.csrfToken(),
-        userEmail,
         userJwt,
         redirectLink
       });
@@ -111,9 +108,6 @@ export class ResetPasswordController {
     @Res() res
   ) {
     try {
-      const userEmail = await this.resetPaswordService.validateResetPasswordRequest(
-        userJwt
-      );
       // Validate new password.
       let validationErrors = undefined;
       if (!password || !this.validatorService.validatePassword(password))
@@ -130,11 +124,10 @@ export class ResetPasswordController {
           csrfToken: req.csrfToken(),
           redirectLink,
           userJwt,
-          userEmail,
           ...validationErrors
         });
 
-      await this.resetPaswordService.resetPassword(userEmail, password);
+      await this.resetPaswordService.resetPassword(userJwt, password);
       return res.status(400).render("reset-password/reset-success", {
         redirectLink
       });
