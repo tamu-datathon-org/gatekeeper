@@ -56,8 +56,10 @@ describe("SignupService", () => {
         },
         {
           provide: AuthLinkGeneratorService,
-          useValue: { 
-            async getLinkWithUserJwt() { return ""; }
+          useValue: {
+            async getLinkWithUserJwt() {
+              return "";
+            }
           }
         }
       ]

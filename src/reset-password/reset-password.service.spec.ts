@@ -26,11 +26,9 @@ describe("ResetPasswordService", () => {
         },
         {
           provide: AuthLinkGeneratorService,
-          useValue: {
-
-          }
+          useValue: {}
         }
-      ],
+      ]
     }).compile();
 
     service = module.get<ResetPasswordService>(ResetPasswordService);
