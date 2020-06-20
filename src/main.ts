@@ -7,10 +7,22 @@ import * as cookieParser from "cookie-parser";
 import passport = require("passport");
 import csrf = require("csurf");
 import bodyParser = require("body-parser");
+import { Request, Response, NextFunction } from "express";
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: console
+  });
+
+  /**
+   * In production the real host header will be in x-forwarded-host, as the host header will be squashed as the heroku url
+   * https://vercel.com/docs/v2/edge-network/headers#inlinecode
+   */
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (process.env.NODE_ENV === "prod") {
+      req.headers.host = req.header("x-forwarded-host");
+    }
+    next();
   });
 
   app.use(
