@@ -21,6 +21,7 @@ async function bootstrap(): Promise<void> {
   app.use((req: Request, res: Response, next: NextFunction) => {
     if (process.env.NODE_ENV === "prod") {
       req.headers.host = req.header("x-forwarded-host");
+      req.protocol = "https";
     }
     next();
   });
