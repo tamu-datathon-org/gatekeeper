@@ -18,6 +18,7 @@ export class LoginProviderExceptionFilter implements ExceptionFilter {
       return response.status(401).render(this.templatePath, {
         csrfToken: request.csrfToken(),
         emailPrefill: request.body.username,
+        redirectLink: request.query.r || request.session.redirect,
         emailError
       });
     }
