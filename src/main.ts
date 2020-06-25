@@ -43,6 +43,7 @@ async function bootstrap(): Promise<void> {
   // Use session level CRSF for better protection. (only on login and signup endpoints)
   app.use("/login", csrf());
   app.use("/signup", csrf());
+  app.use("/reset-password", csrf());
 
   app.useStaticAssets(join(__dirname, "..", "public"));
   app.setBaseViewsDir(join(__dirname, "..", "views"));

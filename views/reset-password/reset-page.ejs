@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html class="AuthFormPage" lang="en">
+<%- include ("../partials/head") %>
+
+<body class="AuthFormPage text-center">
+  <form class="form-signin mx-auto px-3" method="post" action="/auth/reset-password/reset?user=<%= locals.userJwt %>&r=<%= locals.redirectLink %>">
+    <!-- csrf token for integrity :) -->
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    <!-- logo/image -->
+    <!-- TODO: change the image link to static image -->
+    <img class="mb-4" src="/auth/static/img/main.png" alt="" width="72" height="72" />
+    <h1 class="h3 mb-3 font-weight-normal">Reset Password</h1>
+
+    <p>
+      You're resetting the password for your account</a>.
+    </br>
+      Please enter your new password below:
+    </p>
+
+    <!-- PASSWORD -->
+    <div class="form-input-div <%= locals.passwordError ? 'input-invalid' : null%>">
+      <label for="resetPasswordPassword" class="text-muted">New Password</label>
+      <input type="password" class="" id="resetPasswordPassword" name="password" />
+      <% if (locals.passwordError) { %>
+        <div class="form-invalid-feedback">
+          <i class="fas fa-exclamation-circle"></i>
+          <%= locals.passwordError %>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- CONFIRM PASSWORD -->
+    <div class="form-input-div <%= locals.confirmPasswordError ? 'input-invalid' : null%>">
+      <label for="resetPasswordConfirmPassword" class="text-muted">Confirm Password</label>
+      <input
+        type="password"
+        id="resetPasswordConfirmPassword"
+        name="confirmPassword"
+      />
+      <% if (locals.confirmPasswordError) { %>
+        <div class="form-invalid-feedback">
+          <i class="fas fa-exclamation-circle"></i>
+          <%= locals.confirmPasswordError %>
+        </div>
+      <% } %>
+    </div>
+
+    <div id="submit-btn-div"" class="text-center text-left">
+      <button type="submit" class="btn btn-primary btn-block btn-lg mx-auto">Reset Password</button>
+    </div>
+
+    <div class="text-center mt-3">
+      <a href="/auth/login?r=<%= locals.redirectLink %>">Never mind</a>
+    </div>
+
+    <!-- copyright TD -->
+    <p class="mt-5 mb-3 text-muted text-center">&copy; TAMU Datathon <%= new Date().getFullYear() %></p>
+  </form>
+
+  <%- include ("../partials/scripts") %>
+</body>
+
+</html>

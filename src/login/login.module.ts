@@ -9,6 +9,8 @@ import { AuthModule } from "../auth/auth.module";
 })
 export class LoginModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(saveRedirectParam).forRoutes("login/google$");
+    consumer
+      .apply(saveRedirectParam)
+      .forRoutes("login/google$", "login/facebook$");
   }
 }

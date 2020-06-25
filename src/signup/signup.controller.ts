@@ -106,7 +106,6 @@ export class SignupController {
           emailError: this.controllerErrors.userExists
         });
 
-      // TODO: Change this to a standard way of handling 5XX errors.
       throw e;
     }
   }

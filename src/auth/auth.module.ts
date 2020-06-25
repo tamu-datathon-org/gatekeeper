@@ -9,6 +9,7 @@ import { GoogleStrategy } from "./strategies/google.strategy";
 import { FacebookStrategy } from "./strategies/facebook.strategy";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 import { UserModule } from "../user/user.module";
+import { AuthLinkGeneratorService } from "./auth-link-generator.service";
 
 @Module({
   imports: [
@@ -24,12 +25,13 @@ import { UserModule } from "../user/user.module";
   ],
   providers: [
     AuthService,
+    AuthLinkGeneratorService,
     LocalStrategy,
     LocalSerializer,
     JwtStrategy,
     GoogleStrategy,
     FacebookStrategy
   ],
-  exports: [PassportModule, AuthService]
+  exports: [PassportModule, AuthService, AuthLinkGeneratorService]
 })
 export class AuthModule {}

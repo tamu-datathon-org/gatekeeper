@@ -2,7 +2,8 @@ import { Model } from "mongoose";
 import {
   Injectable,
   BadRequestException,
-  ConflictException
+  ConflictException,
+  NotFoundException
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { UserAuth } from "./interfaces/user-auth.interface";
@@ -84,5 +85,23 @@ export class UserAuthService {
    */
   async findById(id: string): Promise<UserAuth | undefined> {
     return (await this.userAuthModel.findById(id)) || undefined;
+  }
+
+  /**
+   * Updates the password of the user with the given email
+   * @param  {string} email Email of the user whose password is being changed
+   * @param  {string} password The new password
+   */
+  async updatePasswordForUser(
+    email: string,
+    password: string
+  ): Promise<UserAuth> {
+    const user = await this.findByEmail(email);
+    if (!user)
+      throw new NotFoundException(
+        "A user with the given email does not exist."
+      );
+    user.passwordHash = await bcrypt.hash(password, 10);
+    return user.save();
   }
 }

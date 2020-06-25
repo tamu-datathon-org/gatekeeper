@@ -4,9 +4,10 @@ import { SignupUserDto } from "./dto/signup-user.dto";
 import { CreateUserAuthDto } from "../user-auth/dto/create-user-auth.dto";
 import { UserAuth } from "../user-auth/interfaces/user-auth.interface";
 import { MailService } from "../mail/mail.service";
-import { JwtService } from "@nestjs/jwt";
 import { UserService } from "../user/user.service";
 import { User } from "../user/interfaces/user.interface";
+import { AuthLinkGeneratorService } from "../auth/auth-link-generator.service";
+import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class SignupService {
@@ -15,31 +16,9 @@ export class SignupService {
     private userAuthService: UserAuthService,
     private userService: UserService,
     private mailService: MailService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private authLinkGeneratorService: AuthLinkGeneratorService
   ) {}
-
-  private createOriginFromHost(host: string) {
-    if (host.startsWith("https://") || host.startsWith("http://")) return host;
-    let scheme = "https";
-    if (host.startsWith("localhost")) {
-      scheme = "http";
-    }
-    return `${scheme}://${host}`;
-  }
-
-  getVerificationUrl(email: string, host: string, redirectLink: string) {
-    const userJwt = this.jwtService.sign(
-      { email },
-      {
-        expiresIn: process.env.CONFIRMATION_JWT_EXPIRATION
-      }
-    );
-    const confirmationLink = `${this.createOriginFromHost(host) ||
-      process.env.DEFAULT_GATEKEEPER_ORIGIN}${
-      this.verificationPath
-    }/?user=${userJwt}&r=${redirectLink}`;
-    return encodeURI(confirmationLink);
-  }
 
   private async sendVerificationEmail(
     userEmail: string,
@@ -48,11 +27,16 @@ export class SignupService {
   ): Promise<void> {
     return this.mailService.sendTemplatedEmail({
       emailTo: userEmail,
-      subject: "Activate your account!",
+      subject: "Verify your account!",
       templateFile: "email-confirmation.ejs",
       templateParams: {
-        confirmationLink: this.getVerificationUrl(userEmail, host, redirectLink)
-      } /* TODO: Update when email-confirmation is implemented */
+        confirmationLink: this.authLinkGeneratorService.getLinkWithUserJwt(
+          userEmail,
+          host,
+          this.verificationPath,
+          redirectLink
+        )
+      }
     });
   }
 
