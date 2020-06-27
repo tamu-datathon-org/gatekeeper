@@ -7,9 +7,14 @@ export const GatekeeperGalaxyIntegration = newGalaxyIntegrationConfig({
 
 export const DefaultGalaxyIntegrations = {
   "/": GatekeeperGalaxyIntegration,
+  "/auth": GatekeeperGalaxyIntegration,
   "/apply": newGalaxyIntegrationConfig({
     pathPrefix: "/apply",
     appName: "TAMU Datathon 2020 Applications"
+  }),
+  "/events": newGalaxyIntegrationConfig({
+    pathPrefix: "/events",
+    appName: "TAMU Datathon 2020 Events"
   }),
   "/workshops": newGalaxyIntegrationConfig({
     pathPrefix: "/workshops",
