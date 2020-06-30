@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html class="AuthFormPage" lang="en">
-<%- include ("../partials/head") %>
+<%- include ("../partials/head",{page_title:"Reset Password"}) %>
 
 <body class="AuthFormPage text-center">
   <form class="form-signin mx-auto px-3" method="post" action="/auth/reset-password/reset?user=<%= locals.userJwt %>&r=<%= locals.redirectLink %>">
