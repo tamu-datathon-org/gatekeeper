@@ -1,5 +1,5 @@
 <h1 align="center">
-  :european_castle:
+  :crossed_swords:
   gatekeeper
   :european_castle:
 </h1>
