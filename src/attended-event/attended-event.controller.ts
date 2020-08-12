@@ -13,10 +13,14 @@ import { AttendedEventService } from "./attended-event.service";
 import { AuthGuard } from "@nestjs/passport";
 import { GetUser } from "../user/user-auth.decorator";
 import { User } from "../user/interfaces/user.interface";
+import { UserService } from "../user/user.service";
 
 @Controller("attended/")
 export class AttendedEventController {
-  constructor(private attendedEventService: AttendedEventService) {}
+  constructor(
+    private attendedEventService: AttendedEventService,
+    private userService: UserService
+  ) {}
 
   @UseGuards(GalaxyIntegrationGuard)
   @Get("/")
@@ -35,6 +39,31 @@ export class AttendedEventController {
 
     const attendedObjects = await this.attendedEventService.findAll(filter);
     return attendedObjects;
+  }
+
+  @UseGuards(GalaxyIntegrationGuard)
+  @Get("/event")
+  async getEventEmails(@Query("eventId") eventId) {
+    let filter = {};
+    if (eventId) filter = { eventId };
+
+    if (!filter) throw new BadRequestException("Request must contain eventId");
+
+    const attendedObjects = await this.attendedEventService.findAll(filter);
+    const attendedEventEmails = [];
+    for (let i = 0; i < attendedObjects.length; i++) {
+      const userObj = await this.userService.findByAuthId(
+        attendedObjects[i].userAuthId
+      );
+      const userEmail = userObj.email;
+      const attendedEmailsObj = {
+        timestamp: attendedObjects[i].timestamp,
+        userAuthId: attendedObjects[i].userAuthId,
+        userEmail: userEmail
+      };
+      attendedEventEmails.push(attendedEmailsObj);
+    }
+    return attendedEventEmails;
   }
 
   @UseGuards(GalaxyIntegrationGuard, AuthGuard("jwt"))
