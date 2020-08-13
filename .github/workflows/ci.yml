@@ -116,15 +116,9 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: coverage
-      - uses: amondnet/now-deployment@v2.0.2
-        id: publisher
-        name: Create a PR deployment in now.sh
+      - uses: codecov/codecov-action@v1
         with:
-          github-comment: false
-          zeit-token: ${{ secrets.ZEIT_TOKEN }}
-          now-org-id: ${{ secrets.ORG_ID }}
-          working-directory: ./coverage
-          now-project-id: ${{ secrets.ZEIT_PROJECT_ID }}
+          file: ./coverage/clover.xml
       - name: Read Results
         id: results
         run: |
@@ -144,7 +138,6 @@ jobs:
         with:
           message: |
             **✅ Jest Unit Test(s) passed for commit [`${{ steps.results.outputs.short-commit }}`](https://github.com/tamu-datathon-org/gatekeeper/commit/${{ github.event.after }})**
-            Link to code coverage report: ${{ steps.publisher.outputs.preview-url }}
             
             <details><summary>Jest Unit Test Results:</summary>
             <p>
