@@ -7,10 +7,28 @@ import {
 } from "@nestjs/common";
 import { Response } from "express";
 import { UserNotVerifiedException } from "../../auth/exceptions/user-not-verified.exception";
+import fetch from "node-fetch";
 
 @Catch()
 export class GlobalHttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
+    // Send exception to r2d2 slackbot if in production.
+    if (process.env.NODE_ENV === "prod") {
+      const payload = {
+        source: "GATEKEEPER",
+        error: `${exception.stack}\n${JSON.stringify(exception, undefined, 2)}`
+      };
+      fetch(`${process.env.SLACKBOT_BASE_URL}slack/log-error`, {
+        method: "post",
+        body: JSON.stringify(payload, undefined, 2),
+        headers: {
+          "Content-Type": "application/json",
+          "Gatekeeper-Integration": process.env
+            .GATEKEEPER_INTEGRATION_SECRET as string
+        }
+      });
+    }
+
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest();
