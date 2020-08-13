@@ -116,15 +116,15 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: coverage
-      - uses: amondnet/now-deployment@v2.0.2
+      - uses: amondnet/vercel-action@v19
         id: publisher
-        name: Create a PR deployment in now.sh
+        name: Upload coverage build to Vercel 
         with:
-          github-comment: false
-          zeit-token: ${{ secrets.ZEIT_TOKEN }}
-          now-org-id: ${{ secrets.ORG_ID }}
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.ORG_ID }}
+          vercel-project-id: ${{ secrets.ZEIT_PROJECT_ID }}
           working-directory: ./coverage
-          now-project-id: ${{ secrets.ZEIT_PROJECT_ID }}
+          github-comment: false
       - name: Read Results
         id: results
         run: |
