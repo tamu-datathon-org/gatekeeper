@@ -12,8 +12,8 @@ import fetch from "node-fetch";
 @Catch()
 export class GlobalHttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
-    // Send exception to r2d2 slackbot if in production.
-    if (process.env.NODE_ENV === "prod") {
+    // Send server exceptions to r2d2 slackbot, if in production mode.
+    if (process.env.NODE_ENV === "prod" && exception.getStatus() >= 500) {
       const payload = {
         source: "GATEKEEPER",
         error: `${exception.stack}\n${JSON.stringify(exception, undefined, 2)}`
