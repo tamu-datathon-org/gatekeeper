@@ -23,12 +23,14 @@ export class LoginRootExceptionFilter implements ExceptionFilter {
       return response.status(401).render(this.templatePath, {
         csrfToken: request.csrfToken(),
         emailPrefill: request.body.username,
+        redirectLink: request.query.r || request.session.redirect,
         emailError: "Email and password combination is invalid."
       });
     if (exception instanceof NotFoundException)
       return response.status(404).render(this.templatePath, {
         csrfToken: request.csrfToken(),
         emailPrefill: request.body.username,
+        redirectLink: request.query.r || request.session.redirect,
         emailError: "User with the given email does not exist."
       });
     if (exception instanceof UserNotVerifiedException) {
