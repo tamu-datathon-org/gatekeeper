@@ -47,6 +47,6 @@ $ npm run test:cov
 
 <p align="center">
   <a href="https://vercel.com?utm_source=tamu-datathon&utm_campaign=oss">
-    TAMU Datathon is powered by </br><img src="https://tamudatathon.com/static/img/sponsors/vercel_dark.svg" height="24px" alt="Vercel" />
+    <img src="https://tamudatathon.com/static/img/sponsors/powered-by-vercel.svg" height="36px" alt="Powered by Vercel" />
   </a>
 </p>
