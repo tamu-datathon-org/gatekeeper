@@ -7,6 +7,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build && npm run build:sass",
+    "build:prod": "npm run build && mv dist api",
     "build:sass": "node-sass scss/custom.scss public/static/css/style.css --output-style compressed",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",

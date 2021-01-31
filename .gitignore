@@ -112,3 +112,4 @@ public/static/css/style.css
 # DS_Store
 .DS_Store
 **/*.DS_Store
+.vercel

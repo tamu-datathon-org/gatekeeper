@@ -1,7 +1,7 @@
 {
   "functions": {
-    "/dist/main.js": {
-      "includeFiles": "."
+    "api/main.js": {
+      "runtime": "@vercel/node@1.9.0"
     }
   }
 }
