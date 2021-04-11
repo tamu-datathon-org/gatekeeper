@@ -26,7 +26,7 @@
 	// "shutdownAction": "none",
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "npm install && npm rebuild node-sass && npm rebuild bcrypt --update-binary && cp .env.sample .env.dev",
+	"postCreateCommand": "npm install && npm rebuild sass && npm rebuild bcrypt --update-binary && cp .env.sample .env.dev",
 
 	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "node"
