@@ -16,6 +16,10 @@ export const DefaultGalaxyIntegrations = {
     pathPrefix: "/events",
     appName: "TAMU Datathon 2020 Events"
   }),
+  "/mailing": newGalaxyIntegrationConfig({
+    pathPrefix: "/mailing",
+    appName: "TAMU Datathon 2020 Mailing"
+  }),
   "/workshops": newGalaxyIntegrationConfig({
     pathPrefix: "/workshops",
     appName: "TAMU Datathon 2020 Workshops"
