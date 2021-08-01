@@ -1,7 +1,7 @@
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 import {
   DefaultGalaxyIntegrations,
-  GatekeeperGalaxyIntegration
+  GatekeeperGalaxyIntegration,
 } from "../galaxy-integrations";
 import { Constants } from "../../common/constants";
 
@@ -17,7 +17,7 @@ export const getLongestMatchingPrefix = (key: string, prefixes: string[]) => {
   key = key.toLowerCase(); //
   const keyPathTokens: string[] = key.split("/").filter(String); // Filter undefined values.
 
-  prefixes.forEach(prefix => {
+  prefixes.forEach((prefix) => {
     const prefixTokens: string[] = prefix
       .toLowerCase()
       .split("/")

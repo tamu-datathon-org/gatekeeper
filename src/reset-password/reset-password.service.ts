@@ -31,8 +31,8 @@ export class ResetPasswordService {
           host,
           this.resetPasswordPath,
           redirectLink
-        )
-      }
+        ),
+      },
     });
   }
 

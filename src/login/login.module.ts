@@ -5,7 +5,7 @@ import { AuthModule } from "../auth/auth.module";
 
 @Module({
   imports: [AuthModule],
-  controllers: [LoginController]
+  controllers: [LoginController],
 })
 export class LoginModule {
   configure(consumer: MiddlewareConsumer) {

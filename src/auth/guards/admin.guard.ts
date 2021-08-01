@@ -3,7 +3,7 @@ import {
   CanActivate,
   ExecutionContext,
   UnauthorizedException,
-  ForbiddenException
+  ForbiddenException,
 } from "@nestjs/common";
 import { Observable } from "rxjs";
 

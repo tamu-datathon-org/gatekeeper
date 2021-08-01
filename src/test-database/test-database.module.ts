@@ -12,26 +12,22 @@ import { MongoMemoryServer } from "mongodb-memory-server";
         if (process.env.CI) {
           // http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
           const randomDBName =
-            Math.random()
-              .toString(36)
-              .substring(2, 15) +
-            Math.random()
-              .toString(36)
-              .substring(2, 20);
+            Math.random().toString(36).substring(2, 15) +
+            Math.random().toString(36).substring(2, 20);
           return {
             uri: `mongodb://localhost:27017/${randomDBName}`,
             useNewUrlParser: true,
             useUnifiedTopology: true,
-            useCreateIndex: true
+            useCreateIndex: true,
           };
         }
         const mongod = new MongoMemoryServer();
-        const uri = await mongod.getConnectionString();
+        const uri = await mongod.getUri();
         return {
-          uri: uri
+          uri: uri,
         };
-      }
-    })
-  ]
+      },
+    }),
+  ],
 })
 export class TestDatabaseModule {}

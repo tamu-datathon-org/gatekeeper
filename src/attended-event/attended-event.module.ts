@@ -9,13 +9,13 @@ import { AttendedEventController } from "./attended-event.controller";
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: "AttendedEvent", schema: AttendedEventSchema }
+      { name: "AttendedEvent", schema: AttendedEventSchema },
     ]),
     UserModule,
-    EventModule
+    EventModule,
   ],
   providers: [AttendedEventService],
   exports: [AttendedEventService],
-  controllers: [AttendedEventController]
+  controllers: [AttendedEventController],
 })
 export class AttendedEventModule {}

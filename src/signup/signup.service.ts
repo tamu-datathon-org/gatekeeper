@@ -35,8 +35,8 @@ export class SignupService {
           host,
           this.verificationPath,
           redirectLink
-        )
-      }
+        ),
+      },
     });
   }
 
@@ -54,7 +54,7 @@ export class SignupService {
       email: signupUserDto.email,
       password: signupUserDto.password,
       authType: "EmailAndPassword",
-      isVerified: false
+      isVerified: false,
     };
     const user = await this.userAuthService.create(createUserPayload);
     await this.sendVerificationEmail(user.email, host, redirectLink);
@@ -76,7 +76,7 @@ export class SignupService {
     return this.userService.create({
       userAuthId: user.id,
       firstName: user.firstName,
-      lastName: user.lastName
+      lastName: user.lastName,
     });
   }
 

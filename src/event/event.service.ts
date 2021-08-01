@@ -23,7 +23,7 @@ export class EventService {
     const createdEvent = new this.eventModel({
       name: req.eventName,
       parentId: req.eventParentId || "root",
-      description: req.eventDescription || ""
+      description: req.eventDescription || "",
     });
 
     return createdEvent.save();
@@ -50,7 +50,7 @@ export class EventService {
         throw new BadRequestException("Parent Event does not exist");
       }
     }
-    await this.eventModel.updateOne(event, fields).exec();
+    await event.updateOne(fields).exec();
   }
 
   /**

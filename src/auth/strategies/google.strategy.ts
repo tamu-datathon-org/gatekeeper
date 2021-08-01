@@ -26,7 +26,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "Google") {
             process.env.GOOGLE_OAUTH_CALLBACK_URL,
       proxy: process.env.NODE_ENV === "prod", // in prod enforce using https in callback url
       passReqToCallback: true,
-      scope: ["profile", "email"]
+      scope: ["profile", "email"],
     });
   }
   /**
@@ -61,13 +61,13 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "Google") {
           isVerified: true,
           authType: "Google",
           firstName: profile.name?.givenName,
-          lastName: profile.name?.familyName
+          lastName: profile.name?.familyName,
         });
 
         const newUser = await this.userService.create({
           userAuthId: newUserAuth.id,
           firstName: newUserAuth.firstName,
-          lastName: newUserAuth.lastName
+          lastName: newUserAuth.lastName,
         });
 
         return done(null, newUser);

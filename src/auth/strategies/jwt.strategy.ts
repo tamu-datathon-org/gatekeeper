@@ -13,11 +13,11 @@ export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {
   ) {
     super({
       secretOrKey: process.env.AUTH_JWT_SECRET,
-      jwtFromRequest: req => {
+      jwtFromRequest: (req) => {
         // Custom cookie extractor for JWT
         if (req && req.cookies) return req.cookies["accessToken"];
         return undefined;
-      }
+      },
     });
   }
 

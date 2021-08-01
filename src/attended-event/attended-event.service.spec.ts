@@ -49,14 +49,14 @@ describe("AttendedEventService", () => {
       imports: [
         TestDatabaseModule,
         MongooseModule.forFeature([
-          { name: "AttendedEvent", schema: AttendedEventSchema }
-        ])
+          { name: "AttendedEvent", schema: AttendedEventSchema },
+        ]),
       ],
       providers: [
         AttendedEventService,
         { provide: UserService, useValue: new MockUserService() },
-        { provide: EventService, useValue: new MockEventService() }
-      ]
+        { provide: EventService, useValue: new MockEventService() },
+      ],
     }).compile();
 
     service = module.get<AttendedEventService>(AttendedEventService);
@@ -76,7 +76,7 @@ describe("AttendedEventService", () => {
         ({
           authId: "random",
           email: "example@example.com",
-          notificationEmail: "example@example.com"
+          notificationEmail: "example@example.com",
         } as User)
     );
     jest.spyOn(eventService, "findById").mockImplementation(
@@ -85,13 +85,13 @@ describe("AttendedEventService", () => {
           name: "A Random Event",
           parentId: "root",
           description: "",
-          id: "randomEventId"
+          id: "randomEventId",
         } as Event)
     );
 
     const attendedEvent = await service.record({
       eventId: "randomEventId",
-      userAuthId: "random"
+      userAuthId: "random",
     });
 
     expect(attendedEvent).toBeDefined();
@@ -109,14 +109,14 @@ describe("AttendedEventService", () => {
           name: "A Random Event",
           parentId: "root",
           description: "",
-          id: "randomEventId"
+          id: "randomEventId",
         } as Event)
     );
 
     await expect(
       service.record({
         eventId: "randomEventId",
-        userAuthId: "random"
+        userAuthId: "random",
       })
     ).rejects.toThrow(new BadRequestException("User does not exist"));
   });
@@ -127,7 +127,7 @@ describe("AttendedEventService", () => {
         ({
           authId: "random",
           email: "example@example.com",
-          notificationEmail: "example@example.com"
+          notificationEmail: "example@example.com",
         } as User)
     );
     jest
@@ -137,7 +137,7 @@ describe("AttendedEventService", () => {
     await expect(
       service.record({
         eventId: "randomEventId",
-        userAuthId: "random"
+        userAuthId: "random",
       })
     ).rejects.toThrow(new BadRequestException("Event doesn't exist"));
   });
@@ -148,7 +148,7 @@ describe("AttendedEventService", () => {
         ({
           authId: "random",
           email: "example@example.com",
-          notificationEmail: "example@example.com"
+          notificationEmail: "example@example.com",
         } as User)
     );
     jest.spyOn(eventService, "findById").mockImplementation(
@@ -157,19 +157,19 @@ describe("AttendedEventService", () => {
           name: "A Random Event",
           parentId: "root",
           description: "",
-          id: "randomEventId"
+          id: "randomEventId",
         } as Event)
     );
 
     await service.record({
       eventId: "randomEventId",
-      userAuthId: "random"
+      userAuthId: "random",
     });
 
     await expect(
       service.record({
         eventId: "randomEventId",
-        userAuthId: "random"
+        userAuthId: "random",
       })
     ).rejects.toThrow(
       new BadRequestException(

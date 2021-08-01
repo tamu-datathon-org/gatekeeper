@@ -28,12 +28,12 @@ describe("UserService", () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TestDatabaseModule,
-        MongooseModule.forFeature([{ name: "User", schema: UserSchema }])
+        MongooseModule.forFeature([{ name: "User", schema: UserSchema }]),
       ],
       providers: [
         UserService,
-        { provide: UserAuthService, useValue: new MockUserAuthService() }
-      ]
+        { provide: UserAuthService, useValue: new MockUserAuthService() },
+      ],
     }).compile();
 
     service = module.get<UserService>(UserService);
@@ -48,7 +48,7 @@ describe("UserService", () => {
     const createPayload = {
       userAuthId: "random",
       firstName: "George",
-      lastName: "Blah"
+      lastName: "Blah",
     } as CreateUserDto;
 
     jest.spyOn(userAuthService, "findById").mockImplementation(async () => {
@@ -57,7 +57,7 @@ describe("UserService", () => {
         id: "random",
         isVerified: true,
         authType: "EmailAndPassword",
-        passwordHash: "random"
+        passwordHash: "random",
       } as UserAuth;
     });
 
@@ -73,7 +73,7 @@ describe("UserService", () => {
   it("should be fail to create a user when they haven't registered", async () => {
     const createPayload = {
       userAuthId: "random",
-      name: "George Blah"
+      name: "George Blah",
     } as CreateUserDto;
 
     jest
@@ -89,7 +89,7 @@ describe("UserService", () => {
     const createPayload = {
       userAuthId: "random",
       firstName: "George",
-      lastName: "Blah"
+      lastName: "Blah",
     } as CreateUserDto;
 
     jest.spyOn(userAuthService, "findById").mockImplementation(
@@ -99,7 +99,7 @@ describe("UserService", () => {
           id: "random",
           isVerified: false,
           authType: "EmailAndPassword",
-          passwordHash: "random"
+          passwordHash: "random",
         } as UserAuth)
     );
 
@@ -112,7 +112,7 @@ describe("UserService", () => {
     const createPayload = {
       userAuthId: "random",
       firstName: "George",
-      lastName: "Blah"
+      lastName: "Blah",
     } as CreateUserDto;
 
     jest.spyOn(userAuthService, "findById").mockImplementation(
@@ -122,7 +122,7 @@ describe("UserService", () => {
           id: "random",
           isVerified: true,
           authType: "EmailAndPassword",
-          passwordHash: "random"
+          passwordHash: "random",
         } as UserAuth)
     );
 
@@ -136,13 +136,13 @@ describe("UserService", () => {
     const createPayload = {
       userAuthId: "random",
       firstName: "George",
-      lastName: "Blah"
+      lastName: "Blah",
     } as CreateUserDto;
 
     const createPayload2 = {
       userAuthId: "random2",
       firstName: "George",
-      lastName: "Blah Blah"
+      lastName: "Blah Blah",
     } as CreateUserDto;
 
     jest.spyOn(userAuthService, "findById").mockImplementation(
@@ -152,7 +152,7 @@ describe("UserService", () => {
           id: authId,
           isVerified: true,
           authType: "EmailAndPassword",
-          passwordHash: "random"
+          passwordHash: "random",
         } as UserAuth)
     );
 
@@ -172,7 +172,7 @@ describe("UserService", () => {
     const createPayload = {
       userAuthId: "random",
       firstName: "George",
-      lastName: "Blah"
+      lastName: "Blah",
     } as CreateUserDto;
 
     jest.spyOn(userAuthService, "findById").mockImplementation(
@@ -182,14 +182,14 @@ describe("UserService", () => {
           id: authId,
           isVerified: true,
           authType: "EmailAndPassword",
-          passwordHash: "random"
+          passwordHash: "random",
         } as UserAuth)
     );
 
     await service.create(createPayload);
 
     await service.update("random", {
-      resumeLink: "hello.com"
+      resumeLink: "hello.com",
     });
 
     const updatedUser = await service.findByAuthId("random");
@@ -202,7 +202,7 @@ describe("UserService", () => {
     const createPayload = {
       userAuthId: "random",
       firstName: "George",
-      lastName: "Blah"
+      lastName: "Blah",
     } as CreateUserDto;
 
     jest.spyOn(userAuthService, "findById").mockImplementation(
@@ -212,7 +212,7 @@ describe("UserService", () => {
           id: authId,
           isVerified: true,
           authType: "EmailAndPassword",
-          passwordHash: "random"
+          passwordHash: "random",
         } as UserAuth)
     );
 
@@ -221,7 +221,7 @@ describe("UserService", () => {
     await service.update("random", {
       resumeLink: "hello.com",
       email: "hello@example.com",
-      authId: "differentAuthId"
+      authId: "differentAuthId",
     });
 
     const updatedUser = await service.findByAuthId("differentAuthId");

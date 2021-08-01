@@ -33,15 +33,15 @@ describe("ResetPasswordService", () => {
         ResetPasswordService,
         {
           provide: UserAuthService,
-          useValue: new MockUserAuthService()
+          useValue: new MockUserAuthService(),
         },
         MailService,
         {
           provide: MailCoreService,
-          useValue: new MockMailCoreService()
+          useValue: new MockMailCoreService(),
         },
-        AuthLinkGeneratorService
-      ]
+        AuthLinkGeneratorService,
+      ],
     }).compile();
 
     service = module.get<ResetPasswordService>(ResetPasswordService);
@@ -53,7 +53,7 @@ describe("ResetPasswordService", () => {
   it("should send a valid user a reset-password email", async () => {
     jest
       .spyOn(userAuthService, "findByEmail")
-      .mockImplementation(async email => {
+      .mockImplementation(async (email) => {
         return { email, authType: "EmailAndPassword" } as UserAuth;
       });
     const sendEmailFunc = jest.spyOn(mailService, "sendTemplatedEmail");
@@ -87,7 +87,7 @@ describe("ResetPasswordService", () => {
   it("should fail when trying to reset password when user's AuthType isn't EmailAndPassword", async () => {
     jest
       .spyOn(userAuthService, "findByEmail")
-      .mockImplementation(async email => {
+      .mockImplementation(async (email) => {
         return { email, authType: "Facebook" } as UserAuth;
       });
 
@@ -137,7 +137,7 @@ describe("ResetPasswordService", () => {
   it("should successfully reset the password for a valid user", async () => {
     jest
       .spyOn(userAuthService, "updatePasswordForUser")
-      .mockImplementation(async email => {
+      .mockImplementation(async (email) => {
         return { email } as UserAuth;
       });
     const userJwt = jwtService.sign(

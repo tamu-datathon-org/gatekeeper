@@ -6,7 +6,7 @@ import {
   Post,
   Body,
   BadRequestException,
-  UnauthorizedException
+  UnauthorizedException,
 } from "@nestjs/common";
 import { GalaxyIntegrationGuard } from "../auth/guards/galaxy-integration.guard";
 import { AttendedEventService } from "./attended-event.service";

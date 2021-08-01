@@ -37,3 +37,9 @@ export class ModifyUserDto {
   @IsBoolean()
   isFirstGenerationCollegeStudent?: boolean;
 }
+
+export class SudoModifyUserDto extends ModifyUserDto {
+  @IsOptional()
+  @IsBoolean()
+  isAdmin?: boolean;
+}

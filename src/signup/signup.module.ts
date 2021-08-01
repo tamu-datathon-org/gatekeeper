@@ -17,12 +17,12 @@ import { UserModule } from "../user/user.module";
     JwtModule.registerAsync({
       // Needs to be async as it uses env variable that's loaded after module is registered.
       useFactory: (): JwtModuleOptions => ({
-        secret: process.env.AUTH_JWT_SECRET
-      })
-    })
+        secret: process.env.AUTH_JWT_SECRET,
+      }),
+    }),
   ],
   controllers: [SignupController],
   providers: [SignupService, ValidatorService],
-  exports: [SignupService]
+  exports: [SignupService],
 })
 export class SignupModule {}

@@ -32,7 +32,7 @@ export class AttendedEventService {
 
     const existingAttendedEvents = await this.findAll({
       eventId: event.id,
-      userAuthId: user.authId
+      userAuthId: user.authId,
     });
 
     if (existingAttendedEvents.length > 0) {
@@ -44,7 +44,7 @@ export class AttendedEventService {
     const createdAttendedEvent = new this.attendedEventModel({
       userAuthId: user.authId,
       eventId: event.id,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
     return createdAttendedEvent.save();

@@ -19,7 +19,7 @@ export class LoginProviderExceptionFilter implements ExceptionFilter {
         csrfToken: request.csrfToken(),
         emailPrefill: request.body.username,
         redirectLink: request.query.r || request.session.redirect,
-        emailError
+        emailError,
       });
     }
 

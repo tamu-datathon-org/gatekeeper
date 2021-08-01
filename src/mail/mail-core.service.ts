@@ -22,7 +22,7 @@ export class MailCoreService {
       {} /* Mailgun needs the payload to be in params, leave body empty */,
       {
         auth: { username: "api", password: this.mailgunApiKey },
-        params
+        params,
       }
     );
   }

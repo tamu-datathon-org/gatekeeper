@@ -2,9 +2,9 @@ import {
   Injectable,
   BadRequestException,
   ConflictException,
-  NotFoundException
+  NotFoundException,
 } from "@nestjs/common";
-import { Model, UpdateQuery } from "mongoose";
+import { FilterQuery, Model, UpdateQuery } from "mongoose";
 import { User } from "./interfaces/user.interface";
 import { InjectModel } from "@nestjs/mongoose";
 import { CreateUserDto } from "./dto/create-user.dto";
@@ -46,7 +46,7 @@ export class UserService {
       email: userAuth.email,
       firstName: req.firstName,
       lastName: req.lastName,
-      isAdmin: false
+      isAdmin: false,
     });
 
     return createdUser.save();
@@ -68,7 +68,22 @@ export class UserService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { authId, email, ...fieldsToUpdate } = fields;
     const user = await this.findByAuthId(userAuthId);
-    await this.userModel.updateOne(user, fieldsToUpdate).exec();
+    await user.updateOne(fieldsToUpdate).exec();
+  }
+
+  /**
+   * Update certain fields of a queried user (cannot update email or authId)
+   * @param {FilterQuery<User>} query authId of the user to update
+   * @param {UpdateQuery<User>} fields fields to update (cannot be email or authId)
+   */
+  async updateByQuery(
+    query: FilterQuery<User>,
+    fields: UpdateQuery<User>
+  ): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { authId, email, ...fieldsToUpdate } = fields;
+    const user = await this.findBy(query);
+    await user.updateOne(fieldsToUpdate).exec();
   }
 
   /**
@@ -76,6 +91,14 @@ export class UserService {
    * @param {string} authId User Auth Id to find
    */
   async findByAuthId(authId: string): Promise<User | undefined> {
-    return (await this.userModel.findOne({ authId })) || undefined;
+    return this.findBy({ authId });
+  }
+
+  /**
+   * Finds a User with the matching criteria
+   * @param {FilterQuery<User>} q Search Criteria
+   */
+  async findBy(q: FilterQuery<User>): Promise<User | undefined> {
+    return (await this.userModel.findOne(q)) || undefined;
   }
 }

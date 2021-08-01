@@ -43,6 +43,6 @@ export const newGalaxyIntegrationConfig = (
 
     verificationPageSubtext:
       config.verificationPageSubtext ||
-      `to complete your application for ${appName}`
+      `to complete your application for ${appName}`,
   };
 };

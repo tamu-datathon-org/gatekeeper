@@ -23,12 +23,12 @@ export class AuthLinkGeneratorService {
     const userJwt = this.jwtService.sign(
       { email },
       {
-        expiresIn: process.env.CONFIRMATION_JWT_EXPIRATION
+        expiresIn: process.env.CONFIRMATION_JWT_EXPIRATION,
       }
     );
-    const confirmationLink = `${this.createOriginFromHost(host) ||
-      process.env
-        .DEFAULT_GATEKEEPER_ORIGIN}${path}/?user=${userJwt}&r=${redirectLink}`;
+    const confirmationLink = `${
+      this.createOriginFromHost(host) || process.env.DEFAULT_GATEKEEPER_ORIGIN
+    }${path}/?user=${userJwt}&r=${redirectLink}`;
     return encodeURI(confirmationLink);
   }
 }

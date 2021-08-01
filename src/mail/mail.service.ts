@@ -30,7 +30,7 @@ export class MailService {
         ? sendEmailParams.emailsBCC.join(",")
         : undefined,
       subject: sendEmailParams.subject,
-      text: sendEmailParams.bodyText
+      text: sendEmailParams.bodyText,
     };
     await this.mailCoreService.sendMailPayload(payload);
   }
@@ -54,7 +54,7 @@ export class MailService {
         ? sendEmailParams.emailsBCC.join(",")
         : undefined,
       subject: sendEmailParams.subject,
-      html: sendEmailParams.bodyHTML
+      html: sendEmailParams.bodyHTML,
     };
     await this.mailCoreService.sendMailPayload(payload);
   }
@@ -89,7 +89,7 @@ export class MailService {
         ? sendEmailParams.emailsBCC.join(",")
         : undefined,
       subject: sendEmailParams.subject,
-      html: emailHTML
+      html: emailHTML,
     };
     await this.mailCoreService.sendMailPayload(payload);
   }

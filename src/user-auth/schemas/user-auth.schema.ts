@@ -7,5 +7,5 @@ export const UserAuthSchema = new mongoose.Schema({
   passwordHash: String,
   firstName: String,
   lastName: String,
-  accessId: String
+  accessId: String,
 });

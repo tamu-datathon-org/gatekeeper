@@ -1,7 +1,7 @@
 export enum ResponseStatus {
   Success = "Success",
   Warning = "Warning",
-  Failure = "Failure"
+  Failure = "Failure",
 }
 
 export interface ResponseBase {

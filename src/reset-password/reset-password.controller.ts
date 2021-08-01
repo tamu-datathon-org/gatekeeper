@@ -7,7 +7,7 @@ import {
   Body,
   NotFoundException,
   Res,
-  Query
+  Query,
 } from "@nestjs/common";
 import { QueryWithDefault } from "../common/decorators/query-with-default.decorator";
 import { RedirectGalaxyIntegration } from "../galaxy-integrations/decorators/redirect-galaxy-integration.decorator";
@@ -34,7 +34,7 @@ export class ResetPasswordController {
     return {
       ...integrationConfig,
       csrfToken: req.csrfToken(),
-      redirectLink
+      redirectLink,
     };
   }
 
@@ -55,7 +55,7 @@ export class ResetPasswordController {
       );
       return res.render("reset-password/reset-password-link-sent", {
         ...integrationConfig,
-        userEmail: userEmail
+        userEmail: userEmail,
       });
     } catch (e) {
       if (e instanceof NotFoundException)
@@ -63,14 +63,14 @@ export class ResetPasswordController {
           csrfToken: req.csrfToken(),
           redirectLink,
           emailPrefill: userEmail,
-          emailError: e.message
+          emailError: e.message,
         });
       if (e instanceof AuthProviderException)
         return res.status(409).render("reset-password/index", {
           csrfToken: req.csrfToken(),
           redirectLink,
           emailPrefill: userEmail,
-          emailError: `The user with the given was created using ${e.message}. Passwords cannot be reset for accounts created using ${e.message}.`
+          emailError: `The user with the given was created using ${e.message}. Passwords cannot be reset for accounts created using ${e.message}.`,
         });
 
       throw e;
@@ -89,11 +89,11 @@ export class ResetPasswordController {
       return res.render("reset-password/reset-page", {
         csrfToken: req.csrfToken(),
         userJwt,
-        redirectLink
+        redirectLink,
       });
     } catch (e) {
       return res.status(400).render("reset-password/reset-failure", {
-        redirectLink
+        redirectLink,
       });
     }
   }
@@ -112,11 +112,11 @@ export class ResetPasswordController {
       let validationErrors = undefined;
       if (!password || !this.validatorService.validatePassword(password))
         validationErrors = {
-          passwordError: "A password must contain at least 6 characters."
+          passwordError: "A password must contain at least 6 characters.",
         };
       else if (!confirmPassword || confirmPassword !== password)
         validationErrors = {
-          confirmPasswordError: "Value must match the given password."
+          confirmPasswordError: "Value must match the given password.",
         };
 
       if (validationErrors)
@@ -124,16 +124,16 @@ export class ResetPasswordController {
           csrfToken: req.csrfToken(),
           redirectLink,
           userJwt,
-          ...validationErrors
+          ...validationErrors,
         });
 
       await this.resetPaswordService.resetPassword(userJwt, password);
       return res.status(400).render("reset-password/reset-success", {
-        redirectLink
+        redirectLink,
       });
     } catch (e) {
       return res.status(400).render("reset-password/reset-failure", {
-        redirectLink
+        redirectLink,
       });
     }
   }

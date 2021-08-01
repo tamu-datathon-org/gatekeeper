@@ -6,7 +6,7 @@ import {
   BadRequestException,
   Patch,
   Query,
-  Get
+  Get,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { AdminGuard } from "../auth/guards/admin.guard";
@@ -31,7 +31,7 @@ export class EventController {
     const event = await this.eventService.create({
       eventName,
       eventDescription,
-      eventParentId
+      eventParentId,
     });
     return event;
   }

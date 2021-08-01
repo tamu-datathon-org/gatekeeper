@@ -24,7 +24,7 @@ class MockResetPasswordService {
 const mockCsrfToken = "test-csrf";
 const mockCsrfGenerator = (): string => mockCsrfToken;
 const csrfReq = {
-  csrfToken: mockCsrfGenerator
+  csrfToken: mockCsrfGenerator,
 };
 const response = {
   code: 200,
@@ -39,7 +39,7 @@ const response = {
     // Reset the state of the response
     response.code = 200;
     return response;
-  }
+  },
 };
 
 describe("ResetPassword Controller", () => {
@@ -52,16 +52,15 @@ describe("ResetPassword Controller", () => {
       providers: [
         {
           provide: ResetPasswordService,
-          useValue: new MockResetPasswordService()
+          useValue: new MockResetPasswordService(),
         },
-        ValidatorService
-      ]
+        ValidatorService,
+      ],
     }).compile();
 
     controller = module.get<ResetPasswordController>(ResetPasswordController);
-    resetPasswordService = module.get<ResetPasswordService>(
-      ResetPasswordService
-    );
+    resetPasswordService =
+      module.get<ResetPasswordService>(ResetPasswordService);
   });
 
   it("should be defined", () => {

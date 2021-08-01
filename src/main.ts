@@ -11,7 +11,7 @@ import { Request, Response, NextFunction } from "express";
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    logger: console
+    logger: console,
   });
 
   /**
@@ -30,7 +30,7 @@ async function bootstrap(): Promise<void> {
     session({
       secret: process.env.SESSION_SECRET,
       saveUninitialized: false,
-      resave: false
+      resave: false,
     })
   );
 

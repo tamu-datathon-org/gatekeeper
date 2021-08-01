@@ -7,7 +7,7 @@ import { GalaxyIntegrationConfig } from "../galaxy-integrations/interfaces/galax
 const mockCsrfToken = "test-csrf";
 const mockCsrfGenerator = (): string => mockCsrfToken;
 const csrfReq = {
-  csrfToken: mockCsrfGenerator
+  csrfToken: mockCsrfGenerator,
 };
 
 describe("Login Controller", () => {
@@ -16,7 +16,7 @@ describe("Login Controller", () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [TestDatabaseModule, AuthModule],
-      controllers: [LoginController]
+      controllers: [LoginController],
     }).compile();
 
     controller = module.get<LoginController>(LoginController);

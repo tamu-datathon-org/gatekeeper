@@ -44,25 +44,25 @@ describe("SignupService", () => {
         MailService,
         {
           provide: MailCoreService,
-          useValue: new MockMailCoreService()
+          useValue: new MockMailCoreService(),
         },
         {
           provide: UserAuthService,
-          useValue: new MockUserAuthService()
+          useValue: new MockUserAuthService(),
         },
         {
           provide: UserService,
-          useValue: new MockUserService()
+          useValue: new MockUserService(),
         },
         {
           provide: AuthLinkGeneratorService,
           useValue: {
             async getLinkWithUserJwt() {
               return "";
-            }
-          }
-        }
-      ]
+            },
+          },
+        },
+      ],
     }).compile();
 
     service = module.get<SignupService>(SignupService);
@@ -80,7 +80,7 @@ describe("SignupService", () => {
     const signupPayload = {
       email: "testy@mcface.com",
       password: "TestPassword",
-      confirmPassword: "TestPassword"
+      confirmPassword: "TestPassword",
     };
 
     jest.spyOn(userAuthService, "create").mockImplementation(async () => {
@@ -103,7 +103,7 @@ describe("SignupService", () => {
     const signupPayload = {
       email: "already@exists.com",
       password: "TestPassword",
-      confirmPassword: "TestPassword"
+      confirmPassword: "TestPassword",
     };
 
     jest.spyOn(userAuthService, "create").mockImplementation(() => {
@@ -122,7 +122,7 @@ describe("SignupService", () => {
     const signupPayload = {
       email: "",
       password: "TestPassword",
-      confirmPassword: "TestPassword"
+      confirmPassword: "TestPassword",
     };
 
     jest.spyOn(userAuthService, "create").mockImplementation(() => {
@@ -141,7 +141,7 @@ describe("SignupService", () => {
     const signupPayload = {
       email: "testy@mcface.com",
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
     };
 
     jest.spyOn(userAuthService, "create").mockImplementation(() => {
@@ -167,7 +167,7 @@ describe("SignupService", () => {
         email: "testy@mctestface.com",
         save: () => {
           /* no implementation needed */
-        }
+        },
       } as UserAuth;
     });
 
@@ -235,7 +235,7 @@ describe("SignupService", () => {
         email: "testy@mctestface.com",
         save: () => {
           /* no implementation needed */
-        }
+        },
       } as UserAuth;
     });
 
@@ -259,7 +259,7 @@ describe("SignupService", () => {
     jest.spyOn(userAuthService, "findByEmail").mockImplementation(async () => {
       return {
         email: "testy@mctestface.com",
-        isVerified: true
+        isVerified: true,
       } as UserAuth;
     });
 
@@ -316,7 +316,7 @@ describe("SignupService", () => {
     jest.spyOn(userAuthService, "findByEmail").mockImplementation(async () => {
       return {
         email: "testy@mctestface.com",
-        isVerified: true
+        isVerified: true,
       } as UserAuth;
     });
 

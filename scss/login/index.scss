@@ -47,7 +47,7 @@ body.AuthFormPage {
 .AuthFormPage {
   .form-signin {
     width: 100%;
-    max-width: 400px;
+    max-width: 25rem;
     margin-top: 40px;
 
     .form-control {
@@ -81,4 +81,8 @@ body.AuthFormPage {
       box-shadow: inset 300px 0 0 0 $splash-light-purple;
     }
   }
+}
+
+img {
+  object-fit: contain;
 }

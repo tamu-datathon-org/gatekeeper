@@ -19,9 +19,9 @@ describe("User Controller", () => {
       providers: [
         {
           provide: UserService,
-          useValue: new MockUseService()
-        }
-      ]
+          useValue: new MockUseService(),
+        },
+      ],
     }).compile();
 
     controller = module.get<UserController>(UserController);
@@ -37,9 +37,9 @@ describe("User Controller", () => {
       _id: "random-id",
       __v: "random-value",
       email: "testy@mcface.com",
-      toObject: () => user
+      toObject: () => user,
     };
-    const result = await controller.root((user as unknown) as User);
+    const result = await controller.root(user as unknown as User);
     expect(result.email).toBe("testy@mcface.com");
     expect(result._id).toBeUndefined();
     expect(result.__v).toBeUndefined();
@@ -50,12 +50,12 @@ describe("User Controller", () => {
       _id: "random-id",
       __v: "random-value",
       email: "testy@mcface.com",
-      toObject: () => user
+      toObject: () => user,
     };
     const userUpdate = {
       notificationEmail: "testy@mcface.com",
       firstName: "test",
-      lastName: "McFace"
+      lastName: "McFace",
     };
 
     // Update should run normally without any errors.
@@ -63,10 +63,7 @@ describe("User Controller", () => {
       return;
     });
 
-    const result = await controller.modify(
-      userUpdate,
-      (user as unknown) as User
-    );
+    const result = await controller.modify(userUpdate, user as unknown as User);
     expect(result.success).toBe(true);
   });
 
@@ -75,12 +72,12 @@ describe("User Controller", () => {
       _id: "random-id",
       __v: "random-value",
       email: "testy@mcface.com",
-      toObject: () => user
+      toObject: () => user,
     };
     const userUpdate = {
       notificationEmail: "testy@mcface.com",
       firstName: "test",
-      lastName: "McFace"
+      lastName: "McFace",
     };
 
     // Update should run normally without any errors.
@@ -88,7 +85,7 @@ describe("User Controller", () => {
       throw new Error("Error from UserService");
     });
 
-    const promise = controller.modify(userUpdate, (user as unknown) as User);
+    const promise = controller.modify(userUpdate, user as unknown as User);
     await expect(promise).rejects.toThrow(new Error("Error from UserService"));
   });
 });

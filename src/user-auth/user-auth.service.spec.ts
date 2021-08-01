@@ -6,7 +6,7 @@ import { TestDatabaseModule } from "../test-database/test-database.module";
 import {
   ConflictException,
   BadRequestException,
-  NotFoundException
+  NotFoundException,
 } from "@nestjs/common";
 
 describe("UserAuthService", () => {
@@ -18,10 +18,10 @@ describe("UserAuthService", () => {
       imports: [
         TestDatabaseModule,
         MongooseModule.forFeature([
-          { name: "UserAuth", schema: UserAuthSchema }
-        ])
+          { name: "UserAuth", schema: UserAuthSchema },
+        ]),
       ],
-      providers: [UserAuthService]
+      providers: [UserAuthService],
     }).compile();
 
     service = module.get<UserAuthService>(UserAuthService);
@@ -36,7 +36,7 @@ describe("UserAuthService", () => {
       email: "george@example.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: false
+      isVerified: false,
     });
     expect(userAuth).toBeDefined();
     expect(userAuth.id).toBeDefined();
@@ -46,7 +46,7 @@ describe("UserAuthService", () => {
     const userAuth = await service.create({
       email: "george@example.com",
       authType: "Google",
-      isVerified: true
+      isVerified: true,
     });
     expect(userAuth).toBeDefined();
     expect(userAuth.id).toBeDefined();
@@ -57,13 +57,13 @@ describe("UserAuthService", () => {
       email: "george@example.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: false
+      isVerified: false,
     });
     const promise = service.create({
       email: "george@example.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: false
+      isVerified: false,
     });
 
     await expect(promise).rejects.toThrow(
@@ -76,13 +76,13 @@ describe("UserAuthService", () => {
       email: "gEOrge@ExampLE.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: false
+      isVerified: false,
     });
     const promise = service.create({
       email: "GeoRGe@example.COM",
       authType: "EmailAndPassword",
       password: "DifferentPassword",
-      isVerified: false
+      isVerified: false,
     });
 
     await expect(promise).rejects.toThrow(
@@ -94,7 +94,7 @@ describe("UserAuthService", () => {
     const promise1 = service.create({
       email: "george@example.com",
       authType: "EmailAndPassword",
-      isVerified: false
+      isVerified: false,
     });
     await expect(promise1).rejects.toThrow(
       new BadRequestException(
@@ -106,7 +106,7 @@ describe("UserAuthService", () => {
       email: "george@example.com",
       authType: "EmailAndPassword",
       password: "",
-      isVerified: false
+      isVerified: false,
     });
     await expect(promise2).rejects.toThrow(
       new BadRequestException(
@@ -119,7 +119,7 @@ describe("UserAuthService", () => {
     const promise = service.create({
       email: "",
       authType: "EmailAndPassword",
-      isVerified: false
+      isVerified: false,
     });
     await expect(promise).rejects.toThrow(
       new BadRequestException("Email is required to be a non-empty string")
@@ -131,19 +131,19 @@ describe("UserAuthService", () => {
       email: "george@example.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: false
+      isVerified: false,
     });
     await service.create({
       email: "bob@example.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: true
+      isVerified: true,
     });
     await service.create({
       email: "jan@example.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: false
+      isVerified: false,
     });
     const users = await service.findAll();
     expect(users).toBeDefined();
@@ -155,19 +155,19 @@ describe("UserAuthService", () => {
       email: "george@example.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: false
+      isVerified: false,
     });
     await service.create({
       email: "bob@example.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: true
+      isVerified: true,
     });
     await service.create({
       email: "jan@example.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: false
+      isVerified: false,
     });
     const user = await service.findByEmail("bob@example.com");
     expect(user).toBeDefined();
@@ -179,19 +179,19 @@ describe("UserAuthService", () => {
       email: "george@example.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: false
+      isVerified: false,
     });
     await service.create({
       email: "bob@example.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: true
+      isVerified: true,
     });
     await service.create({
       email: "jan@example.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: false
+      isVerified: false,
     });
 
     const user = await service.findByEmail("BOB@eXAmpLE.cOm");
@@ -210,19 +210,19 @@ describe("UserAuthService", () => {
       email: "george@example.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: false
+      isVerified: false,
     });
     const bob = await service.create({
       email: "bob@example.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: true
+      isVerified: true,
     });
     await service.create({
       email: "jan@example.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: false
+      isVerified: false,
     });
     const user = await service.findById(bob.id);
     expect(user).toBeDefined();
@@ -234,19 +234,14 @@ describe("UserAuthService", () => {
       email: "george@example.com",
       authType: "EmailAndPassword",
       password: "SomePassword",
-      isVerified: false
+      isVerified: false,
     });
     const { passwordHash: originalPasswordHash } = await service.findByEmail(
       "george@example.com"
     );
 
-    const {
-      passwordHash: newPasswordHash,
-      email
-    } = await service.updatePasswordForUser(
-      "george@example.com",
-      "NewPassword"
-    );
+    const { passwordHash: newPasswordHash, email } =
+      await service.updatePasswordForUser("george@example.com", "NewPassword");
     expect(email).toBe("george@example.com");
     expect(newPasswordHash !== originalPasswordHash).toBe(true);
   });

@@ -12,5 +12,5 @@ export const UserSchema = new mongoose.Schema({
   locationCity: String,
   locationState: String,
   locationCountry: String,
-  isFirstGenerationCollegeStudent: Boolean
+  isFirstGenerationCollegeStudent: Boolean,
 });

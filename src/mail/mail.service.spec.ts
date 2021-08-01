@@ -14,9 +14,9 @@ describe("MailService", () => {
         MailService,
         {
           provide: MailCoreService,
-          useValue: new MockMailCoreService()
-        }
-      ]
+          useValue: new MockMailCoreService(),
+        },
+      ],
     }).compile();
 
     mailService = module.get<MailService>(MailService);
@@ -31,7 +31,7 @@ describe("MailService", () => {
       const mailParams = {
         emailTo: testRecipientEmail,
         subject: "Gatekeeper Test: sendTextMail",
-        bodyText: "Ignore this, it's a test"
+        bodyText: "Ignore this, it's a test",
       };
 
       // Function returns void, test that no error is thrown.
@@ -46,7 +46,7 @@ describe("MailService", () => {
       const mailParams = {
         emailTo: testRecipientEmail,
         subject: "Gatekeeper Test: sendHTMLEmail",
-        bodyHTML: "<h1>Ignore this, it's a test<h1>"
+        bodyHTML: "<h1>Ignore this, it's a test<h1>",
       };
 
       // Function returns void, test that no error is thrown.
@@ -65,8 +65,8 @@ describe("MailService", () => {
         templateParams: {
           name: "JarJarBinks",
           listStuff: ["The Force", "Lightsabers", "C3P0", "Seagulls"],
-          randomWord: "Apricots"
-        }
+          randomWord: "Apricots",
+        },
       };
 
       // Function returns void, test that no error is thrown.

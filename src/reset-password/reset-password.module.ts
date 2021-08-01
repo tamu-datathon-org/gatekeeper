@@ -15,11 +15,11 @@ import { ValidatorService } from "../validator/validator.service";
     JwtModule.registerAsync({
       // Needs to be async as it uses env variable that's loaded after module is registered.
       useFactory: (): JwtModuleOptions => ({
-        secret: process.env.AUTH_JWT_SECRET
-      })
-    })
+        secret: process.env.AUTH_JWT_SECRET,
+      }),
+    }),
   ],
   controllers: [ResetPasswordController],
-  providers: [ResetPasswordService, ValidatorService]
+  providers: [ResetPasswordService, ValidatorService],
 })
 export class ResetPasswordModule {}

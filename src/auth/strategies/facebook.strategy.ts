@@ -23,7 +23,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "Facebook") {
       proxy: process.env.NODE_ENV === "prod", // in prod enforce using https in callback url
       passReqToCallback: true,
       profileFields: ["email", "name"],
-      scope: ["email"]
+      scope: ["email"],
     });
   }
 
@@ -59,13 +59,13 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "Facebook") {
           isVerified: true,
           authType: "Facebook",
           firstName: profile.name?.givenName,
-          lastName: profile.name?.familyName
+          lastName: profile.name?.familyName,
         });
 
         const newUser = await this.userService.create({
           userAuthId: newUserAuth.id,
           firstName: newUserAuth.firstName,
-          lastName: newUserAuth.lastName
+          lastName: newUserAuth.lastName,
         });
 
         return done(null, newUser);

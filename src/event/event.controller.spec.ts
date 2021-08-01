@@ -29,9 +29,9 @@ describe("Event Controller", () => {
       providers: [
         {
           provide: EventService,
-          useValue: new MockEventService()
-        }
-      ]
+          useValue: new MockEventService(),
+        },
+      ],
     }).compile();
 
     controller = module.get<EventController>(EventController);
@@ -48,7 +48,7 @@ describe("Event Controller", () => {
         ({
           name: req.eventName,
           parentId: req.eventParentId,
-          description: req.eventDescription
+          description: req.eventDescription,
         } as Event)
     );
     const event = await controller.createEvent(
@@ -71,11 +71,11 @@ describe("Event Controller", () => {
   });
 
   it("should propagate errors for EventService when creating events", async () => {
-    jest.spyOn(eventService, "create").mockImplementation(
-      async (): Promise<Event> => {
+    jest
+      .spyOn(eventService, "create")
+      .mockImplementation(async (): Promise<Event> => {
         throw new Error();
-      }
-    );
+      });
     const promise = controller.getEvent(undefined);
     await expect(promise).rejects.toThrow(Error);
   });
@@ -86,7 +86,7 @@ describe("Event Controller", () => {
         ({
           name: req.eventName,
           parentId: "",
-          description: ""
+          description: "",
         } as Event)
     );
     const event = await controller.createEvent(
@@ -103,7 +103,7 @@ describe("Event Controller", () => {
         ({
           name: "Test Name",
           parentId: "parent-id",
-          description: "desc"
+          description: "desc",
         } as Event)
     );
     const event = await controller.getEvent("random-id");

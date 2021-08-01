@@ -26,14 +26,14 @@ import { ResetPasswordModule } from "./reset-password/reset-password.module";
     LoginModule,
     EventModule,
     AttendedEventModule,
-    ResetPasswordModule
+    ResetPasswordModule,
   ],
   controllers: [AppController],
   providers: [
     {
       provide: APP_FILTER,
-      useClass: GlobalHttpExceptionFilter
-    }
-  ]
+      useClass: GlobalHttpExceptionFilter,
+    },
+  ],
 })
 export class AppModule {}

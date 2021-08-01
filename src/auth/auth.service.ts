@@ -1,12 +1,12 @@
 import {
   Injectable,
   NotFoundException,
-  UnauthorizedException
+  UnauthorizedException,
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import {
   UserAuth,
-  OAuthProviders
+  OAuthProviders,
 } from "../user-auth/interfaces/user-auth.interface";
 import { UserAuthService } from "../user-auth/user-auth.service";
 import { JwtService } from "@nestjs/jwt";
@@ -82,10 +82,10 @@ export class AuthService {
     const payload = {
       id: user.id,
       accessId: user.accessId,
-      email: user.email
+      email: user.email,
     };
     return this.jwtService.sign(payload, {
-      expiresIn: process.env.AUTH_JWT_EXPIRATION
+      expiresIn: process.env.AUTH_JWT_EXPIRATION,
     });
   }
 
@@ -107,7 +107,7 @@ export class AuthService {
     }
     const jwt = this.getJwtForUser(userAuth);
     return res.cookie("accessToken", jwt, {
-      httpOnly: true // Prevent JS access of the cookie on the client
+      httpOnly: true, // Prevent JS access of the cookie on the client
       // secure: true, // Prevent cookie use for non-https stuff.
     });
   }

@@ -4,7 +4,7 @@ import {
   ArgumentsHost,
   HttpException,
   UnauthorizedException,
-  NotFoundException
+  NotFoundException,
 } from "@nestjs/common";
 import { Response } from "express";
 import { UserNotVerifiedException } from "../../auth/exceptions/user-not-verified.exception";
@@ -24,20 +24,20 @@ export class LoginRootExceptionFilter implements ExceptionFilter {
         csrfToken: request.csrfToken(),
         emailPrefill: request.body.username,
         redirectLink: request.query.r || request.session.redirect,
-        emailError: "Email and password combination is invalid."
+        emailError: "Email and password combination is invalid.",
       });
     if (exception instanceof NotFoundException)
       return response.status(404).render(this.templatePath, {
         csrfToken: request.csrfToken(),
         emailPrefill: request.body.username,
         redirectLink: request.query.r || request.session.redirect,
-        emailError: "User with the given email does not exist."
+        emailError: "User with the given email does not exist.",
       });
     if (exception instanceof UserNotVerifiedException) {
       return response
         .status(401)
         .render("signup/resend-verification-email.ejs", {
-          redirectLink: request.query.r || Constants.defaultRedirect
+          redirectLink: request.query.r || Constants.defaultRedirect,
         });
     }
 

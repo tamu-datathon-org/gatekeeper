@@ -7,7 +7,7 @@ import {
   Body,
   ConflictException,
   Res,
-  Query
+  Query,
 } from "@nestjs/common";
 import { SignupUserDto } from "./dto/signup-user.dto";
 import { SignupService } from "./signup.service";
@@ -24,7 +24,7 @@ export class SignupController {
     invalidEmail: "Please enter a valid email.",
     invalidPassword: "A password must contain at least 6 characters.",
     invalidConfirmPassword: "Value must match the given password.",
-    userExists: "A user with this email already exists."
+    userExists: "A user with this email already exists.",
   };
 
   constructor(
@@ -43,7 +43,7 @@ export class SignupController {
     return {
       ...integrationConfig,
       csrfToken: req.csrfToken(),
-      redirectLink
+      redirectLink,
     };
   }
 
@@ -68,14 +68,14 @@ export class SignupController {
       !this.validatorService.validatePassword(signupUserDto.password)
     )
       validationErrors = {
-        passwordError: this.controllerErrors.invalidPassword
+        passwordError: this.controllerErrors.invalidPassword,
       };
     else if (
       !signupUserDto.confirmPassword ||
       signupUserDto.confirmPassword !== signupUserDto.password
     )
       validationErrors = {
-        confirmPasswordError: this.controllerErrors.invalidConfirmPassword
+        confirmPasswordError: this.controllerErrors.invalidConfirmPassword,
       };
 
     if (validationErrors)
@@ -83,7 +83,7 @@ export class SignupController {
         csrfToken: req.csrfToken(),
         redirectLink,
         emailPrefill: signupUserDto.email,
-        ...validationErrors
+        ...validationErrors,
       });
 
     try {
@@ -94,7 +94,7 @@ export class SignupController {
       );
       return res.render("signup/verification-email-sent", {
         ...integrationConfig,
-        userEmail: user.email
+        userEmail: user.email,
       });
     } catch (e) {
       // Show user-already-exists error on the signup-form.
@@ -103,7 +103,7 @@ export class SignupController {
           csrfToken: req.csrfToken(),
           redirectLink,
           emailPrefill: signupUserDto.email,
-          emailError: this.controllerErrors.userExists
+          emailError: this.controllerErrors.userExists,
         });
 
       throw e;
@@ -120,16 +120,16 @@ export class SignupController {
       const user = await this.signupService.confirmUserSignup(userJwt);
       await this.authService.authorizeUser(user, res);
       return res.render("signup/verification-success", {
-        redirectLink
+        redirectLink,
       });
     } catch (e) {
       if (e instanceof ConflictException) {
         return res.status(409).render("signup/user-already-verified", {
-          redirectLink
+          redirectLink,
         });
       }
       return res.status(400).render("signup/verification-failure", {
-        redirectLink
+        redirectLink,
       });
     }
   }
@@ -153,16 +153,16 @@ export class SignupController {
         redirectLink
       );
       return res.render("signup/verification-email-sent", {
-        userEmail
+        userEmail,
       });
     } catch (e) {
       if (e instanceof ConflictException) {
         return res.status(409).render("signup/user-already-verified", {
-          redirectLink
+          redirectLink,
         });
       }
       return res.status(400).render("signup/verification-failure", {
-        redirectLink
+        redirectLink,
       });
     }
   }

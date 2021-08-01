@@ -8,7 +8,7 @@ export const isHostValid = (
 ): boolean => {
   if (host.split(":")[0] === "localhost") return true;
   if (!validDomainRegex.test(host)) return false;
-  if (validHosts.some(val => host === val)) return true;
+  if (validHosts.some((val) => host === val)) return true;
 
   // Check if host is a subdomain of any validSubdomainHosts.
   return validSubdomainHosts.some((subdomainHost: string) => {

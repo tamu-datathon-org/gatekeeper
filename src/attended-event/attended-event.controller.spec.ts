@@ -24,15 +24,14 @@ describe("AttendedEvent Controller", () => {
       providers: [
         {
           provide: AttendedEventService,
-          useValue: new MockAttendedEventService()
-        }
-      ]
+          useValue: new MockAttendedEventService(),
+        },
+      ],
     }).compile();
 
     controller = module.get<AttendedEventController>(AttendedEventController);
-    attendedEventService = module.get<AttendedEventService>(
-      AttendedEventService
-    );
+    attendedEventService =
+      module.get<AttendedEventService>(AttendedEventService);
   });
 
   it("should be defined", () => {
@@ -46,17 +45,17 @@ describe("AttendedEvent Controller", () => {
       {
         eventId,
         userAuthId,
-        timestamp: new Date()
-      } as AttendedEvent
+        timestamp: new Date(),
+      } as AttendedEvent,
     ];
 
-    jest.spyOn(attendedEventService, "findAll").mockImplementation(
-      async (filter): Promise<AttendedEvent[]> => {
+    jest
+      .spyOn(attendedEventService, "findAll")
+      .mockImplementation(async (filter): Promise<AttendedEvent[]> => {
         // Check that filter only container eventId as userAuthId should be undefined.
         if ("userAuthId" in filter || !("eventId" in filter)) throw new Error();
         return attendedEvents;
-      }
-    );
+      });
 
     const result = await controller.getAttendedEvents(eventId, undefined);
     expect(result).toEqual(attendedEvents);
@@ -66,16 +65,16 @@ describe("AttendedEvent Controller", () => {
     const userAuthId = "user-auth-id";
     const eventId = "test-event-id";
     const attendedEvents = [
-      { eventId, userAuthId, timestamp: new Date() } as AttendedEvent
+      { eventId, userAuthId, timestamp: new Date() } as AttendedEvent,
     ];
 
-    jest.spyOn(attendedEventService, "findAll").mockImplementation(
-      async (filter): Promise<AttendedEvent[]> => {
+    jest
+      .spyOn(attendedEventService, "findAll")
+      .mockImplementation(async (filter): Promise<AttendedEvent[]> => {
         // Check that filter only container userAuthId as eventId should be undefined.
         if ("eventId" in filter || !("userAuthId" in filter)) throw new Error();
         return attendedEvents;
-      }
-    );
+      });
 
     const result = await controller.getAttendedEvents(undefined, userAuthId);
     expect(result).toEqual(attendedEvents);
@@ -85,16 +84,16 @@ describe("AttendedEvent Controller", () => {
     const userAuthId = "user-auth-id";
     const eventId = "test-event-id";
     const attendedEvents = [
-      { eventId, userAuthId, timestamp: new Date() } as AttendedEvent
+      { eventId, userAuthId, timestamp: new Date() } as AttendedEvent,
     ];
 
-    jest.spyOn(attendedEventService, "findAll").mockImplementation(
-      async (filter): Promise<AttendedEvent[]> => {
+    jest
+      .spyOn(attendedEventService, "findAll")
+      .mockImplementation(async (filter): Promise<AttendedEvent[]> => {
         // Check that filter contains both event and userAuth IDs.
         if (!("eventId" in filter && "userAuthId" in filter)) throw new Error();
         return attendedEvents;
-      }
-    );
+      });
 
     const result = await controller.getAttendedEvents(eventId, userAuthId);
     expect(result).toEqual(attendedEvents);
@@ -104,13 +103,13 @@ describe("AttendedEvent Controller", () => {
     const userAuthId = "user-auth-id";
     const eventId = "test-id";
     const user: User = {
-      authId: userAuthId
+      authId: userAuthId,
     } as User;
     const attendedEvent = {
       eventId,
       userAuthId,
       timestamp: new Date(),
-      toObject: () => attendedEvent
+      toObject: () => attendedEvent,
     } as AttendedEvent;
 
     jest
@@ -126,13 +125,13 @@ describe("AttendedEvent Controller", () => {
     const eventId = "test-id";
     const user: User = {
       authId: "admin-auth-id",
-      isAdmin: true
+      isAdmin: true,
     } as User;
     const attendedEvent = {
       eventId,
       userAuthId,
       timestamp: new Date(),
-      toObject: () => attendedEvent
+      toObject: () => attendedEvent,
     } as AttendedEvent;
 
     jest
@@ -147,13 +146,13 @@ describe("AttendedEvent Controller", () => {
     const userAuthId = "user-auth-id";
     const eventId = "test-id";
     const user: User = {
-      authId: "non-admin-user-auth-id"
+      authId: "non-admin-user-auth-id",
     } as User;
     const attendedEvent = {
       eventId,
       userAuthId,
       timestamp: new Date(),
-      toObject: () => attendedEvent
+      toObject: () => attendedEvent,
     } as AttendedEvent;
 
     jest
@@ -168,20 +167,20 @@ describe("AttendedEvent Controller", () => {
     const userAuthId = "user-auth-id";
     const eventId = "test-id";
     const user: User = {
-      authId: userAuthId
+      authId: userAuthId,
     } as User;
     const attendedEvent = {
       eventId,
       userAuthId,
       timestamp: new Date(),
-      toObject: () => attendedEvent
+      toObject: () => attendedEvent,
     } as AttendedEvent;
 
-    jest.spyOn(attendedEventService, "record").mockImplementation(
-      async (): Promise<AttendedEvent> => {
+    jest
+      .spyOn(attendedEventService, "record")
+      .mockImplementation(async (): Promise<AttendedEvent> => {
         throw new BadRequestException();
-      }
-    );
+      });
 
     const promise = controller.addAttendedEvent(user, eventId, userAuthId);
     await expect(promise).rejects.toThrow(BadRequestException);

@@ -19,9 +19,9 @@ import { AuthLinkGeneratorService } from "./auth-link-generator.service";
     JwtModule.registerAsync({
       // Needs to be async as it uses env variable that's loaded after module is registered.
       useFactory: (): JwtModuleOptions => ({
-        secret: process.env.AUTH_JWT_SECRET
-      })
-    })
+        secret: process.env.AUTH_JWT_SECRET,
+      }),
+    }),
   ],
   providers: [
     AuthService,
@@ -30,8 +30,8 @@ import { AuthLinkGeneratorService } from "./auth-link-generator.service";
     LocalSerializer,
     JwtStrategy,
     GoogleStrategy,
-    FacebookStrategy
+    FacebookStrategy,
   ],
-  exports: [PassportModule, AuthService, AuthLinkGeneratorService]
+  exports: [PassportModule, AuthService, AuthLinkGeneratorService],
 })
 export class AuthModule {}

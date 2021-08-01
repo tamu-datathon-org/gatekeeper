@@ -13,9 +13,9 @@ describe("EventService", () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TestDatabaseModule,
-        MongooseModule.forFeature([{ name: "Event", schema: EventSchema }])
+        MongooseModule.forFeature([{ name: "Event", schema: EventSchema }]),
       ],
-      providers: [EventService]
+      providers: [EventService],
     }).compile();
 
     service = module.get<EventService>(EventService);
@@ -28,7 +28,7 @@ describe("EventService", () => {
   it("should be able to create an event", async () => {
     const createPayload = {
       eventName: "Test Event",
-      eventDescription: "Some Text"
+      eventDescription: "Some Text",
     } as CreateEventReq;
 
     const event = await service.create(createPayload);
@@ -41,14 +41,14 @@ describe("EventService", () => {
 
   it("should be able to create an event with a parent event", async () => {
     const createParentEventPayload = {
-      eventName: "ParentEvent"
+      eventName: "ParentEvent",
     } as CreateEventReq;
 
     const parentEvent = await service.create(createParentEventPayload);
 
     const createChildEventPayload = {
       eventName: "ChildEvent",
-      eventParentId: parentEvent.id
+      eventParentId: parentEvent.id,
     } as CreateEventReq;
 
     const childEvent = await service.create(createChildEventPayload);
@@ -60,14 +60,14 @@ describe("EventService", () => {
 
   it("should fail to create an event if the specified parent doesn't exist", async () => {
     const createParentEventPayload = {
-      eventName: "ParentEvent"
+      eventName: "ParentEvent",
     } as CreateEventReq;
 
     await service.create(createParentEventPayload);
 
     const createChildEventPayload = {
       eventName: "ChildEvent",
-      eventParentId: "5eccad133d48002da14db0b6"
+      eventParentId: "5eccad133d48002da14db0b6",
     } as CreateEventReq;
 
     await expect(service.create(createChildEventPayload)).rejects.toThrow(
@@ -77,11 +77,11 @@ describe("EventService", () => {
 
   it("should find all events and find by id", async () => {
     const createEventPayload1 = {
-      eventName: "event1"
+      eventName: "event1",
     } as CreateEventReq;
 
     const createEventPayload2 = {
-      eventName: "event2"
+      eventName: "event2",
     } as CreateEventReq;
 
     const event1 = await service.create(createEventPayload1);
@@ -102,17 +102,17 @@ describe("EventService", () => {
 
   it("should be able to update an event and fail if parentId doesn't exist", async () => {
     const createPayload = {
-      eventName: "event"
+      eventName: "event",
     } as CreateEventReq;
     const createParentPayload = {
-      eventName: "parentEvent"
+      eventName: "parentEvent",
     } as CreateEventReq;
 
     const parentEvent = await service.create(createParentPayload);
     const event = await service.create(createPayload);
     await service.update(event.id, {
       name: "newEventName",
-      parentId: parentEvent.id
+      parentId: parentEvent.id,
     });
 
     const foundEvent = await service.findById(event.id);
@@ -123,7 +123,7 @@ describe("EventService", () => {
     await expect(
       service.update(event.id, {
         name: "AnotherNewEventName",
-        parentId: "5eccad133d48002da14db0b6"
+        parentId: "5eccad133d48002da14db0b6",
       })
     ).rejects.toThrow(new BadRequestException("Parent Event does not exist"));
   });

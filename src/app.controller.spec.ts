@@ -11,7 +11,7 @@ describe("App Controller", () => {
   beforeEach(async () => {
     module = await Test.createTestingModule({
       imports: [TestDatabaseModule, UserAuthModule, AuthModule],
-      controllers: [AppController]
+      controllers: [AppController],
     }).compile();
 
     controller = module.get<AppController>(AppController);

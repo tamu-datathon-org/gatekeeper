@@ -3,7 +3,7 @@ import {
   Injectable,
   BadRequestException,
   ConflictException,
-  NotFoundException
+  NotFoundException,
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { UserAuth } from "./interfaces/user-auth.interface";
@@ -48,13 +48,13 @@ export class UserAuthService {
       const createdUserAuth = new this.userAuthModel({
         ...userAuth,
         passwordHash,
-        isVerified: userAuth.isVerified || false
+        isVerified: userAuth.isVerified || false,
       });
       return createdUserAuth.save();
     } else {
       const createdUserAuth = new this.userAuthModel({
         ...createUserAuth,
-        isVerified: true
+        isVerified: true,
       });
       return createdUserAuth.save();
     }

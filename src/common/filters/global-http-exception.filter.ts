@@ -3,7 +3,7 @@ import {
   Catch,
   ArgumentsHost,
   HttpException,
-  UnauthorizedException
+  UnauthorizedException,
 } from "@nestjs/common";
 import { Response } from "express";
 import { UserNotVerifiedException } from "../../auth/exceptions/user-not-verified.exception";
@@ -16,7 +16,7 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
     if (process.env.NODE_ENV === "prod" && exception.getStatus() >= 500) {
       const payload = {
         source: "GATEKEEPER",
-        error: `${exception.stack}\n${JSON.stringify(exception, undefined, 2)}`
+        error: `${exception.stack}\n${JSON.stringify(exception, undefined, 2)}`,
       };
       fetch(`${process.env.SLACKBOT_BASE_URL}slack/log-error`, {
         method: "post",
@@ -24,8 +24,8 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
         headers: {
           "Content-Type": "application/json",
           "Gatekeeper-Integration": process.env
-            .GATEKEEPER_INTEGRATION_SECRET as string
-        }
+            .GATEKEEPER_INTEGRATION_SECRET as string,
+        },
       });
     }
 
@@ -50,7 +50,7 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
     // render views if it is not an API request
     if (exception instanceof UserNotVerifiedException) {
       return response.render("signup/resend-verification-email.ejs", {
-        redirectLink: `/auth${request.path}`
+        redirectLink: `/auth${request.path}`,
       });
     } else if (exception instanceof UnauthorizedException) {
       return response.redirect(`/auth/login?r=/auth${request.path}`);

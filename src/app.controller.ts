@@ -36,7 +36,7 @@ export class AppController {
   me(@GetUser() user: User): ResponseBase & { yourEmail: string } {
     return {
       yourEmail: user.email,
-      status: ResponseStatus.Success
+      status: ResponseStatus.Success,
     };
   }
 }

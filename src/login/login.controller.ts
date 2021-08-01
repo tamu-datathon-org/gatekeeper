@@ -6,7 +6,7 @@ import {
   Req,
   Res,
   UseFilters,
-  UseGuards
+  UseGuards,
 } from "@nestjs/common";
 import { AuthService } from "../auth/auth.service";
 import { LoginRootExceptionFilter } from "./filters/login-root-exception.filter";
@@ -33,7 +33,7 @@ export class LoginController {
     return {
       ...integrationConfig,
       csrfToken: req.csrfToken(),
-      redirectLink
+      redirectLink,
     };
   }
 

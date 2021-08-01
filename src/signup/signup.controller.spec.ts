@@ -16,7 +16,7 @@ const mockPassword = "TestyMcTestFace";
 const mockCsrfToken = "test-csrf";
 const mockCsrfGenerator = (): string => mockCsrfToken;
 const csrfReq = {
-  csrfToken: mockCsrfGenerator
+  csrfToken: mockCsrfGenerator,
 };
 const response = {
   code: 200,
@@ -31,7 +31,7 @@ const response = {
     // Reset the state of the response
     response.code = 200;
     return response;
-  }
+  },
 };
 
 class MockSignupService {
@@ -56,7 +56,7 @@ class MockSignupService {
     return {
       email: mockEmail,
       authType: "EmailAndPassword",
-      isVerified: false
+      isVerified: false,
     };
   }
 
@@ -82,15 +82,15 @@ describe("Signup Controller", () => {
           useValue: {
             authorizeUser: () => {
               // Should be overriden using spyOn
-            }
-          }
+            },
+          },
         },
         {
           provide: SignupService,
-          useValue: new MockSignupService()
+          useValue: new MockSignupService(),
         },
-        ValidatorService
-      ]
+        ValidatorService,
+      ],
     }).compile();
 
     controller = module.get<SignupController>(SignupController);
@@ -110,7 +110,7 @@ describe("Signup Controller", () => {
     const signupUserDto = {
       email: mockEmail,
       password: mockPassword,
-      confirmPassword: mockPassword
+      confirmPassword: mockPassword,
     };
 
     const { path, params } = await controller.signupUserEmailAndPassword(
@@ -132,7 +132,7 @@ describe("Signup Controller", () => {
     const signupUserDto = {
       email: "already@exists.com",
       password: mockPassword,
-      confirmPassword: mockPassword
+      confirmPassword: mockPassword,
     };
 
     const { path, params } = await controller.signupUserEmailAndPassword(
@@ -155,7 +155,7 @@ describe("Signup Controller", () => {
     const signupUserDto = {
       email: "",
       password: mockPassword,
-      confirmPassword: mockPassword
+      confirmPassword: mockPassword,
     };
 
     const { path, params } = await controller.signupUserEmailAndPassword(
@@ -177,7 +177,7 @@ describe("Signup Controller", () => {
     const signupUserDto = {
       email: "test@test",
       password: mockPassword,
-      confirmPassword: mockPassword
+      confirmPassword: mockPassword,
     };
 
     const { path, params } = await controller.signupUserEmailAndPassword(
@@ -199,7 +199,7 @@ describe("Signup Controller", () => {
     const signupUserDto = {
       email: mockEmail,
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
     };
 
     const { path, params } = await controller.signupUserEmailAndPassword(
@@ -224,7 +224,7 @@ describe("Signup Controller", () => {
     const signupUserDto = {
       email: mockEmail,
       password: "test", // Should be more than 6 characters
-      confirmPassword: "test"
+      confirmPassword: "test",
     };
 
     const { path, params } = await controller.signupUserEmailAndPassword(
@@ -249,7 +249,7 @@ describe("Signup Controller", () => {
     const signupUserDto = {
       email: mockEmail,
       password: "testing", // Should be more than 6 characters
-      confirmPassword: "testing2"
+      confirmPassword: "testing2",
     };
 
     const { path, params } = await controller.signupUserEmailAndPassword(
@@ -314,7 +314,7 @@ describe("Signup Controller", () => {
 
     const { path, params } = await controller.resendVerificationEmail(
       {
-        cookies: { accessToken: "test.user.jwt" }
+        cookies: { accessToken: "test.user.jwt" },
       },
       "/app/me",
       "https://tamudatathon.com",
@@ -335,7 +335,7 @@ describe("Signup Controller", () => {
 
     const { path, params } = await controller.resendVerificationEmail(
       {
-        cookies: { accessToken: "test.user.jwt" }
+        cookies: { accessToken: "test.user.jwt" },
       },
       "/app/me",
       "https://tamudatathon.com",
@@ -356,7 +356,7 @@ describe("Signup Controller", () => {
 
     const { path, params } = await controller.resendVerificationEmail(
       {
-        cookies: { accessToken: "test.user.jwt" }
+        cookies: { accessToken: "test.user.jwt" },
       },
       "/app/me",
       "https://tamudatathon.com",

@@ -25,9 +25,9 @@ describe("AuthService", () => {
         UserAuthModule,
         PassportModule,
         UserModule,
-        JwtModule.register({ secret: "TEST_SECRET" })
+        JwtModule.register({ secret: "TEST_SECRET" }),
       ],
-      providers: [AuthService, LocalStrategy]
+      providers: [AuthService, LocalStrategy],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
@@ -46,11 +46,11 @@ describe("AuthService", () => {
       authType: "EmailAndPassword",
       email: "george@example.com",
       password: "Testing123",
-      isVerified: true
+      isVerified: true,
     });
 
     await userService.create({
-      userAuthId: userAuth.id
+      userAuthId: userAuth.id,
     });
 
     const user = await service.validateUser("george@example.com", "Testing123");
@@ -63,7 +63,7 @@ describe("AuthService", () => {
       authType: "EmailAndPassword",
       email: "george@example.com",
       password: "Testing123",
-      isVerified: false
+      isVerified: false,
     });
 
     try {
@@ -81,7 +81,7 @@ describe("AuthService", () => {
     await userAuthService.create({
       authType: "Google",
       email: "george@example.com",
-      isVerified: false
+      isVerified: false,
     });
 
     try {
@@ -99,11 +99,11 @@ describe("AuthService", () => {
     const userAuth = await userAuthService.create({
       authType: "Google",
       email: "george@example.com",
-      isVerified: true
+      isVerified: true,
     });
 
     await userService.create({
-      userAuthId: userAuth.id
+      userAuthId: userAuth.id,
     });
 
     const user = await service.validateOAuthUser(
@@ -127,7 +127,7 @@ describe("AuthService", () => {
       authType: "EmailAndPassword",
       email: "george@example.com",
       password: "Testing123",
-      isVerified: false
+      isVerified: false,
     });
 
     const validatePromise = service.validateOAuthUser(
@@ -141,18 +141,18 @@ describe("AuthService", () => {
     const userAuth = await userAuthService.create({
       authType: "Google",
       email: "george@example.com",
-      isVerified: true
+      isVerified: true,
     });
 
     const user = {
       email: "george@example.com",
-      authId: userAuth.id
+      authId: userAuth.id,
     };
     let res = {
       cookie: (key, val) => {
         this[key] = val;
         return this;
-      }
+      },
     };
     res = await service.authorizeUser(user as User, res);
     expect(res["accessToken"]).toBeDefined();
@@ -166,13 +166,13 @@ describe("AuthService", () => {
 
   it("should fail to authorize a user without a UserAuth", async () => {
     const user = {
-      email: "george@example.com"
+      email: "george@example.com",
     };
     const res = {
       cookie: (key, val) => {
         this[key] = val;
         return this;
-      }
+      },
     };
     const promise = service.authorizeUser(user as User, res);
     await expect(promise).rejects.toThrow(UnauthorizedException);
@@ -182,18 +182,18 @@ describe("AuthService", () => {
     const userAuth = await userAuthService.create({
       authType: "Google",
       email: "george@example.com",
-      isVerified: true
+      isVerified: true,
     });
 
     const user = {
       email: "george@example.com",
-      authId: userAuth.id
+      authId: userAuth.id,
     };
     let res = {
       cookie: (key, val) => {
         this[key] = val;
         return this;
-      }
+      },
     };
     res = await service.authorizeUser(user as User, res);
     expect(res["accessToken"]).toBeDefined();
@@ -206,7 +206,7 @@ describe("AuthService", () => {
       cookie: (key, val) => {
         this[key] = val;
         return this;
-      }
+      },
     };
     newRes = await service.authorizeUser(user as User, newRes);
     expect(newRes["accessToken"]).toBeDefined();
@@ -220,21 +220,21 @@ describe("AuthService", () => {
     const userAuth = await userAuthService.create({
       authType: "Google",
       email: "george@example.com",
-      isVerified: true
+      isVerified: true,
     });
     userAuth.accessId = "random-id";
     await userAuth.save();
 
     const user = {
       email: "george@example.com",
-      authId: userAuth.id
+      authId: userAuth.id,
     };
     let res = {
       accessToken: "random-access-token",
-      clearCookie: key => {
+      clearCookie: (key) => {
         delete this[key];
         return this;
-      }
+      },
     };
     res = await service.deauthorizeUser(user as User, res);
     expect(res["accessToken"]).toBeUndefined();
@@ -245,15 +245,15 @@ describe("AuthService", () => {
 
   it("should successfully deauthorize a user without a valid UserAuth object", async () => {
     const user = {
-      email: "george@example.com"
+      email: "george@example.com",
       /* Non existent authId */
     };
     let res = {
       accessToken: "random-access-token",
-      clearCookie: key => {
+      clearCookie: (key) => {
         delete this[key];
         return this;
-      }
+      },
     };
     res = await service.deauthorizeUser(user as User, res);
     expect(res["accessToken"]).toBeUndefined();
