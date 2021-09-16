@@ -33,6 +33,33 @@ export const DefaultGalaxyIntegrations = {
     verificationPageSubtext:
       "afterwards, you can continue joining the TD Discord Server",
   }),
+  "/guild": newGalaxyIntegrationConfig({
+    pathPrefix: "/guild",
+    appName: "TD Discord",
+    loginPageSubtext: "to join the TD Discord Server",
+    signupPageSubtext:
+      "afterwards, you can continue joining the TD Discord Server",
+    verificationPageSubtext:
+      "afterwards, you can continue joining the TD Discord Server",
+  }),
+  "/projects": newGalaxyIntegrationConfig({
+    pathPrefix: "/projects",
+    appName: "hacker submissions",
+    loginPageSubtext: "to make project submissions",
+    signupPageSubtext:
+      "afterwards, you can continue doing stuff with project submissions",
+    verificationPageSubtext:
+      "afterwards, you can continue doing stuff with project submissions",
+  }),
+  "/bulletin": newGalaxyIntegrationConfig({
+    pathPrefix: "/bulletin",
+    appName: "hacker submissions",
+    loginPageSubtext: "to make project submissions",
+    signupPageSubtext:
+      "afterwards, you can continue doing stuff with project submissions",
+    verificationPageSubtext:
+      "afterwards, you can continue doing stuff with project submissions",
+  }),
   "/forms": newGalaxyIntegrationConfig({
     pathPrefix: "/forms",
     appName: "TD Forms",
