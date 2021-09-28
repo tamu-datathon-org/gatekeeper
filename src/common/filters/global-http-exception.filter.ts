@@ -14,12 +14,19 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
     console.error(exception);
     try {
-
       // Send server exceptions to r2d2 slackbot, if in production mode.
-      if (process.env.NODE_ENV === "prod" && exception.getStatus && exception.getStatus() >= 500) {
+      if (
+        process.env.NODE_ENV === "prod" &&
+        exception.getStatus &&
+        exception.getStatus() >= 500
+      ) {
         const payload = {
           source: "GATEKEEPER",
-          error: `${exception.stack}\n${JSON.stringify(exception, undefined, 2)}`,
+          error: `${exception.stack}\n${JSON.stringify(
+            exception,
+            undefined,
+            2
+          )}`,
         };
         fetch(`${process.env.SLACKBOT_BASE_URL}slack/log-error`, {
           method: "post",
@@ -69,12 +76,13 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
           .status(500)
           .json(new HttpException("Internal Server Error", 500));
       }
-    } catch(e) {
+    } catch (e) {
+      const ctx = host.switchToHttp();
+      const response = ctx.getResponse<Response>();
       console.error("GlobalExceptionHandlerError, oh the irony", e);
       return response
         .status(500)
         .json(new HttpException("Internal Server Error", 500));
     }
-
   }
 }
