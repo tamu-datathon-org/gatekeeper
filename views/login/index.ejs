@@ -8,7 +8,7 @@
     <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
     <!-- logo/image -->
     <!-- TODO: change the image link to static image -->
-    <img class="mb-4" src="https://tamudatathon.com/static/img/logos/main.svg" alt="" width="72" height="72" />
+    <img class="mb-4" src="https://tamudatathon.com/static/img/logos/main-22.webp" alt="" width="72" height="72" />
     <h1 class="h3 mb-3 font-weight-normal">Log in</h1>
 
     <p><%= locals.loginPageSubtext %></p>
@@ -63,9 +63,20 @@
         Log in with Facebook
       </a>
     </div>
+    <div class="mt-3 mb-5 d-flex flex-row align-items-start text-left" style="
+        gap: 0.5rem;
+    ">
+      <span class="badge badge-success" style="
+        margin-top: 0.2rem;
+        background-color: transparent;
+        color: var(--success);
+        border: 1px solid;
+      ">Pro Tip</span>
+      If you are logging in with a tamu.edu email, click the "Log in with Google Button"
+    </div>
 
     <!-- copyright TD -->
-    <p class="mt-5 mb-3 text-center">Have questions, problems, etc? Email us at <a href="mailto:connect@tamudatathon.com">connect@tamudatathon.com</a></p>
+    <p class="mb-3 text-center">Have questions, problems, etc? Email us at <a href="mailto:connect@tamudatathon.com">connect@tamudatathon.com</a></p>
     <p class="mb-3 text-muted text-center">&copy; TAMU Datathon <%= new Date().getFullYear() %></p>
   </form>
 
