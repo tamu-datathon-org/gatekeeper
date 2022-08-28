@@ -11,7 +11,7 @@ export const DefaultGalaxyIntegrations = {
   "/apply": newGalaxyIntegrationConfig({
     pathPrefix: "/apply",
     appName: "TD 2021 Application Portal",
-    loginPageSubtext: "to apply for TAMU Datathon 2021",
+    loginPageSubtext: "to apply for TAMU Datathon 2022",
     signupPageSubtext: "afterwards, you'll be sent back to your application",
     verificationPageSubtext:
       "afterwards, you'll be sent back to your application",
