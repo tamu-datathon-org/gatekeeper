@@ -28,15 +28,6 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
             2
           )}`,
         };
-        fetch(`${process.env.SLACKBOT_BASE_URL}slack/log-error`, {
-          method: "post",
-          body: JSON.stringify(payload, undefined, 2),
-          headers: {
-            "Content-Type": "application/json",
-            "Gatekeeper-Integration": process.env
-              .GATEKEEPER_INTEGRATION_SECRET as string,
-          },
-        });
       }
 
       const ctx = host.switchToHttp();

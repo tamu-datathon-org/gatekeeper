@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/main.js": {
+    "src/main.js": {
       "runtime": "@vercel/node@1.9.0"
     }
   }
