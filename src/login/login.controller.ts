@@ -19,7 +19,7 @@ import { RedirectGalaxyIntegration } from "../galaxy-integrations/decorators/red
 import { GalaxyIntegrationConfig } from "../galaxy-integrations/interfaces/galaxy-integration";
 import { Constants } from "../common/constants";
 
-@Controller("auth/login")
+@Controller("login")
 export class LoginController {
   constructor(private authService: AuthService) {}
 

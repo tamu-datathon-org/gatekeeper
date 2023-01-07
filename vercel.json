@@ -1,3 +1,18 @@
 {
-  
-}
+    "version": 2,
+    "builds": [
+      {
+        "src": "*.ts",
+        "use": "@vercel/node-10",
+        "config": {
+          "tsconfig": "tsconfig.build.json"
+        }
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "dist/$1"
+      }
+    ]
+  }
