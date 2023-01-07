@@ -18,7 +18,7 @@ import { ResetPasswordModule } from "./reset-password/reset-password.module";
   imports: [
     AuthModule,
     UserAuthModule,
-    // EasyconfigModule.register({ safe: false }),
+    EasyconfigModule.register({ safe: true }),
     MongooseModule.forRoot(process.env.MONGODB_URL),
     MailModule,
     SignupModule,
