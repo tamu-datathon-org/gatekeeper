@@ -18,7 +18,7 @@ import { RedirectGalaxyIntegration } from "../galaxy-integrations/decorators/red
 import { GalaxyIntegrationConfig } from "../galaxy-integrations/interfaces/galaxy-integration";
 import { ValidatedHost } from "../common/decorators/validated-host.decorator";
 
-@Controller("signup")
+@Controller("auth/signup")
 export class SignupController {
   public readonly controllerErrors = {
     invalidEmail: "Please enter a valid email.",

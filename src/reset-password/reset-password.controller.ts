@@ -17,7 +17,7 @@ import { ResetPasswordService } from "./reset-password.service";
 import { AuthProviderException } from "../auth/exceptions/auth-provider.exception";
 import { ValidatorService } from "../validator/validator.service";
 
-@Controller("reset-password")
+@Controller("auth/reset-password")
 export class ResetPasswordController {
   constructor(
     private resetPaswordService: ResetPasswordService,
