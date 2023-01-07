@@ -1,9 +1,9 @@
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { AppModule } from "./app.module";
-import * as session from "express-session";
+import session from "express-session";
 import { join } from "path";
-import * as cookieParser from "cookie-parser";
+import cookieParser from "cookie-parser";
 import passport = require("passport");
 import csrf = require("csurf");
 import bodyParser = require("body-parser");
