@@ -1,12 +1,14 @@
 {
   "version": 2,
-  "builds": [
-      { "src": "/src/main.ts", "use": "@vercel/node" }
-  ],
+  "functions": {
+    "api/main.ts": {
+      "includeFiles": "src/mail/templates/**"
+    }
+  },
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/src/main.ts",
+      "dest": "/api/main.ts",
       "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
     }
   ]
