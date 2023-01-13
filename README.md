@@ -16,6 +16,7 @@
 ## :bullettrain_side: Running the app
 ```bash
 # development (you can load the site through http://localhost:4000)
+# Note: for local environments, uncomment easyconfig line in "src/app.module.ts". Also, go to "views/partials/head.ejs" and remove "/auth" from href if you want the CSS to load.
 $ npm run dev
 
 # check for lint errors
