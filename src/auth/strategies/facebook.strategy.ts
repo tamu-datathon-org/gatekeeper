@@ -19,7 +19,11 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "Facebook") {
     super({
       clientID: process.env.FACEBOOK_OAUTH_APP_ID,
       clientSecret: process.env.FACEBOOK_OAUTH_APP_SECRET,
-      callbackURL: process.env.FACEBOOK_OAUTH_CALLBACK_URL,
+      callbackURL:
+        process.env.NODE_ENV === "prod"
+          ? process.env.DEFAULT_GATEKEEPER_ORIGIN +
+            process.env.FACEBOOK_OAUTH_CALLBACK_URL
+          : process.env.FACEBOOK_OAUTH_CALLBACK_URL,
       proxy: process.env.NODE_ENV === "prod", // in prod enforce using https in callback url
       passReqToCallback: true,
       profileFields: ["email", "name"],
