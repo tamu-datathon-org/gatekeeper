@@ -1,6 +1,6 @@
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
-import { AppModule } from "./app.module";
+import { AppModule } from "../src/app.module";
 import session from "express-session";
 import { join } from "path";
 import cookieParser from "cookie-parser";
