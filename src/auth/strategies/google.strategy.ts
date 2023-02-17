@@ -21,9 +21,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "Google") {
       clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET,
       callbackURL:
         process.env.NODE_ENV === "prod"
-          ? process.env.GOOGLE_OAUTH_CALLBACK_URL
-          : process.env.DEFAULT_GATEKEEPER_ORIGIN +
-            process.env.GOOGLE_OAUTH_CALLBACK_URL,
+          ? process.env.DEFAULT_GATEKEEPER_ORIGIN +
+            process.env.GOOGLE_OAUTH_CALLBACK_URL
+          : process.env.GOOGLE_OAUTH_CALLBACK_URL,
       proxy: process.env.NODE_ENV === "prod", // in prod enforce using https in callback url
       passReqToCallback: true,
       scope: ["profile", "email"],
