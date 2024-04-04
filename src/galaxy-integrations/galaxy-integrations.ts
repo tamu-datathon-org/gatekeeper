@@ -10,8 +10,8 @@ export const DefaultGalaxyIntegrations = {
   "/auth": GatekeeperGalaxyIntegration,
   "/apply": newGalaxyIntegrationConfig({
     pathPrefix: "/apply",
-    appName: "TD 2021 Application Portal",
-    loginPageSubtext: "to apply for TAMU Datathon 2023",
+    appName: "TD 2024 Application Portal",
+    loginPageSubtext: "to apply for TAMU Datathon 2024",
     signupPageSubtext: "afterwards, you'll be sent back to your application",
     verificationPageSubtext:
       "afterwards, you'll be sent back to your application",
